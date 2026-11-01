@@ -34,6 +34,7 @@ const prefValues = {
   'extensions.update.enabled': false,
   'browser.dom.window.dump.enabled': true,
   'devtools.console.stdout.chrome': true,
+  'devtools.debugger.log': true,
   'devtools.debugger.remote-enabled': true,
   'devtools.chrome.enabled': true,
   'devtools.debugger.force-local': true,
