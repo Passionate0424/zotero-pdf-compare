@@ -4,10 +4,11 @@ import hashlib
 import io
 import json
 import zipfile
+import subprocess
 
 root = Path(__file__).resolve().parent.parent
 files = {"manifest.json": "addon/manifest.json", "bootstrap.js": "addon/bootstrap.js",
-         "src/main.js": "addon/src/main.js", "LICENSE": "LICENSE", "NOTICE.md": "NOTICE.md"}
+         "src/main.js": "addon/src/main.js", "src/scroll-sync.js": "addon/src/scroll-sync.js", "LICENSE": "LICENSE", "NOTICE.md": "NOTICE.md"}
 manifest = json.loads((root / files["manifest.json"]).read_text(encoding="utf-8"))
 if manifest["applications"]["zotero"]["id"] != "doubao-translate@local.invalid":
     raise SystemExit("Unexpected development add-on ID")
@@ -15,6 +16,9 @@ outdir = root / "dist"
 if outdir.is_symlink() or (outdir.exists() and outdir.resolve() != outdir):
     raise SystemExit("Refuse a redirected output directory")
 outdir.mkdir(exist_ok=True)
+for relative in files.values():
+    if relative.endswith('.js'):
+        subprocess.run(['node','--check',str(root / relative)],check=True,capture_output=True)
 buffer = io.BytesIO()
 with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as archive:
     for name, relative in files.items():

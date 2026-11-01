@@ -20,9 +20,9 @@
     {
       "id": "P2",
       "title": "三模式与联动",
-      "status": "pending",
+      "status": "in_progress",
       "tag": "milestone/p2",
-      "report": null
+      "report": "docs/reports/P2.json"
     },
     {
       "id": "P3",

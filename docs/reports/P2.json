@@ -1,0 +1,172 @@
+{
+  "milestone": "P2",
+  "status": "in_progress",
+  "recordedAt": "2026-11-02T02:18:00+08:00",
+  "checks": {
+    "isolationAudit": true,
+    "twentyModeSwitches": true,
+    "nineteenPageAlignment": true,
+    "anchorError": true,
+    "latencyP95": true,
+    "zoomResize": true,
+    "annotationInteraction": true,
+    "cleanup": true,
+    "UI-01": true,
+    "UI-02": true,
+    "UI-03": true,
+    "UI-04": true,
+    "UI-05": true,
+    "UI-06": true,
+    "bidirectionalNavigation": false
+  },
+  "unitTests": {
+    "passed": 20,
+    "failed": 0
+  },
+  "evidence": [
+    "docs/reports/P2-evidence.json",
+    "docs/reports/P2.md",
+    "docs/reports/P1-manual.json",
+    "docs/reports/P2-isolation.json"
+  ],
+  "build": {
+    "file": "E:\\project\\zotero-doubao-translate\\dist\\doubao-translate-dev-39481cd4d08d6d22.xpi",
+    "filename": "doubao-translate-dev-39481cd4d08d6d22.xpi",
+    "version": "0.2.0",
+    "entries": 6,
+    "bytes": 22598,
+    "sha256": "39481cd4d08d6d2263a76ea96fe549237ebad0f62a73a1b114250b2ed82e099a"
+  },
+  "performance": {
+    "maximumError": 0.0022985602424858698,
+    "p95Ms": 49,
+    "sampleCount": 120,
+    "measurement": "DOM scrollTop mutation to observed paired scrollTop; normal timers/refresh, no synthetic refresh-driver advancement; not OS input-to-present latency"
+  },
+  "remaining": [
+    "两侧键盘、实际滚动条拖动尚未可靠验证；Gecko 可信事件探查未产生滚动，不冒充通过。"
+  ],
+  "visualReview": {
+    "status": "passed",
+    "screenshots": [
+      {
+        "path": "docs/reports/assets/p2-light-compare-1280.png",
+        "width": 1600,
+        "height": 1000,
+        "dpr": 1.25,
+        "theme": "light",
+        "mode": "compare",
+        "windowSize": [
+          1280,
+          800
+        ],
+        "method": "gecko-window-global-snapshot",
+        "toolbarHeight": 144.8000030517578,
+        "sourceWritable": true,
+        "rightReadOnly": true,
+        "limit": "Test refresh only for screenshot; excluded from all latency samples",
+        "sha256": "f0881d2a0cee85e7c81b079fb9e642af655c63011fd113196179896689aef315"
+      },
+      {
+        "path": "docs/reports/assets/p2-light-compare-1600.png",
+        "width": 2000,
+        "height": 1250,
+        "dpr": 1.25,
+        "theme": "light",
+        "mode": "compare",
+        "windowSize": [
+          1600,
+          1000
+        ],
+        "method": "gecko-window-global-snapshot",
+        "toolbarHeight": 81,
+        "sourceWritable": true,
+        "rightReadOnly": true,
+        "limit": "Test refresh only for screenshot; excluded from all latency samples",
+        "sha256": "25baa12e7444bf2b40b11483504fb9b8d81b2062656ad80dce6cc9659f9fcbc4"
+      },
+      {
+        "path": "docs/reports/assets/p2-dark-compare-1280.png",
+        "width": 1600,
+        "height": 1000,
+        "dpr": 1.25,
+        "theme": "dark",
+        "mode": "compare",
+        "windowSize": [
+          1280,
+          800
+        ],
+        "method": "gecko-window-global-snapshot",
+        "toolbarHeight": 144.8000030517578,
+        "sourceWritable": true,
+        "rightReadOnly": true,
+        "limit": "Test refresh only for screenshot; excluded from all latency samples",
+        "sha256": "b33fced08b1525ff6a05e5b2b8e470fca88b255f48356fcbd9e6e6d82cc52f78"
+      },
+      {
+        "path": "docs/reports/assets/p2-dark-compare-1600.png",
+        "width": 2000,
+        "height": 1250,
+        "dpr": 1.25,
+        "theme": "dark",
+        "mode": "compare",
+        "windowSize": [
+          1600,
+          1000
+        ],
+        "method": "gecko-window-global-snapshot",
+        "toolbarHeight": 81,
+        "sourceWritable": true,
+        "rightReadOnly": true,
+        "limit": "Test refresh only for screenshot; excluded from all latency samples",
+        "sha256": "c2046833eea06ead9513c1dd0f31cb7483daaadf50e79043b70f68bba06ed209"
+      },
+      {
+        "path": "docs/reports/assets/p2-light-translation.png",
+        "width": 2000,
+        "height": 1250,
+        "dpr": 1.25,
+        "theme": "light",
+        "mode": "translation",
+        "windowSize": [
+          1600,
+          1000
+        ],
+        "method": "gecko-window-global-snapshot",
+        "toolbarHeight": 0,
+        "sourceWritable": true,
+        "rightReadOnly": true,
+        "limit": "Test refresh only for screenshot; excluded from all latency samples",
+        "sha256": "675ff67e47f006412e02ad3c30cf655e3e975a977cbd6708997fc8622a4f716d"
+      },
+      {
+        "path": "docs/reports/assets/p2-light-original.png",
+        "width": 2000,
+        "height": 1250,
+        "dpr": 1.25,
+        "theme": "light",
+        "mode": "original",
+        "windowSize": [
+          1600,
+          1000
+        ],
+        "method": "gecko-window-global-snapshot",
+        "toolbarHeight": 41,
+        "sourceWritable": true,
+        "limit": "Test refresh only for screenshot; excluded from all latency samples",
+        "sha256": "43bb41cfeffbb438eaf002687aea38fbd3d94acb6f6dd3eef79e1693ef7d9518"
+      },
+      {
+        "path": "docs/reports/assets/p2-maximized.png",
+        "width": 2578,
+        "height": 1398,
+        "dpr": 1.25,
+        "theme": "dark",
+        "mode": "compare",
+        "method": "gecko-window-global-snapshot",
+        "sha256": "c3de8c3555eb30000d7d7f3af1e21d53a891ba4968af2539919c6cc7fd96ae23"
+      }
+    ],
+    "findings": "7 张实际测试窗口截图已检查：原生工具栏/批注侧栏保留，模式状态清楚，两个尺寸、连续分隔拖动与最大化无按钮遮挡。DPR 1.25；阅读器明暗主题覆盖，应用外框仍深色；图片型译文暗色下对比度较低，可单独切换阅读器颜色方案。未测试额外 DPI 或操作系统输入焦点。"
+  }
+}

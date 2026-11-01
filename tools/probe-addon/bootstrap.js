@@ -87,7 +87,7 @@ async function runProbe() {
           const install=await AddonManager.getInstallForFile(file);
           await install.install();
           const installed=await AddonManager.getAddonByID('doubao-translate@local.invalid');
-          await IOUtils.writeJSON(PathUtils.join(root,'product-install-report.json'),{nonce:command.nonce,passed:installed?.isActive===true&&!installed.temporarilyInstalled,isActive:installed?.isActive,userDisabled:installed?.userDisabled,temporary:installed?.temporarilyInstalled,version:installed?.version,controllerLoaded:!!win.DoubaoTranslate});
+          await IOUtils.writeJSON(PathUtils.join(root,'product-install-report.json'),{nonce:command.nonce,passed:installed?.isActive===true&&!installed.temporarilyInstalled&&!!win.DoubaoTranslate,isActive:installed?.isActive,userDisabled:installed?.userDisabled,temporary:installed?.temporarilyInstalled,version:installed?.version,controllerLoaded:!!win.DoubaoTranslate});
         } catch(error) {
           await IOUtils.writeJSON(PathUtils.join(root,'product-install-report.json'),{nonce:command.nonce,passed:false,error:String(error)});
         } finally {
@@ -95,23 +95,23 @@ async function runProbe() {
           globalThis.__doubaoSuiteBusy=false;
         }
       }
-      if (command.runId === request.runId && command.action === 'run-suite' && command.suite === 'p1-reader' && !globalThis.__doubaoSuiteBusy) {
+      if (command.runId === request.runId && command.action === 'run-suite' && ['p1-reader','p2-sync'].includes(command.suite) && !globalThis.__doubaoSuiteBusy) {
         globalThis.__doubaoSuiteBusy = true;
         try {
           const projectRoot = PathUtils.parent(root);
-          const suiteFile = Zotero.File.pathToFile(PathUtils.join(projectRoot, 'tests', 'integration', 'p1-reader.js'));
+          const suiteFile = Zotero.File.pathToFile(PathUtils.join(projectRoot, 'tests', 'integration', command.suite==='p2-sync'?'p2-sync.js':'p1-reader.js'));
           const scope = { Zotero, Services, Components, ChromeUtils, IOUtils, PathUtils };
           Services.scriptloader.loadSubScriptWithOptions(Services.io.newFileURI(suiteFile).spec, {target:scope,ignoreCache:true});
           const controller = new win.AbortController();
           let deadline;
-          const work = scope.runP1({ root: projectRoot, runtime: root, action: command.scenario || 'inspect', timers: timerAPI, nonce: command.nonce, signal:controller.signal });
+          const work = (command.suite==='p2-sync'?scope.runP2:scope.runP1)({ root: projectRoot, runtime: root, action: command.scenario || 'inspect', timers: timerAPI, nonce: command.nonce, signal:controller.signal });
           let result;
           try {
             result = await Promise.race([work,new Promise((_,reject) => { deadline=timerAPI.setTimeout(() => {controller.abort();reject(new Error('P1 suite exceeded its deadline'));},80000); })]);
           } finally { timerAPI.clearTimeout(deadline); }
-          await IOUtils.writeJSON(PathUtils.join(root, 'p1-report.json'), { ...result, nonce: command.nonce, generatedAt: new Date().toISOString() });
+          await IOUtils.writeJSON(PathUtils.join(root, command.suite==='p2-sync'?'p2-report.json':'p1-report.json'), { ...result, nonce: command.nonce, generatedAt: new Date().toISOString() });
         } catch (error) {
-          await IOUtils.writeJSON(PathUtils.join(root, 'p1-report.json'), { passed: false, nonce: command.nonce, error: String(error), stack: error.stack });
+          await IOUtils.writeJSON(PathUtils.join(root, command.suite==='p2-sync'?'p2-report.json':'p1-report.json'), { passed: false, nonce: command.nonce, error: String(error), stack: error.stack });
         } finally {
           await IOUtils.writeJSON(requestPath, { runId: request.runId, action: 'observe' });
           globalThis.__doubaoSuiteBusy = false;

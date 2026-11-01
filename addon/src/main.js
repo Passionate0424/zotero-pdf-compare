@@ -10,6 +10,7 @@ var DoubaoTranslateAddon = class {
     this.hostWatches = new Map();
     this.modeQueues = new Map();
     this.modeRequests = new Map();
+    this.translationPositions = new Map();
     this.stopped = false;
     this.timers = ChromeUtils.importESModule('resource://gre/modules/Timer.sys.mjs');
     this.onToolbar = event => this.renderToolbar(event);
@@ -94,6 +95,11 @@ var DoubaoTranslateAddon = class {
       }));
       group.appendChild(button);
     }
+    const link=doc.createElement('button');
+    link.className='toolbar-button doubao-sync-button';link.textContent='联动';link.title='开启或关闭双向滚动联动';
+    link.style.cssText='font:inherit;font-size:11px;width:auto;min-width:32px;height:26px;padding:0 3px;border:1px solid var(--fill-tertiary,#888);border-radius:4px;';
+    link.addEventListener('click',()=>{const state=this.states.get(reader.tabID);if(state?.sync){state.linkWanted=!state.sync.enabled;state.sync.setEnabled(state.linkWanted);}});
+    group.appendChild(link);
     this.buttons.add(group);
     return group;
   }
@@ -164,7 +170,7 @@ var DoubaoTranslateAddon = class {
       reader, sourceBrowser, container, right, divider, translated, mode: 'compare',
       originalContainerStyle: container.getAttribute('style'),
       originalBrowserStyle: sourceBrowser.getAttribute('style'),
-      nativeInternal: reader._internalReader, originalParent: sourceBrowser.parentNode,
+      nativeInternal: reader._internalReader, originalParent: sourceBrowser.parentNode, linkWanted:true,
     };
     state.ratio = 0.5;
     const resize = ratio => {
@@ -242,6 +248,17 @@ var DoubaoTranslateAddon = class {
       toolbar.querySelector('.end').prepend(state.rightControls);
       state.restoreSourceLayout = this.responsiveToolbar(reader._iframeWindow.document);
       state.restoreRightLayout = this.responsiveToolbar(content.document,true);
+      const leftView=reader._internalReader._primaryView,rightView=state.rightInternal._primaryView;
+      await this.waitFor(()=>leftView._iframeWindow?.document.getElementById('viewerContainer')&&rightView._iframeWindow?.document.getElementById('viewerContainer'),state);
+      state.sync=new DoubaoScrollSync({
+        left:{host:reader._iframe,window:leftView._iframeWindow,viewer:leftView._iframeWindow.document.getElementById('viewerContainer'),outerDocument:reader._iframeWindow.document},
+        right:{host:right,window:rightView._iframeWindow,viewer:rightView._iframeWindow.document.getElementById('viewerContainer'),outerDocument:content.document},
+        timers:this.timers,onState:status=>this.updateSyncButtons(reader,status),
+        onNavigate:(side,anchor)=>{if(side==='right')this.translationPositions.set(reader.itemID,anchor);},
+      });
+      const saved=this.translationPositions.get(reader.itemID);
+      if(saved){const target=DoubaoScrollMath.target(saved,state.sync.metrics('right'));if(target)state.sync.views.right.viewer.scrollTop=target.top;}
+      state.sync.alignFrom('left');
       state.closeObserver = new doc.defaultView.MutationObserver(() => {
         if (!container.isConnected) this.restore(state);
       });
@@ -250,6 +267,21 @@ var DoubaoTranslateAddon = class {
       container.addEventListener('tab-selection-change',state.selectionListener);
       return state;
     } catch (error) { this.restore(state); throw error; }
+  }
+  updateSyncButtons(reader,status) {
+    const state=this.states.get(reader.tabID);
+    for(const group of this.buttons){
+      if(group.dataset.sourceTab!==reader.tabID)continue;
+      const button=group.querySelector('.doubao-sync-button');if(!button)continue;
+      const active=state?.mode==='compare';
+      const unsupported=active&&status&&!status.compatible;
+      button.disabled=!active||!status?.compatible;
+      button.setAttribute('aria-pressed',String(active&&status?.enabled&&status?.compatible));
+      button.textContent=unsupported?(status.reason==='page-count'?'页数不同':'布局不支持'):'联动';
+      button.style.background=active&&status?.enabled&&status?.compatible?'#2563eb':'transparent';
+      button.style.color=active&&status?.enabled&&status?.compatible?'white':'var(--fill-primary,#ddd)';
+      button.title=unsupported?(status.reason==='page-count'?'原译文页数不一致，暂停自动联动':'联动支持单页纵向滚动，请关闭双页或横向布局'):'开启或关闭双向滚动联动';
+    }
   }
   setMode(reader, mode) {
     if (!['original','translation','compare'].includes(mode)) return Promise.reject(new Error('未知阅读模式'));
@@ -271,16 +303,35 @@ var DoubaoTranslateAddon = class {
     if (!['original','translation','compare'].includes(mode)) throw new Error('未知阅读模式');
     if (mode === 'original') {
       const state = this.states.get(reader.tabID);
-      if (state) this.restore(state);
+      if (state) {
+        const translatedAnchor=state.mode==='translation'?state.sync.anchor('right'):null;
+        this.restore(state);
+        if(translatedAnchor){
+          reader._iframe.getBoundingClientRect();
+          await new Promise(resolve=>this.timers.setTimeout(resolve,140));
+          const view=reader._internalReader._primaryView;
+          const adapter={host:reader._iframe,window:view._iframeWindow,viewer:view._iframeWindow.document.getElementById('viewerContainer'),outerDocument:reader._iframeWindow.document};
+          const metrics=DoubaoScrollSync.prototype.metrics.call({views:{left:adapter}},'left');
+          const target=DoubaoScrollMath.target(translatedAnchor,metrics);
+          if(target)adapter.viewer.scrollTop=target.top;
+        }
+      }
     } else {
       const state = await this.ensureState(reader);
+      if(state.closed||this.stopped)return;
+      const leader=state.mode==='translation'?'right':state.sync.leader;
+      const anchor=state.sync.anchor(leader);
       state.mode = mode;
       state.sourceBrowser.style.display = mode === 'translation' ? 'none' : '';
       state.divider.style.display = mode === 'translation' ? 'none' : '';
+      const primaryTarget=DoubaoScrollMath.target(anchor,state.sync.metrics(leader));
+      if(primaryTarget)state.sync.views[leader].viewer.scrollTop=primaryTarget.top;
+      state.sync.setEnabled(mode==='compare'&&state.linkWanted,leader);
+      if(mode==='compare'&&state.linkWanted)state.sync.alignFrom(leader,Date.now(),anchor);
     }
     for (const group of this.buttons) {
       if(group.dataset.sourceTab!==reader.tabID)continue;
-      for (const button of group.querySelectorAll('button')) {
+      for (const button of group.querySelectorAll('[data-doubao-mode]')) {
         const selected=button.dataset.doubaoMode===mode;
         button.setAttribute('aria-pressed',String(selected));
         button.style.background=selected?'#2563eb':'var(--fill-quinary,transparent)';
@@ -290,6 +341,8 @@ var DoubaoTranslateAddon = class {
   }
   restore(state) {
     if (state.closed) return;
+    const anchor=state.sync?.anchor('right');if(anchor)this.translationPositions.set(state.reader.itemID,anchor);
+    state.sync?.dispose();
     state.closed = true;
     state.closeObserver?.disconnect();
     if (state.selectionListener) state.container.removeEventListener('tab-selection-change',state.selectionListener);
@@ -297,6 +350,7 @@ var DoubaoTranslateAddon = class {
     if (state.rightControls) { this.buttons.delete(state.rightControls); state.rightControls.remove(); }
     try { state.rightInternal?.uninit?.(); } catch (error) { Zotero.logError(error); }
     state.right.remove(); state.divider.remove();
+    this.updateSyncButtons(state.reader,null);
     for (const [node, style] of [[state.container,state.originalContainerStyle],[state.sourceBrowser,state.originalBrowserStyle]]) {
       if (style == null) node.removeAttribute('style'); else node.setAttribute('style', style);
     }

@@ -1,0 +1,2210 @@
+{
+  "alignment": {
+    "passed": true,
+    "stage": "native_sync_alignment_latency",
+    "checks": {
+      "nineteenPagesBothDirections": true,
+      "anchorError": true,
+      "latencyP95": true
+    },
+    "maximumError": 0.0022985602424858698,
+    "p95Ms": 49,
+    "sampleCount": 120,
+    "pages": [
+      {
+        "side": "left",
+        "index": 0,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0004167719120989899,
+        "latencyMs": 47,
+        "source": 146,
+        "target": 239
+      },
+      {
+        "side": "left",
+        "index": 1,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0004167719120991009,
+        "latencyMs": 45,
+        "source": 584,
+        "target": 989
+      },
+      {
+        "side": "left",
+        "index": 2,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0004167719120991009,
+        "latencyMs": 48,
+        "source": 1022,
+        "target": 1739
+      },
+      {
+        "side": "left",
+        "index": 3,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0004167719120991009,
+        "latencyMs": 45,
+        "source": 1460,
+        "target": 2489
+      },
+      {
+        "side": "left",
+        "index": 4,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0004167719120991009,
+        "latencyMs": 46,
+        "source": 1898,
+        "target": 3239
+      },
+      {
+        "side": "left",
+        "index": 5,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0004167719120991009,
+        "latencyMs": 47,
+        "source": 2336,
+        "target": 3989
+      },
+      {
+        "side": "left",
+        "index": 6,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0004167719120991009,
+        "latencyMs": 46,
+        "source": 2774,
+        "target": 4739
+      },
+      {
+        "side": "left",
+        "index": 7,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0004167719120991009,
+        "latencyMs": 47,
+        "source": 3212,
+        "target": 5489
+      },
+      {
+        "side": "left",
+        "index": 8,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.001071001071002442,
+        "latencyMs": 45,
+        "source": 3650,
+        "target": 6238
+      },
+      {
+        "side": "left",
+        "index": 9,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.001071001071002442,
+        "latencyMs": 44,
+        "source": 4089,
+        "target": 6988
+      },
+      {
+        "side": "left",
+        "index": 10,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.001071001071002442,
+        "latencyMs": 34,
+        "source": 4528,
+        "target": 7738
+      },
+      {
+        "side": "left",
+        "index": 11,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.00041677191209821274,
+        "latencyMs": 94,
+        "source": 4967,
+        "target": 8489
+      },
+      {
+        "side": "left",
+        "index": 12,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.001071001071002442,
+        "latencyMs": 45,
+        "source": 5405,
+        "target": 9238
+      },
+      {
+        "side": "left",
+        "index": 13,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.001071001071002442,
+        "latencyMs": 47,
+        "source": 5844,
+        "target": 9988
+      },
+      {
+        "side": "left",
+        "index": 14,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.001071001071002442,
+        "latencyMs": 45,
+        "source": 6283,
+        "target": 10738
+      },
+      {
+        "side": "left",
+        "index": 15,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.001071001071002442,
+        "latencyMs": 48,
+        "source": 6722,
+        "target": 11488
+      },
+      {
+        "side": "left",
+        "index": 16,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0004167719120999891,
+        "latencyMs": 44,
+        "source": 7161,
+        "target": 12239
+      },
+      {
+        "side": "left",
+        "index": 17,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.00108613286183612,
+        "latencyMs": 47,
+        "source": 7516,
+        "target": 12845
+      },
+      {
+        "side": "left",
+        "index": 18,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.00108613286183612,
+        "latencyMs": 1,
+        "source": 7516,
+        "target": 12845
+      },
+      {
+        "side": "right",
+        "index": 0,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0009345794392523477,
+        "latencyMs": 46,
+        "source": 240,
+        "target": 146
+      },
+      {
+        "side": "right",
+        "index": 1,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0009345794392523477,
+        "latencyMs": 45,
+        "source": 990,
+        "target": 584
+      },
+      {
+        "side": "right",
+        "index": 2,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0009345794392521256,
+        "latencyMs": 47,
+        "source": 1740,
+        "target": 1022
+      },
+      {
+        "side": "right",
+        "index": 3,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0009345794392521256,
+        "latencyMs": 46,
+        "source": 2490,
+        "target": 1460
+      },
+      {
+        "side": "right",
+        "index": 4,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0009345794392521256,
+        "latencyMs": 48,
+        "source": 3240,
+        "target": 1898
+      },
+      {
+        "side": "right",
+        "index": 5,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0009345794392521256,
+        "latencyMs": 45,
+        "source": 3990,
+        "target": 2336
+      },
+      {
+        "side": "right",
+        "index": 6,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0009345794392521256,
+        "latencyMs": 48,
+        "source": 4740,
+        "target": 2774
+      },
+      {
+        "side": "right",
+        "index": 7,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0009345794392521256,
+        "latencyMs": 47,
+        "source": 5490,
+        "target": 3212
+      },
+      {
+        "side": "right",
+        "index": 8,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0016317016317017874,
+        "latencyMs": 43,
+        "source": 6240,
+        "target": 3650
+      },
+      {
+        "side": "right",
+        "index": 9,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0016317016317017874,
+        "latencyMs": 45,
+        "source": 6990,
+        "target": 4089
+      },
+      {
+        "side": "right",
+        "index": 10,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0016317016317017874,
+        "latencyMs": 49,
+        "source": 7740,
+        "target": 4528
+      },
+      {
+        "side": "right",
+        "index": 11,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0009345794392530138,
+        "latencyMs": 46,
+        "source": 8490,
+        "target": 4967
+      },
+      {
+        "side": "right",
+        "index": 12,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0016317016317017874,
+        "latencyMs": 46,
+        "source": 9240,
+        "target": 5405
+      },
+      {
+        "side": "right",
+        "index": 13,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0016317016317017874,
+        "latencyMs": 48,
+        "source": 9990,
+        "target": 5844
+      },
+      {
+        "side": "right",
+        "index": 14,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0016317016317017874,
+        "latencyMs": 47,
+        "source": 10740,
+        "target": 6283
+      },
+      {
+        "side": "right",
+        "index": 15,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0016317016317017874,
+        "latencyMs": 43,
+        "source": 11490,
+        "target": 6722
+      },
+      {
+        "side": "right",
+        "index": 16,
+        "fraction": 0.3,
+        "clipped": false,
+        "error": 0.0009345794392530138,
+        "latencyMs": 51,
+        "source": 12240,
+        "target": 7161
+      },
+      {
+        "side": "right",
+        "index": 17,
+        "fraction": 0.3,
+        "clipped": true,
+        "error": 0.1971962616822438,
+        "latencyMs": 47,
+        "source": 12990,
+        "target": 7515
+      },
+      {
+        "side": "right",
+        "index": 18,
+        "fraction": 0.3,
+        "clipped": true,
+        "error": 0.8012503157362971,
+        "latencyMs": 1,
+        "source": 13437,
+        "target": 7515
+      }
+    ],
+    "latency": [
+      {
+        "side": "left",
+        "index": 9,
+        "fraction": 0.44999999999999996,
+        "clipped": false,
+        "error": 0.0012348012348013526,
+        "latencyMs": 47,
+        "source": 4154,
+        "target": 7100
+      },
+      {
+        "side": "right",
+        "index": 10,
+        "fraction": 0.358,
+        "clipped": false,
+        "error": 0.00011340011340088552,
+        "latencyMs": 47,
+        "source": 7782,
+        "target": 4553
+      },
+      {
+        "side": "left",
+        "index": 11,
+        "fraction": 0.34299999999999997,
+        "clipped": false,
+        "error": 0.0005809547865620601,
+        "latencyMs": 45,
+        "source": 4985,
+        "target": 8520
+      },
+      {
+        "side": "right",
+        "index": 14,
+        "fraction": 0.624,
+        "clipped": false,
+        "error": 0.0005953505953506522,
+        "latencyMs": 47,
+        "source": 10979,
+        "target": 6422
+      },
+      {
+        "side": "left",
+        "index": 1,
+        "fraction": 0.225,
+        "clipped": false,
+        "error": 0.0013260924475877456,
+        "latencyMs": 46,
+        "source": 552,
+        "target": 933
+      },
+      {
+        "side": "right",
+        "index": 13,
+        "fraction": 0.226,
+        "clipped": false,
+        "error": 0.001899451899452842,
+        "latencyMs": 45,
+        "source": 9935,
+        "target": 5812
+      },
+      {
+        "side": "left",
+        "index": 11,
+        "fraction": 0.44799999999999995,
+        "clipped": false,
+        "error": 0.00031573629704517714,
+        "latencyMs": 49,
+        "source": 5030,
+        "target": 8598
+      },
+      {
+        "side": "right",
+        "index": 12,
+        "fraction": 0.623,
+        "clipped": false,
+        "error": 0.0005953505953506522,
+        "latencyMs": 47,
+        "source": 9479,
+        "target": 5544
+      },
+      {
+        "side": "left",
+        "index": 12,
+        "fraction": 0.6749999999999999,
+        "clipped": false,
+        "error": 0.0006867006867015135,
+        "latencyMs": 46,
+        "source": 5566,
+        "target": 9516
+      },
+      {
+        "side": "right",
+        "index": 15,
+        "fraction": 0.473,
+        "clipped": false,
+        "error": 0.0021105021105025656,
+        "latencyMs": 48,
+        "source": 11618,
+        "target": 6796
+      },
+      {
+        "side": "left",
+        "index": 8,
+        "fraction": 0.193,
+        "clipped": false,
+        "error": 0.0006016506016504053,
+        "latencyMs": 47,
+        "source": 3604,
+        "target": 6159
+      },
+      {
+        "side": "right",
+        "index": 3,
+        "fraction": 0.702,
+        "clipped": false,
+        "error": 0.0004167719120991009,
+        "latencyMs": 49,
+        "source": 2787,
+        "target": 1632
+      },
+      {
+        "side": "left",
+        "index": 14,
+        "fraction": 0.6689999999999999,
+        "clipped": false,
+        "error": 7.875007874957873e-05,
+        "latencyMs": 47,
+        "source": 6442,
+        "target": 11013
+      },
+      {
+        "side": "right",
+        "index": 17,
+        "fraction": 0.653,
+        "clipped": true,
+        "error": 0.5498989643849441,
+        "latencyMs": 45,
+        "source": 13251,
+        "target": 7515
+      },
+      {
+        "side": "left",
+        "index": 16,
+        "fraction": 0.66,
+        "clipped": false,
+        "error": 0.0007703965647891664,
+        "latencyMs": 47,
+        "source": 7315,
+        "target": 12505
+      },
+      {
+        "side": "right",
+        "index": 8,
+        "fraction": 0.585,
+        "clipped": false,
+        "error": 0.0010332010332003705,
+        "latencyMs": 47,
+        "source": 6450,
+        "target": 3772
+      },
+      {
+        "side": "left",
+        "index": 9,
+        "fraction": 0.29000000000000004,
+        "clipped": false,
+        "error": 0.0012064512064515753,
+        "latencyMs": 47,
+        "source": 4085,
+        "target": 6981
+      },
+      {
+        "side": "right",
+        "index": 2,
+        "fraction": 0.496,
+        "clipped": false,
+        "error": 0.0006188431422073926,
+        "latencyMs": 47,
+        "source": 1885,
+        "target": 1106
+      },
+      {
+        "side": "left",
+        "index": 17,
+        "fraction": 0.116,
+        "clipped": false,
+        "error": 0.00108613286183612,
+        "latencyMs": 46,
+        "source": 7516,
+        "target": 12845
+      },
+      {
+        "side": "right",
+        "index": 1,
+        "fraction": 0.156,
+        "clipped": false,
+        "error": 0.0011997979287698968,
+        "latencyMs": 46,
+        "source": 883,
+        "target": 522
+      },
+      {
+        "side": "left",
+        "index": 10,
+        "fraction": 0.322,
+        "clipped": false,
+        "error": 5.670005669955458e-05,
+        "latencyMs": 47,
+        "source": 4538,
+        "target": 7756
+      },
+      {
+        "side": "right",
+        "index": 17,
+        "fraction": 0.397,
+        "clipped": true,
+        "error": 0.29314220762818977,
+        "latencyMs": 46,
+        "source": 13061,
+        "target": 7515
+      },
+      {
+        "side": "left",
+        "index": 4,
+        "fraction": 0.549,
+        "clipped": false,
+        "error": 0.0007830260166707959,
+        "latencyMs": 47,
+        "source": 2004,
+        "target": 3422
+      },
+      {
+        "side": "right",
+        "index": 7,
+        "fraction": 0.644,
+        "clipped": false,
+        "error": 0.0007198787572617604,
+        "latencyMs": 45,
+        "source": 5744,
+        "target": 3359
+      },
+      {
+        "side": "left",
+        "index": 2,
+        "fraction": 0.109,
+        "clipped": false,
+        "error": 0.0007198787572622045,
+        "latencyMs": 48,
+        "source": 940,
+        "target": 1597
+      },
+      {
+        "side": "right",
+        "index": 12,
+        "fraction": 0.21600000000000003,
+        "clipped": false,
+        "error": 0.0004126504126507058,
+        "latencyMs": 48,
+        "source": 9177,
+        "target": 5369
+      },
+      {
+        "side": "left",
+        "index": 1,
+        "fraction": 0.203,
+        "clipped": false,
+        "error": 0.0009345794392523477,
+        "latencyMs": 47,
+        "source": 542,
+        "target": 916
+      },
+      {
+        "side": "right",
+        "index": 7,
+        "fraction": 0.14400000000000002,
+        "clipped": false,
+        "error": 0.0007198787572617604,
+        "latencyMs": 49,
+        "source": 5374,
+        "target": 3145
+      },
+      {
+        "side": "left",
+        "index": 14,
+        "fraction": 0.224,
+        "clipped": false,
+        "error": 0.0008032508032496111,
+        "latencyMs": 44,
+        "source": 6251,
+        "target": 10683
+      },
+      {
+        "side": "right",
+        "index": 5,
+        "fraction": 0.778,
+        "clipped": false,
+        "error": 0.0013260924475879676,
+        "latencyMs": 44,
+        "source": 4343,
+        "target": 2540
+      },
+      {
+        "side": "left",
+        "index": 12,
+        "fraction": 0.5630000000000001,
+        "clipped": false,
+        "error": 0.0009607509607505449,
+        "latencyMs": 52,
+        "source": 5518,
+        "target": 9433
+      },
+      {
+        "side": "right",
+        "index": 10,
+        "fraction": 0.6719999999999999,
+        "clipped": false,
+        "error": 0.00029295029295006714,
+        "latencyMs": 44,
+        "source": 8015,
+        "target": 4688
+      },
+      {
+        "side": "left",
+        "index": 12,
+        "fraction": 0.134,
+        "clipped": false,
+        "error": 0.00043470043470072994,
+        "latencyMs": 44,
+        "source": 5334,
+        "target": 9116
+      },
+      {
+        "side": "right",
+        "index": 15,
+        "fraction": 0.638,
+        "clipped": false,
+        "error": 0.0014742014742008536,
+        "latencyMs": 46,
+        "source": 11740,
+        "target": 6867
+      },
+      {
+        "side": "left",
+        "index": 5,
+        "fraction": 0.524,
+        "clipped": false,
+        "error": 0.000391513008335842,
+        "latencyMs": 47,
+        "source": 2432,
+        "target": 4155
+      },
+      {
+        "side": "right",
+        "index": 4,
+        "fraction": 0.581,
+        "clipped": false,
+        "error": 0.00029047739328103006,
+        "latencyMs": 47,
+        "source": 3447,
+        "target": 2018
+      },
+      {
+        "side": "left",
+        "index": 11,
+        "fraction": 0.615,
+        "clipped": false,
+        "error": 0.000972467794897014,
+        "latencyMs": 47,
+        "source": 5102,
+        "target": 8722
+      },
+      {
+        "side": "right",
+        "index": 3,
+        "fraction": 0.6639999999999999,
+        "clipped": false,
+        "error": 0.0022985602424854257,
+        "latencyMs": 47,
+        "source": 2759,
+        "target": 1615
+      },
+      {
+        "side": "left",
+        "index": 1,
+        "fraction": 0.29000000000000004,
+        "clipped": false,
+        "error": 0.0005304369790350982,
+        "latencyMs": 45,
+        "source": 580,
+        "target": 982
+      },
+      {
+        "side": "right",
+        "index": 4,
+        "fraction": 0.46499999999999997,
+        "clipped": false,
+        "error": 0.002248042434958464,
+        "latencyMs": 48,
+        "source": 3362,
+        "target": 1968
+      },
+      {
+        "side": "left",
+        "index": 1,
+        "fraction": 0.499,
+        "clipped": false,
+        "error": 0.000366254104571917,
+        "latencyMs": 44,
+        "source": 669,
+        "target": 1136
+      },
+      {
+        "side": "right",
+        "index": 16,
+        "fraction": 0.536,
+        "clipped": false,
+        "error": 8.840616317229433e-05,
+        "latencyMs": 46,
+        "source": 12414,
+        "target": 7262
+      },
+      {
+        "side": "left",
+        "index": 16,
+        "fraction": 0.482,
+        "clipped": false,
+        "error": 0.00022733013387110645,
+        "latencyMs": 48,
+        "source": 7239,
+        "target": 12374
+      },
+      {
+        "side": "right",
+        "index": 12,
+        "fraction": 0.45399999999999996,
+        "clipped": false,
+        "error": 0.00048825048825129613,
+        "latencyMs": 47,
+        "source": 9353,
+        "target": 5471
+      },
+      {
+        "side": "left",
+        "index": 12,
+        "fraction": 0.359,
+        "clipped": false,
+        "error": 0.0008662508662506951,
+        "latencyMs": 45,
+        "source": 5431,
+        "target": 9283
+      },
+      {
+        "side": "right",
+        "index": 5,
+        "fraction": 0.782,
+        "clipped": false,
+        "error": 0.000707249305380131,
+        "latencyMs": 46,
+        "source": 4346,
+        "target": 2542
+      },
+      {
+        "side": "left",
+        "index": 15,
+        "fraction": 0.41800000000000004,
+        "clipped": false,
+        "error": 0.0010332010332003705,
+        "latencyMs": 48,
+        "source": 6773,
+        "target": 11576
+      },
+      {
+        "side": "right",
+        "index": 7,
+        "fraction": 0.127,
+        "clipped": false,
+        "error": 0.0018438999747409923,
+        "latencyMs": 44,
+        "source": 5361,
+        "target": 3137
+      },
+      {
+        "side": "left",
+        "index": 6,
+        "fraction": 0.109,
+        "clipped": false,
+        "error": 0.0007198787572617604,
+        "latencyMs": 47,
+        "source": 2692,
+        "target": 4597
+      },
+      {
+        "side": "right",
+        "index": 9,
+        "fraction": 0.387,
+        "clipped": false,
+        "error": 0.0018711018711012883,
+        "latencyMs": 46,
+        "source": 7054,
+        "target": 4126
+      },
+      {
+        "side": "left",
+        "index": 13,
+        "fraction": 0.112,
+        "clipped": false,
+        "error": 0.0010773010773004188,
+        "latencyMs": 45,
+        "source": 5764,
+        "target": 9850
+      },
+      {
+        "side": "right",
+        "index": 6,
+        "fraction": 0.14500000000000002,
+        "clipped": false,
+        "error": 0.002071230108612987,
+        "latencyMs": 47,
+        "source": 4625,
+        "target": 2707
+      },
+      {
+        "side": "left",
+        "index": 7,
+        "fraction": 0.41500000000000004,
+        "clipped": false,
+        "error": 3.788835564577653e-05,
+        "latencyMs": 44,
+        "source": 3261,
+        "target": 5574
+      },
+      {
+        "side": "right",
+        "index": 3,
+        "fraction": 0.774,
+        "clipped": false,
+        "error": 0.0019449355897953602,
+        "latencyMs": 35,
+        "source": 2840,
+        "target": 1662
+      },
+      {
+        "side": "left",
+        "index": 5,
+        "fraction": 0.735,
+        "clipped": false,
+        "error": 0.0012124273806515262,
+        "latencyMs": 47,
+        "source": 2522,
+        "target": 4310
+      },
+      {
+        "side": "right",
+        "index": 16,
+        "fraction": 0.45399999999999996,
+        "clipped": false,
+        "error": 0.0017681232634494393,
+        "latencyMs": 46,
+        "source": 12353,
+        "target": 7226
+      },
+      {
+        "side": "left",
+        "index": 15,
+        "fraction": 0.21700000000000003,
+        "clipped": false,
+        "error": 0.0005670005670008749,
+        "latencyMs": 46,
+        "source": 6687,
+        "target": 11428
+      },
+      {
+        "side": "right",
+        "index": 4,
+        "fraction": 0.231,
+        "clipped": false,
+        "error": 0.000757767112907537,
+        "latencyMs": 46,
+        "source": 3188,
+        "target": 1868
+      },
+      {
+        "side": "left",
+        "index": 6,
+        "fraction": 0.536,
+        "clipped": false,
+        "error": 0.001262945188178044,
+        "latencyMs": 48,
+        "source": 2875,
+        "target": 4913
+      },
+      {
+        "side": "right",
+        "index": 4,
+        "fraction": 0.536,
+        "clipped": false,
+        "error": 8.84061631731825e-05,
+        "latencyMs": 46,
+        "source": 3414,
+        "target": 1999
+      },
+      {
+        "side": "left",
+        "index": 15,
+        "fraction": 0.42900000000000005,
+        "clipped": false,
+        "error": 0.0005260505260515913,
+        "latencyMs": 46,
+        "source": 6778,
+        "target": 11585
+      },
+      {
+        "side": "right",
+        "index": 10,
+        "fraction": 0.723,
+        "clipped": false,
+        "error": 0.00036225036225090435,
+        "latencyMs": 48,
+        "source": 8053,
+        "target": 4710
+      },
+      {
+        "side": "left",
+        "index": 10,
+        "fraction": 0.518,
+        "clipped": false,
+        "error": 0.0012663012663001183,
+        "latencyMs": 44,
+        "source": 4622,
+        "target": 7900
+      },
+      {
+        "side": "right",
+        "index": 2,
+        "fraction": 0.718,
+        "clipped": false,
+        "error": 0.0002778479413989565,
+        "latencyMs": 47,
+        "source": 2049,
+        "target": 1201
+      },
+      {
+        "side": "left",
+        "index": 10,
+        "fraction": 0.577,
+        "clipped": false,
+        "error": 8.190008190034348e-05,
+        "latencyMs": 47,
+        "source": 4647,
+        "target": 7944
+      },
+      {
+        "side": "right",
+        "index": 14,
+        "fraction": 0.369,
+        "clipped": false,
+        "error": 0.0006205506205496647,
+        "latencyMs": 47,
+        "source": 10791,
+        "target": 6313
+      },
+      {
+        "side": "left",
+        "index": 8,
+        "fraction": 0.113,
+        "clipped": false,
+        "error": 0.0010773010773004188,
+        "latencyMs": 48,
+        "source": 3570,
+        "target": 6100
+      },
+      {
+        "side": "right",
+        "index": 10,
+        "fraction": 0.277,
+        "clipped": false,
+        "error": 0.0006174006174006763,
+        "latencyMs": 42,
+        "source": 7722,
+        "target": 4518
+      },
+      {
+        "side": "left",
+        "index": 16,
+        "fraction": 0.356,
+        "clipped": false,
+        "error": 0.00108613286183612,
+        "latencyMs": 49,
+        "source": 7185,
+        "target": 12280
+      },
+      {
+        "side": "right",
+        "index": 2,
+        "fraction": 0.509,
+        "clipped": false,
+        "error": 0.001098762313715973,
+        "latencyMs": 45,
+        "source": 1894,
+        "target": 1111
+      },
+      {
+        "side": "left",
+        "index": 3,
+        "fraction": 0.557,
+        "clipped": false,
+        "error": 0.0006693609497343544,
+        "latencyMs": 47,
+        "source": 1570,
+        "target": 2679
+      },
+      {
+        "side": "right",
+        "index": 12,
+        "fraction": 0.651,
+        "clipped": false,
+        "error": 0.001981351981351409,
+        "latencyMs": 33,
+        "source": 9499,
+        "target": 5555
+      },
+      {
+        "side": "left",
+        "index": 13,
+        "fraction": 0.579,
+        "clipped": false,
+        "error": 0.0010615510615519241,
+        "latencyMs": 95,
+        "source": 5964,
+        "target": 10195
+      },
+      {
+        "side": "right",
+        "index": 2,
+        "fraction": 0.6869999999999999,
+        "clipped": false,
+        "error": 0.0019070472341500277,
+        "latencyMs": 47,
+        "source": 2026,
+        "target": 1187
+      },
+      {
+        "side": "left",
+        "index": 9,
+        "fraction": 0.39,
+        "clipped": false,
+        "error": 8.820008820009662e-05,
+        "latencyMs": 46,
+        "source": 4128,
+        "target": 7056
+      },
+      {
+        "side": "right",
+        "index": 2,
+        "fraction": 0.306,
+        "clipped": false,
+        "error": 0.0016670876483964037,
+        "latencyMs": 44,
+        "source": 1744,
+        "target": 1024
+      },
+      {
+        "side": "left",
+        "index": 4,
+        "fraction": 0.44799999999999995,
+        "clipped": false,
+        "error": 0.00031573629704517714,
+        "latencyMs": 35,
+        "source": 1961,
+        "target": 3348
+      },
+      {
+        "side": "right",
+        "index": 7,
+        "fraction": 0.592,
+        "clipped": false,
+        "error": 0.0007703965647891664,
+        "latencyMs": 45,
+        "source": 5706,
+        "target": 3337
+      },
+      {
+        "side": "left",
+        "index": 1,
+        "fraction": 0.621,
+        "clipped": false,
+        "error": 0.00023995958575384613,
+        "latencyMs": 47,
+        "source": 721,
+        "target": 1226
+      },
+      {
+        "side": "right",
+        "index": 2,
+        "fraction": 0.169,
+        "clipped": false,
+        "error": 0.0006946198534985015,
+        "latencyMs": 45,
+        "source": 1643,
+        "target": 966
+      },
+      {
+        "side": "left",
+        "index": 6,
+        "fraction": 0.553,
+        "clipped": false,
+        "error": 5.051780752740598e-05,
+        "latencyMs": 48,
+        "source": 2882,
+        "target": 4926
+      },
+      {
+        "side": "right",
+        "index": 12,
+        "fraction": 0.498,
+        "clipped": false,
+        "error": 0.0007938007938008695,
+        "latencyMs": 46,
+        "source": 9386,
+        "target": 5490
+      },
+      {
+        "side": "left",
+        "index": 6,
+        "fraction": 0.621,
+        "clipped": false,
+        "error": 0.00023995958575451226,
+        "latencyMs": 48,
+        "source": 2911,
+        "target": 4976
+      },
+      {
+        "side": "right",
+        "index": 14,
+        "fraction": 0.549,
+        "clipped": false,
+        "error": 0.0008631008630999304,
+        "latencyMs": 47,
+        "source": 10924,
+        "target": 6390
+      },
+      {
+        "side": "left",
+        "index": 8,
+        "fraction": 0.29300000000000004,
+        "clipped": false,
+        "error": 0.0008347508347519295,
+        "latencyMs": 47,
+        "source": 3647,
+        "target": 6233
+      },
+      {
+        "side": "right",
+        "index": 11,
+        "fraction": 0.615,
+        "clipped": false,
+        "error": 0.00037888355645421257,
+        "latencyMs": 48,
+        "source": 8723,
+        "target": 5102
+      },
+      {
+        "side": "left",
+        "index": 10,
+        "fraction": 0.182,
+        "clipped": false,
+        "error": 0.000737100737101315,
+        "latencyMs": 44,
+        "source": 4478,
+        "target": 7652
+      },
+      {
+        "side": "right",
+        "index": 7,
+        "fraction": 0.54,
+        "clipped": false,
+        "error": 0.0018060116190952158,
+        "latencyMs": 49,
+        "source": 5667,
+        "target": 3314
+      },
+      {
+        "side": "left",
+        "index": 14,
+        "fraction": 0.7,
+        "clipped": false,
+        "error": 0.0006520506520519831,
+        "latencyMs": 46,
+        "source": 6455,
+        "target": 11035
+      },
+      {
+        "side": "right",
+        "index": 14,
+        "fraction": 0.551,
+        "clipped": false,
+        "error": 0.0022144522144529333,
+        "latencyMs": 46,
+        "source": 10925,
+        "target": 6390
+      },
+      {
+        "side": "left",
+        "index": 3,
+        "fraction": 0.601,
+        "clipped": false,
+        "error": 0.0004672897196260628,
+        "latencyMs": 47,
+        "source": 1589,
+        "target": 2712
+      },
+      {
+        "side": "right",
+        "index": 10,
+        "fraction": 0.532,
+        "clipped": false,
+        "error": 0.0019435519435528903,
+        "latencyMs": 47,
+        "source": 7911,
+        "target": 4627
+      },
+      {
+        "side": "left",
+        "index": 3,
+        "fraction": 0.523,
+        "clipped": false,
+        "error": 0.000757767112907537,
+        "latencyMs": 48,
+        "source": 1555,
+        "target": 2653
+      },
+      {
+        "side": "right",
+        "index": 6,
+        "fraction": 0.6639999999999999,
+        "clipped": false,
+        "error": 0.0022985602424858698,
+        "latencyMs": 46,
+        "source": 5009,
+        "target": 2929
+      },
+      {
+        "side": "left",
+        "index": 11,
+        "fraction": 0.716,
+        "clipped": false,
+        "error": 8.840616317229433e-05,
+        "latencyMs": 46,
+        "source": 5145,
+        "target": 8797
+      },
+      {
+        "side": "right",
+        "index": 10,
+        "fraction": 0.42400000000000004,
+        "clipped": false,
+        "error": 0.0010615510615519241,
+        "latencyMs": 47,
+        "source": 7831,
+        "target": 4581
+      },
+      {
+        "side": "left",
+        "index": 12,
+        "fraction": 0.513,
+        "clipped": false,
+        "error": 0.0006583506583499599,
+        "latencyMs": 47,
+        "source": 5497,
+        "target": 9397
+      },
+      {
+        "side": "right",
+        "index": 16,
+        "fraction": 0.716,
+        "clipped": false,
+        "error": 0.0022480424349566874,
+        "latencyMs": 45,
+        "source": 12547,
+        "target": 7338
+      },
+      {
+        "side": "left",
+        "index": 10,
+        "fraction": 0.6809999999999999,
+        "clipped": false,
+        "error": 0.0009229509229520261,
+        "latencyMs": 45,
+        "source": 4692,
+        "target": 8021
+      },
+      {
+        "side": "right",
+        "index": 2,
+        "fraction": 0.7969999999999999,
+        "clipped": false,
+        "error": 0.0015534225814599623,
+        "latencyMs": 46,
+        "source": 2107,
+        "target": 1234
+      },
+      {
+        "side": "left",
+        "index": 6,
+        "fraction": 0.21400000000000002,
+        "clipped": false,
+        "error": 0.00045466026774398927,
+        "latencyMs": 44,
+        "source": 2737,
+        "target": 4675
+      },
+      {
+        "side": "right",
+        "index": 4,
+        "fraction": 0.246,
+        "clipped": false,
+        "error": 0.0006188431422078366,
+        "latencyMs": 47,
+        "source": 3200,
+        "target": 1875
+      },
+      {
+        "side": "left",
+        "index": 14,
+        "fraction": 0.591,
+        "clipped": false,
+        "error": 0.0005544005543995922,
+        "latencyMs": 46,
+        "source": 6408,
+        "target": 10954
+      },
+      {
+        "side": "right",
+        "index": 6,
+        "fraction": 0.561,
+        "clipped": false,
+        "error": 6.314725940903543e-05,
+        "latencyMs": 46,
+        "source": 4933,
+        "target": 2886
+      },
+      {
+        "side": "left",
+        "index": 5,
+        "fraction": 0.37,
+        "clipped": false,
+        "error": 0.00023995958575451226,
+        "latencyMs": 45,
+        "source": 2366,
+        "target": 4041
+      },
+      {
+        "side": "right",
+        "index": 8,
+        "fraction": 0.23800000000000002,
+        "clipped": false,
+        "error": 7.560007559881399e-05,
+        "latencyMs": 47,
+        "source": 6194,
+        "target": 3624
+      },
+      {
+        "side": "left",
+        "index": 1,
+        "fraction": 0.10300000000000001,
+        "clipped": false,
+        "error": 0.00010103561505414582,
+        "latencyMs": 46,
+        "source": 500,
+        "target": 844
+      },
+      {
+        "side": "right",
+        "index": 10,
+        "fraction": 0.21400000000000002,
+        "clipped": false,
+        "error": 0.00139230139230051,
+        "latencyMs": 47,
+        "source": 7676,
+        "target": 4491
+      },
+      {
+        "side": "left",
+        "index": 4,
+        "fraction": 0.34199999999999997,
+        "clipped": false,
+        "error": 0.0005809547865629483,
+        "latencyMs": 46,
+        "source": 1916,
+        "target": 3270
+      },
+      {
+        "side": "right",
+        "index": 11,
+        "fraction": 0.33699999999999997,
+        "clipped": false,
+        "error": 3.788835564400017e-05,
+        "latencyMs": 48,
+        "source": 8517,
+        "target": 4983
+      },
+      {
+        "side": "left",
+        "index": 9,
+        "fraction": 0.2,
+        "clipped": false,
+        "error": 0.0008379008379009178,
+        "latencyMs": 45,
+        "source": 4046,
+        "target": 6914
+      },
+      {
+        "side": "right",
+        "index": 16,
+        "fraction": 0.6669999999999999,
+        "clipped": false,
+        "error": 0.00032836574892769477,
+        "latencyMs": 48,
+        "source": 12511,
+        "target": 7318
+      },
+      {
+        "side": "left",
+        "index": 1,
+        "fraction": 0.6809999999999999,
+        "clipped": false,
+        "error": 0.00017681232634503274,
+        "latencyMs": 47,
+        "source": 747,
+        "target": 1271
+      },
+      {
+        "side": "right",
+        "index": 6,
+        "fraction": 0.20500000000000002,
+        "clipped": false,
+        "error": 0.0007830260166707959,
+        "latencyMs": 46,
+        "source": 4669,
+        "target": 2733
+      },
+      {
+        "side": "left",
+        "index": 6,
+        "fraction": 0.582,
+        "clipped": false,
+        "error": 0.0006946198534985015,
+        "latencyMs": 46,
+        "source": 2895,
+        "target": 4948
+      },
+      {
+        "side": "right",
+        "index": 4,
+        "fraction": 0.28500000000000003,
+        "clipped": false,
+        "error": 0.001073503409952714,
+        "latencyMs": 48,
+        "source": 3228,
+        "target": 1891
+      },
+      {
+        "side": "left",
+        "index": 9,
+        "fraction": 0.491,
+        "clipped": false,
+        "error": 0.0003213003213016208,
+        "latencyMs": 45,
+        "source": 4171,
+        "target": 7130
+      },
+      {
+        "side": "right",
+        "index": 1,
+        "fraction": 0.352,
+        "clipped": false,
+        "error": 0.0008840616317251637,
+        "latencyMs": 48,
+        "source": 1028,
+        "target": 606
+      },
+      {
+        "side": "left",
+        "index": 2,
+        "fraction": 0.14900000000000002,
+        "clipped": false,
+        "error": 0.0012503157362973027,
+        "latencyMs": 46,
+        "source": 957,
+        "target": 1626
+      },
+      {
+        "side": "right",
+        "index": 5,
+        "fraction": 0.619,
+        "clipped": false,
+        "error": 0.002096489012376246,
+        "latencyMs": 47,
+        "source": 4226,
+        "target": 2472
+      }
+    ],
+    "stats": {
+      "applies": 163,
+      "suppressed": 98,
+      "clamped": 4
+    },
+    "measurement": "DOM scrollTop mutation to observed paired scrollTop; normal timers/refresh, no synthetic refresh-driver advancement; not OS input-to-present latency",
+    "nonce": "744cf594-3a74-4612-a6b4-abef2ff51b47",
+    "generatedAt": "2026-11-01T18:07:05.830Z",
+    "scenario": "alignment"
+  },
+  "navigation": {
+    "passed": true,
+    "stage": "native_navigation_and_cleanup",
+    "checks": {
+      "leftNativeNavigation": true,
+      "rightNativeNavigation": true,
+      "disabledIndependent": true,
+      "reenabledAligned": true,
+      "annotationGestureNoReverseJump": true,
+      "nativeHostPreserved": true,
+      "cleanup": true
+    },
+    "actions": [
+      {
+        "side": "left",
+        "name": "first",
+        "distance": 0,
+        "anchor": {
+          "pageIndex": 0,
+          "fraction": 0
+        }
+      },
+      {
+        "side": "left",
+        "name": "next",
+        "distance": 0,
+        "anchor": {
+          "pageIndex": 1,
+          "fraction": 0
+        }
+      },
+      {
+        "side": "left",
+        "name": "last",
+        "distance": 0.00108613286183612,
+        "anchor": {
+          "pageIndex": 17,
+          "fraction": 0.10514018691588785
+        }
+      },
+      {
+        "side": "left",
+        "name": "previous",
+        "distance": 0,
+        "anchor": {
+          "pageIndex": 17,
+          "fraction": 0
+        }
+      },
+      {
+        "side": "right",
+        "name": "first",
+        "distance": 0,
+        "anchor": {
+          "pageIndex": 0,
+          "fraction": 0
+        }
+      },
+      {
+        "side": "right",
+        "name": "next",
+        "distance": 0,
+        "anchor": {
+          "pageIndex": 1,
+          "fraction": 0
+        }
+      },
+      {
+        "side": "right",
+        "name": "last",
+        "distance": 0.8012503157362971,
+        "anchor": {
+          "pageIndex": 17,
+          "fraction": 0.904054054054054
+        }
+      },
+      {
+        "side": "right",
+        "name": "previous",
+        "distance": 0,
+        "anchor": {
+          "pageIndex": 17,
+          "fraction": 0
+        }
+      }
+    ],
+    "nonce": "d223fb8e-a4d4-4719-8f18-4a3078f2dfaa",
+    "generatedAt": "2026-11-01T18:08:45.020Z",
+    "scenario": "navigation"
+  },
+  "zoomModes": {
+    "passed": true,
+    "stage": "native_zoom_modes_resize",
+    "checks": {
+      "zoomResize": true,
+      "translationToOriginalPosition": true,
+      "rebuiltAligned": true,
+      "hostPreserved": true
+    },
+    "cases": [
+      {
+        "action": "left-zoom-in",
+        "error": 5.118755118704854e-05
+      },
+      {
+        "action": "left-page-width",
+        "error": 0.0007830260166707959
+      },
+      {
+        "action": "right-zoom-in",
+        "error": 0.0006311733179780177
+      },
+      {
+        "action": "right-page-width",
+        "error": 0.0011871684768873791
+      },
+      {
+        "action": "resize-1280",
+        "error": 0.0023239917976756175
+      },
+      {
+        "action": "resize-1600",
+        "error": 0.0021722657236669107
+      }
+    ],
+    "translatedAnchor": {
+      "pageIndex": 10,
+      "fraction": 0.24967490247074123
+    },
+    "originalScroll": 4504,
+    "nonce": "a058fa91-cb7c-46c3-a593-4d459a794810",
+    "generatedAt": "2026-11-01T18:11:21.266Z",
+    "scenario": "zoom-modes"
+  },
+  "modeLifecycle": {
+    "passed": true,
+    "stage": "mode_lifecycle",
+    "checks": {
+      "twentySwitches": true,
+      "singlePane": true,
+      "dragResize": true,
+      "nativeHostPreserved": true,
+      "finalModeWins": true,
+      "noPaneAfterOriginal": true,
+      "noQueueLeak": true
+    },
+    "ratio": 0.5668519037472175,
+    "sequence": [
+      "compare",
+      "translation",
+      "original",
+      "compare",
+      "translation",
+      "original",
+      "compare",
+      "translation",
+      "original",
+      "compare",
+      "translation",
+      "original",
+      "compare",
+      "translation",
+      "original",
+      "compare",
+      "translation",
+      "original",
+      "compare",
+      "translation"
+    ],
+    "screenshots": [
+      {
+        "path": "E:\\project\\zotero-doubao-translate\\runtime\\p1-layout-1280x800.png",
+        "width": 1600,
+        "height": 1000,
+        "dpr": 1.25,
+        "method": "gecko-window-global-snapshot",
+        "painting": {
+          "frames": 16,
+          "visiblePagesReady": true,
+          "pending": []
+        },
+        "paint": "test refresh frames flushed; normal refresh restored; not used for timing benchmarks"
+      },
+      {
+        "path": "E:\\project\\zotero-doubao-translate\\runtime\\p1-layout-1600x1000.png",
+        "width": 2000,
+        "height": 1250,
+        "dpr": 1.25,
+        "method": "gecko-window-global-snapshot",
+        "painting": {
+          "frames": 16,
+          "visiblePagesReady": true,
+          "pending": []
+        },
+        "paint": "test refresh frames flushed; normal refresh restored; not used for timing benchmarks"
+      }
+    ],
+    "screenshot": {
+      "path": "E:\\project\\zotero-doubao-translate\\runtime\\p1-mode-restored.png",
+      "width": 2000,
+      "height": 1250,
+      "dpr": 1.25,
+      "method": "gecko-window-global-snapshot",
+      "painting": {
+        "frames": 16,
+        "visiblePagesReady": true,
+        "pending": []
+      },
+      "paint": "test refresh frames flushed; normal refresh restored; not used for timing benchmarks"
+    },
+    "nonce": "45660467-cbb0-4c8a-8d46-277f3bcb83d0",
+    "generatedAt": "2026-11-01T18:09:01.579Z",
+    "scenario": "mode-lifecycle",
+    "visualScreenshot": {
+      "path": "E:\\project\\zotero-doubao-translate\\runtime\\p1-mode-restored.png",
+      "width": 2000,
+      "height": 1250,
+      "dpr": 1.25,
+      "method": "gecko-window-global-snapshot",
+      "painting": {
+        "frames": 16,
+        "visiblePagesReady": true,
+        "pending": []
+      },
+      "paint": "test refresh frames flushed; normal refresh restored; not used for timing benchmarks",
+      "sha256": "23fbb1298f34049d129a2c1ddaff2f24c46e565edc1fc0f9af0463e2a5622067"
+    }
+  },
+  "mismatch": {
+    "passed": true,
+    "stage": "real_two_page_mismatch",
+    "checks": {
+      "pageCountMismatchDetected": true,
+      "buttonDisabled": true,
+      "explanationVisible": true,
+      "noSilentMapping": true
+    },
+    "pageCounts": {
+      "source": 19,
+      "translated": 2
+    },
+    "nonce": "df216038-bb3c-4c27-a1d1-1fd307950fdb",
+    "generatedAt": "2026-11-01T18:03:42.315Z",
+    "scenario": "mismatch"
+  },
+  "annotationAPI": {
+    "passed": true,
+    "stage": "native_api_checks",
+    "checks": {
+      "existingAnnotations": true,
+      "existingPositionUnchanged": true,
+      "createdInOriginal": true,
+      "updatedCommentTagsColor": true,
+      "deletedFromDatabase": true,
+      "retainedOriginalParent": true,
+      "nativeCallbacksPreserved": true,
+      "nativeHostPreserved": true,
+      "dragSerializationOriginalIdentity": true,
+      "copyRichText": true
+    },
+    "fixture": {
+      "libraryID": 1,
+      "parentKey": "NEAJXH8A",
+      "sourceKey": "FUWW2BXI",
+      "translationKey": "94M8Z8IP",
+      "seedKey": "ASRLG9I7",
+      "persistedKey": "T3CUQX83",
+      "noteKey": "TK4AZW59",
+      "externalKey": "U8RH3MMA",
+      "permissionGroupID": 91934633,
+      "permissionParentKey": "Y956UR7V",
+      "permissionSourceKey": "IZQYRLTV",
+      "permissionTranslationKey": "FCDWTUI6"
+    },
+    "annotationCount": 13,
+    "clipboardMimeTypes": [
+      "zotero/annotation",
+      "text/plain",
+      "text/html"
+    ],
+    "screenshot": {
+      "path": "E:\\project\\zotero-doubao-translate\\runtime\\p1-native-annotations.png",
+      "width": 2000,
+      "height": 1250,
+      "dpr": 1.25,
+      "method": "gecko-window-global-snapshot",
+      "painting": {
+        "frames": 16,
+        "visiblePagesReady": true,
+        "pending": []
+      },
+      "paint": "test refresh frames flushed; normal refresh restored; not used for timing benchmarks"
+    },
+    "limits": [
+      "Copy/drag checks cover the native serialization callback; a complete pointer drag into the note editor is not yet tested."
+    ],
+    "nonce": "b1818bca-deab-43b3-94b1-ce4cb525fddb",
+    "generatedAt": "2026-11-01T18:13:04.687Z",
+    "scenario": "annotations-api",
+    "visualScreenshot": {
+      "path": "E:\\project\\zotero-doubao-translate\\runtime\\p1-native-annotations.png",
+      "width": 2000,
+      "height": 1250,
+      "dpr": 1.25,
+      "method": "gecko-window-global-snapshot",
+      "painting": {
+        "frames": 16,
+        "visiblePagesReady": true,
+        "pending": []
+      },
+      "paint": "test refresh frames flushed; normal refresh restored; not used for timing benchmarks",
+      "sha256": "e63b5e7854c759bcfcce0b4adec2b9df09b9d355c3dd0bb550d9ef299d6c441a"
+    }
+  },
+  "engineInput": {
+    "passed": false,
+    "stage": "gecko_engine_input",
+    "results": [
+      {
+        "side": "left",
+        "input": "wheel",
+        "moved": true,
+        "error": 0.0012882040919424131,
+        "events": [
+          {
+            "type": "wheel",
+            "trusted": true,
+            "defaultPrevented": false,
+            "target": ""
+          }
+        ]
+      },
+      {
+        "side": "left",
+        "input": "page-down",
+        "moved": false,
+        "error": 0.0012882040919424131,
+        "events": [
+          {
+            "type": "wheel",
+            "trusted": true,
+            "defaultPrevented": false,
+            "target": ""
+          },
+          {
+            "type": "keydown",
+            "trusted": true,
+            "key": "PageDown",
+            "keyCode": 34,
+            "defaultPrevented": false,
+            "target": "viewerContainer"
+          }
+        ],
+        "focus": "viewerContainer"
+      },
+      {
+        "side": "left",
+        "input": "scrollbar-track",
+        "moved": false,
+        "error": 0.0012882040919424131
+      },
+      {
+        "side": "right",
+        "input": "wheel",
+        "moved": true,
+        "error": 0.0018944177822683983,
+        "events": [
+          {
+            "type": "wheel",
+            "trusted": true,
+            "defaultPrevented": false,
+            "target": ""
+          }
+        ]
+      },
+      {
+        "side": "right",
+        "input": "page-down",
+        "moved": false,
+        "error": 0.0018944177822683983,
+        "events": [
+          {
+            "type": "wheel",
+            "trusted": true,
+            "defaultPrevented": false,
+            "target": ""
+          },
+          {
+            "type": "keydown",
+            "trusted": true,
+            "key": "PageDown",
+            "keyCode": 34,
+            "defaultPrevented": false,
+            "target": ""
+          }
+        ],
+        "focus": ""
+      },
+      {
+        "side": "right",
+        "input": "scrollbar-track",
+        "moved": false,
+        "error": 0.0018944177822683983
+      }
+    ],
+    "method": "Gecko windowUtils events scoped to test PDF frames; no OS input",
+    "nonce": "14ece27f-4eda-4c7a-9481-362a9036e22f",
+    "generatedAt": "2026-11-01T18:02:54.955Z",
+    "scenario": "engine-input"
+  },
+  "layout": {
+    "passed": true,
+    "stage": "continuous_divider_and_maximized_layout",
+    "checks": {
+      "continuousDividerDrag": true,
+      "ratioBounded": true,
+      "maximized": true,
+      "controlsReachable": true,
+      "hostPreserved": true
+    },
+    "ratios": [
+      0.30140568417089403,
+      0.336057551823767,
+      0.37136319300667586,
+      0.40666885913039763,
+      0.4419745003133065,
+      0.47662636796617946,
+      0.5119320340899013,
+      0.5472376503319971,
+      0.5825433164557189,
+      0.6171951841085919,
+      0.6525008502323137,
+      0.6878064664744096
+    ],
+    "screenshot": {
+      "path": "E:\\project\\zotero-doubao-translate\\runtime\\p2-maximized.png",
+      "width": 2578,
+      "height": 1398,
+      "dpr": 1.25,
+      "theme": "dark",
+      "mode": "compare",
+      "method": "gecko-window-global-snapshot"
+    },
+    "nonce": "62a934b4-046f-4ad9-83f0-e0cf048d2b03",
+    "generatedAt": "2026-11-01T18:14:56.462Z",
+    "scenario": "layout-interactions",
+    "visualScreenshot": {
+      "path": "E:\\project\\zotero-doubao-translate\\runtime\\p2-maximized.png",
+      "width": 2578,
+      "height": 1398,
+      "dpr": 1.25,
+      "theme": "dark",
+      "mode": "compare",
+      "method": "gecko-window-global-snapshot",
+      "sha256": "c3de8c3555eb30000d7d7f3af1e21d53a891ba4968af2539919c6cc7fd96ae23"
+    }
+  },
+  "visual": {
+    "passed": true,
+    "stage": "visual_evidence_pending_review",
+    "screenshots": [
+      {
+        "path": "E:\\project\\zotero-doubao-translate\\runtime\\p2-light-compare-1280.png",
+        "width": 1600,
+        "height": 1000,
+        "dpr": 1.25,
+        "theme": "light",
+        "mode": "compare",
+        "windowSize": [
+          1280,
+          800
+        ],
+        "method": "gecko-window-global-snapshot",
+        "toolbarHeight": 144.8000030517578,
+        "sourceWritable": true,
+        "rightReadOnly": true,
+        "limit": "Test refresh only for screenshot; excluded from all latency samples"
+      },
+      {
+        "path": "E:\\project\\zotero-doubao-translate\\runtime\\p2-light-compare-1600.png",
+        "width": 2000,
+        "height": 1250,
+        "dpr": 1.25,
+        "theme": "light",
+        "mode": "compare",
+        "windowSize": [
+          1600,
+          1000
+        ],
+        "method": "gecko-window-global-snapshot",
+        "toolbarHeight": 81,
+        "sourceWritable": true,
+        "rightReadOnly": true,
+        "limit": "Test refresh only for screenshot; excluded from all latency samples"
+      },
+      {
+        "path": "E:\\project\\zotero-doubao-translate\\runtime\\p2-dark-compare-1280.png",
+        "width": 1600,
+        "height": 1000,
+        "dpr": 1.25,
+        "theme": "dark",
+        "mode": "compare",
+        "windowSize": [
+          1280,
+          800
+        ],
+        "method": "gecko-window-global-snapshot",
+        "toolbarHeight": 144.8000030517578,
+        "sourceWritable": true,
+        "rightReadOnly": true,
+        "limit": "Test refresh only for screenshot; excluded from all latency samples"
+      },
+      {
+        "path": "E:\\project\\zotero-doubao-translate\\runtime\\p2-dark-compare-1600.png",
+        "width": 2000,
+        "height": 1250,
+        "dpr": 1.25,
+        "theme": "dark",
+        "mode": "compare",
+        "windowSize": [
+          1600,
+          1000
+        ],
+        "method": "gecko-window-global-snapshot",
+        "toolbarHeight": 81,
+        "sourceWritable": true,
+        "rightReadOnly": true,
+        "limit": "Test refresh only for screenshot; excluded from all latency samples"
+      },
+      {
+        "path": "E:\\project\\zotero-doubao-translate\\runtime\\p2-light-translation.png",
+        "width": 2000,
+        "height": 1250,
+        "dpr": 1.25,
+        "theme": "light",
+        "mode": "translation",
+        "windowSize": [
+          1600,
+          1000
+        ],
+        "method": "gecko-window-global-snapshot",
+        "toolbarHeight": 0,
+        "sourceWritable": true,
+        "rightReadOnly": true,
+        "limit": "Test refresh only for screenshot; excluded from all latency samples"
+      },
+      {
+        "path": "E:\\project\\zotero-doubao-translate\\runtime\\p2-light-original.png",
+        "width": 2000,
+        "height": 1250,
+        "dpr": 1.25,
+        "theme": "light",
+        "mode": "original",
+        "windowSize": [
+          1600,
+          1000
+        ],
+        "method": "gecko-window-global-snapshot",
+        "toolbarHeight": 41,
+        "sourceWritable": true,
+        "limit": "Test refresh only for screenshot; excluded from all latency samples"
+      }
+    ],
+    "screenshot": {
+      "path": "E:\\project\\zotero-doubao-translate\\runtime\\p2-light-compare-1600.png",
+      "width": 2000,
+      "height": 1250,
+      "dpr": 1.25,
+      "theme": "light",
+      "mode": "compare",
+      "windowSize": [
+        1600,
+        1000
+      ],
+      "method": "gecko-window-global-snapshot",
+      "toolbarHeight": 81,
+      "sourceWritable": true,
+      "rightReadOnly": true,
+      "limit": "Test refresh only for screenshot; excluded from all latency samples"
+    },
+    "requiresReview": true,
+    "nonce": "ee5a729f-0c1f-43ff-bf44-50fff628c185",
+    "generatedAt": "2026-11-01T18:16:00.026Z",
+    "scenario": "visual",
+    "visualScreenshot": {
+      "path": "E:\\project\\zotero-doubao-translate\\runtime\\p2-light-compare-1600.png",
+      "width": 2000,
+      "height": 1250,
+      "dpr": 1.25,
+      "theme": "light",
+      "mode": "compare",
+      "windowSize": [
+        1600,
+        1000
+      ],
+      "method": "gecko-window-global-snapshot",
+      "toolbarHeight": 81,
+      "sourceWritable": true,
+      "rightReadOnly": true,
+      "limit": "Test refresh only for screenshot; excluded from all latency samples",
+      "sha256": "25baa12e7444bf2b40b11483504fb9b8d81b2062656ad80dce6cc9659f9fcbc4"
+    }
+  }
+}
