@@ -4,7 +4,9 @@
 
 ## 当前状态
 
-2026-11-01：P0 隔离环境已完成真实启动、重启、截图和关闭状态快照验证；产品插件尚未实现。开发配置仅加载身份/截图测试探针，正式 Zotero 保持运行。此前豆包单次真实下载与候选同步核心模拟测试，不代表 P1–P5 已通过。
+2026-11-02：P0 已完成；P1 已实现保留原文宿主的三模式阅读与可拖分隔条。15 项单元测试、13 组真实集成案例的 76 个断言通过，包含原生批注、权限、重启和禁用恢复及实际 UI 截图。
+
+**P1 尚未验收放行。** 最终保护校验发现日常 Zotero 的 prefs.js 指纹变化、来源未查明；原始基线保持，测试实例已关闭。系统鼠标完整拖入笔记仍未覆盖。滚动联动、豆包 worker、自动下载归档尚未实现。详见 [P1 进度与阻断报告](docs/reports/P1.md)。
 
 ## 项目文件
 
@@ -35,15 +37,15 @@ runtime/                 独立配置、测试库、浏览器状态、任务与�
 artifacts/               测试报告、构建结果；不提交
 ```
 
-addon/src 与 worker/src 尚无产品实现。开发工具已落地，使用 Node 24：
+addon/src 为开发原型，worker/src 尚未实现。开发工具使用 Node 24；当前阻断未解决前不重新启动测试实例：
 
 ```powershell
 npm test
 npm run dev:prepare
-npm run dev:start
 npm run dev:stop
 npm run dev:snapshot
 npm run milestone:check -- P0
+node tools/dev-env.mjs protected-audit
 ```
 
 首次准备创建空配置；启动入口只连接归属已核实的测试进程，临时加载诊断探针并校验实际路径。默认运行环境路径已登记在开发工具中，不适用于其他电脑直接照搬；详见搭建说明。运行数据与凭据不纳入 Git。

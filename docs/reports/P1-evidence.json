@@ -1,0 +1,370 @@
+{
+  "recordedAt": "2026-11-02T00:02:48.249872+08:00",
+  "cases": [
+    {
+      "stage": "native_api_checks",
+      "nonce": "5e797fcb-ed7f-4be9-8c3b-75018287e639",
+      "generatedAt": "2026-11-01T15:56:07.878Z",
+      "checks": {
+        "existingAnnotations": true,
+        "existingPositionUnchanged": true,
+        "createdInOriginal": true,
+        "updatedCommentTagsColor": true,
+        "deletedFromDatabase": true,
+        "retainedOriginalParent": true,
+        "nativeCallbacksPreserved": true,
+        "nativeHostPreserved": true,
+        "dragSerializationOriginalIdentity": true,
+        "copyRichText": true
+      },
+      "archive": "artifacts/p1/5e797fcb-ed7f-4be9-8c3b-75018287e639/report.json",
+      "archiveSha256": "02fa7d311c62326bafeb452386b17782df8bb8cca6d55ca658580d6a2679d074",
+      "limits": [
+        "Copy/drag checks cover the native serialization callback; a complete pointer drag into the note editor is not yet tested."
+      ]
+    },
+    {
+      "stage": "native_six_tool_save_delete",
+      "nonce": "e6fa9d76-4823-4b9c-98ff-586eaf6edeba",
+      "generatedAt": "2026-11-01T12:48:34.011Z",
+      "checks": {
+        "highlight": true,
+        "underline": true,
+        "note": true,
+        "text": true,
+        "image": true,
+        "ink": true,
+        "deletedAll": true
+      },
+      "archive": "artifacts/p1/e6fa9d76-4823-4b9c-98ff-586eaf6edeba/report.json",
+      "archiveSha256": "bde8fe1adc52e51a6a6fb3f7052d80ddd7669ac054304d89981ab34011fbc792",
+      "limits": [
+        "Native manager and save callbacks tested; tool pointer gestures remain separate UI checks."
+      ]
+    },
+    {
+      "stage": "native_permission_checks",
+      "nonce": "1c9abf74-63a7-4f4d-bcd3-242f8dfee997",
+      "generatedAt": "2026-11-01T12:47:03.494Z",
+      "checks": {
+        "externalAnnotationRejected": true,
+        "readOnlyLibraryPreserved": true,
+        "readOnlyCreateRejected": true,
+        "originalStillEditable": true
+      },
+      "archive": "artifacts/p1/1c9abf74-63a7-4f4d-bcd3-242f8dfee997/report.json",
+      "archiveSha256": "c36a839e226853350aa5a0ac974540dc44edc9705c79fc1ec20b3244ccb5759b",
+      "limits": []
+    },
+    {
+      "stage": "native_note_insertion",
+      "nonce": "c492c000-e0a2-482a-b2e7-076cdf8762a6",
+      "generatedAt": "2026-11-01T12:33:33.399Z",
+      "checks": {
+        "nativeNoteSaved": true,
+        "noteLinksOriginal": true,
+        "noteLinksAnnotation": true,
+        "nativeHostPreserved": true
+      },
+      "archive": "artifacts/p1/c492c000-e0a2-482a-b2e7-076cdf8762a6/report.json",
+      "archiveSha256": "249c00dfa09fb1ca8b7f8fb4d4d286cb5b2bf1757c9089ede2b978c2d288a88f",
+      "limits": []
+    },
+    {
+      "stage": "native_dom_drag_drop",
+      "nonce": "74ae3601-f0fe-43e4-a708-fde2c0082759",
+      "generatedAt": "2026-11-01T15:44:20.975Z",
+      "checks": {
+        "nativeDragSerialized": true,
+        "nativeEditorSaved": true,
+        "originalBacklink": true,
+        "annotationBacklink": true
+      },
+      "archive": "artifacts/p1/74ae3601-f0fe-43e4-a708-fde2c0082759/report.json",
+      "archiveSha256": "7d5c99ae09bfe65c521c848123b1c9af856f5fa5b6e31202abdbc33a50a1776f",
+      "limits": [
+        "Native source dragstart and note editor drop handlers exercised with DOM drag events; operating-system pointer drag gesture not covered."
+      ]
+    },
+    {
+      "stage": "native_comment_tag_ui",
+      "nonce": "03721453-3844-420f-9e5b-c667fb5b27e8",
+      "generatedAt": "2026-11-01T15:50:20.619Z",
+      "checks": {
+        "commentSaved": true,
+        "tagSaved": true,
+        "nativePanelInvoked": true,
+        "originalParent": true
+      },
+      "archive": "artifacts/p1/03721453-3844-420f-9e5b-c667fb5b27e8/report.json",
+      "archiveSha256": "b90c78e7df1ac506a191149700caf555dac49b7a7a9cdc977c6674f36c6033bf",
+      "limits": []
+    },
+    {
+      "stage": "persistence",
+      "nonce": "934e40a5-27ad-4b94-beb0-c88b5a4666bb",
+      "generatedAt": "2026-11-01T12:53:25.541Z",
+      "checks": {
+        "databaseOriginalParent": true,
+        "commentColorTags": true,
+        "loadedInNativeReader": true,
+        "noteBacklinks": true,
+        "hostPreserved": true
+      },
+      "archive": "artifacts/p1/934e40a5-27ad-4b94-beb0-c88b5a4666bb/report.json",
+      "archiveSha256": "3cf063e5effb3fc19a8223d0c75bb364d119cf6b060508bf8ba98586f1664499",
+      "limits": []
+    },
+    {
+      "stage": "disable",
+      "nonce": "bf4cb672-5ae3-49ac-8efc-8f2de2a4e84f",
+      "generatedAt": "2026-11-01T15:56:10.773Z",
+      "checks": {
+        "databaseOriginalParent": true,
+        "commentColorTags": true,
+        "loadedInNativeReader": true,
+        "noteBacklinks": true,
+        "hostPreserved": true,
+        "disabled": true,
+        "noPane": true,
+        "noButtons": true,
+        "nativeWritable": true,
+        "annotationPreserved": true
+      },
+      "archive": "artifacts/p1/bf4cb672-5ae3-49ac-8efc-8f2de2a4e84f/report.json",
+      "archiveSha256": "685ba9b557f2ad4894d135d8385ea93882b4367c6638c8a77ea030989abe5cb2",
+      "limits": []
+    },
+    {
+      "stage": "native_close_reopen",
+      "nonce": "2cb68efe-2276-4da5-9aee-79316b134e31",
+      "generatedAt": "2026-11-01T15:54:34.523Z",
+      "checks": {
+        "closedPaneCleaned": true,
+        "closedToolbarCleaned": true,
+        "newNativeReader": true,
+        "annotationLoaded": true,
+        "originalParent": true
+      },
+      "archive": "artifacts/p1/2cb68efe-2276-4da5-9aee-79316b134e31/report.json",
+      "archiveSha256": "f235d392504d528afa7f48aae55ec1b5f62eb64768a421264ae02ae5f82beef0",
+      "limits": []
+    },
+    {
+      "stage": "native_save_failure",
+      "nonce": "4235849d-c910-4fd3-a598-7b4e294273e1",
+      "generatedAt": "2026-11-01T15:52:20.399Z",
+      "checks": {
+        "nativeErrorShown": true,
+        "protectiveReadOnly": true,
+        "notFalselySaved": true,
+        "completionReleased": true
+      },
+      "archive": "artifacts/p1/4235849d-c910-4fd3-a598-7b4e294273e1/report.json",
+      "archiveSha256": "f28b852511805cb8d3c2f2da887d704bbf58a5bfbbe4562d0ba184f138f7f928",
+      "limits": []
+    },
+    {
+      "stage": "mode_lifecycle",
+      "nonce": "7fc5d5e3-7865-408b-bb19-99c665fab202",
+      "generatedAt": "2026-11-01T15:54:47.815Z",
+      "checks": {
+        "twentySwitches": true,
+        "singlePane": true,
+        "dragResize": true,
+        "nativeHostPreserved": true,
+        "finalModeWins": true,
+        "noPaneAfterOriginal": true,
+        "noQueueLeak": true
+      },
+      "archive": "artifacts/p1/7fc5d5e3-7865-408b-bb19-99c665fab202/report.json",
+      "archiveSha256": "b4a028a97dec0a5eafc5b88cc59bdbdba48c58ae594058643f0a77dd10029136",
+      "limits": []
+    },
+    {
+      "stage": "native_engine_pointer_six_tools",
+      "scenario": "pointer-tools",
+      "nonce": "61b83900-2ac4-4f6d-82b8-7e77ef096a2c",
+      "generatedAt": "2026-11-01T15:41:47.361Z",
+      "checks": {
+        "highlight": true,
+        "underline": true,
+        "note": true,
+        "text": true,
+        "image": true,
+        "ink": true
+      },
+      "archive": "artifacts/p1/61b83900-2ac4-4f6d-82b8-7e77ef096a2c/report.json",
+      "archiveSha256": "8dbe223416931367fb5da0f71de446cbc4dfd840c9be0a29af9c4608150f75fc"
+    },
+    {
+      "stage": "native_engine_pointer_six_tools",
+      "scenario": "pointer-tools-original",
+      "nonce": "176c743e-40a3-4c36-a17c-95090e788edc",
+      "generatedAt": "2026-11-01T15:52:41.952Z",
+      "checks": {
+        "highlight": true,
+        "underline": true,
+        "note": true,
+        "text": true,
+        "image": true,
+        "ink": true
+      },
+      "archive": "artifacts/p1/176c743e-40a3-4c36-a17c-95090e788edc/report.json",
+      "archiveSha256": "1e03435169640c4a7a11397413b97e20a8d1968272dfc57f8deff33d1abbaaf5"
+    }
+  ],
+  "passingAssertions": 76,
+  "caseCount": 13,
+  "screenshots": [
+    {
+      "path": "docs/reports/assets/p1-original.png",
+      "sha256": "0534ea9bc932a2c75b58d335201ca5edca7ded04ac024ac8821fff324c3843f1",
+      "width": 2000,
+      "height": 1250,
+      "devicePixelRatio": 1.25,
+      "theme": "dark",
+      "description": "原文单栏，原生批注侧栏与插件模式按钮",
+      "method": "gecko-window-global-snapshot"
+    },
+    {
+      "path": "docs/reports/assets/p1-compare-1280.png",
+      "sha256": "f9e4cd53fff93e5bbb70a027c8171f5cb3e722676c51ce59135794506273a834",
+      "width": 1600,
+      "height": 1000,
+      "devicePixelRatio": 1.25,
+      "theme": "dark",
+      "description": "1280×800 窗口，对照、拖宽后、原生批注和笔记侧栏",
+      "method": "gecko-window-global-snapshot"
+    },
+    {
+      "path": "docs/reports/assets/p1-compare-1600.png",
+      "sha256": "3e2731cddf5a3f196ff7de73a7d70a11d7ec896ea8698e1022cd05b5639fd54f",
+      "width": 2000,
+      "height": 1250,
+      "devicePixelRatio": 1.25,
+      "theme": "dark",
+      "description": "1600×1000 窗口，对照与窄窗格导航行",
+      "method": "gecko-window-global-snapshot"
+    },
+    {
+      "path": "docs/reports/assets/p1-color-menu.png",
+      "sha256": "ea11fb8a59f8546497464b90c11726c2782b6af0dbb6a1afcf5c139a1acaea7f",
+      "width": 2000,
+      "height": 1250,
+      "devicePixelRatio": 1.25,
+      "theme": "dark",
+      "description": "原生颜色菜单，可信指针事件打开",
+      "method": "gecko-window-global-snapshot"
+    },
+    {
+      "path": "docs/reports/assets/p1-tags-widget.png",
+      "sha256": "9263884fd64f4f9f550c7943b79ad1f8c2874a6167ad3e94fd387018694a3e22",
+      "width": 375,
+      "height": 85,
+      "devicePixelRatio": 1.25,
+      "theme": "dark",
+      "description": "原生标签浮窗，按隔离进程归属单独捕获",
+      "method": "owned-native-popup-PrintWindow"
+    },
+    {
+      "path": "docs/reports/assets/p1-native-note-drop.png",
+      "sha256": "f8a1b257b94e25f7ce7502befbfcf4fe003316f2c7abde8fdcb923be27536cec",
+      "width": 2000,
+      "height": 1250,
+      "devicePixelRatio": 1.25,
+      "theme": "dark",
+      "description": "原生拖放处理后保存的笔记与原文、译文",
+      "method": "gecko-window-global-snapshot"
+    },
+    {
+      "path": "docs/reports/assets/p1-disabled.png",
+      "sha256": "399e89cd580552ae3a9a3c4031bb3425fe2f3890e48fc841545d16c420dc448d",
+      "width": 2000,
+      "height": 1250,
+      "devicePixelRatio": 1.25,
+      "theme": "dark",
+      "description": "禁用插件后原生阅读布局与批注保留",
+      "method": "gecko-window-global-snapshot"
+    },
+    {
+      "path": "docs/reports/assets/p1-save-failure.png",
+      "sha256": "dfbac774961b4820798e6141d315dcfcb93d799a234b5edac87d220e18c8ad81",
+      "width": 2000,
+      "height": 1250,
+      "devicePixelRatio": 1.25,
+      "theme": "dark",
+      "description": "注入保存失败，原生红色错误条与保护性只读",
+      "method": "gecko-window-global-snapshot"
+    }
+  ],
+  "protectedAudit": {
+    "observedAt": "2026-11-01T16:01:11.136Z",
+    "passed": false,
+    "files": [
+      {
+        "path": "D:\\D_Applications\\Zotero\\zotero.exe",
+        "baselineExists": true,
+        "baselineSha256": "ca77400c14cb0bb392d23d85e802e3af389dc8b76f9ab6a09414051cbae81b0f",
+        "observedExists": true,
+        "observedSha256": "ca77400c14cb0bb392d23d85e802e3af389dc8b76f9ab6a09414051cbae81b0f",
+        "unchanged": true
+      },
+      {
+        "path": "D:\\D_Applications\\Zotero\\app\\application.ini",
+        "baselineExists": true,
+        "baselineSha256": "5ceacc82b67706f5770c5736faa5f72c8460fbd5e959bd324ed0a47f835d2fbc",
+        "observedExists": true,
+        "observedSha256": "5ceacc82b67706f5770c5736faa5f72c8460fbd5e959bd324ed0a47f835d2fbc",
+        "unchanged": true
+      },
+      {
+        "path": "D:\\D_Applications\\Zotero\\app\\omni.ja",
+        "baselineExists": true,
+        "baselineSha256": "9573f63faaf1d8ddf0baa16d3e7f0d011e6b6d277e0ff8b5ab9b6db069b864a4",
+        "observedExists": true,
+        "observedSha256": "9573f63faaf1d8ddf0baa16d3e7f0d011e6b6d277e0ff8b5ab9b6db069b864a4",
+        "unchanged": true
+      },
+      {
+        "path": "C:\\Users\\18522\\AppData\\Roaming\\Zotero\\Zotero\\Profiles\\jza7s4xb.default\\prefs.js",
+        "baselineExists": true,
+        "baselineSha256": "e507cf55f2ebe2988cd731fbf8ceefb503a1515b61d4deb64e591dc49271b6f2",
+        "observedExists": true,
+        "observedSha256": "f9cd332027c70a4baef2a6f63f2a2aa7dd9039670e4c5ec0a0abc93933de6885",
+        "unchanged": false
+      },
+      {
+        "path": "C:\\Users\\18522\\AppData\\Roaming\\Zotero\\Zotero\\profiles.ini",
+        "baselineExists": true,
+        "baselineSha256": "e6850bde598b5a8f0aa97eef1312a02e15ccd5b032d3feda9342fcaf6d53148e",
+        "observedExists": true,
+        "observedSha256": "e6850bde598b5a8f0aa97eef1312a02e15ccd5b032d3feda9342fcaf6d53148e",
+        "unchanged": true
+      },
+      {
+        "path": "C:\\Users\\18522\\AppData\\Roaming\\Microsoft\\Word\\STARTUP\\Zotero.dotm",
+        "baselineExists": true,
+        "baselineSha256": "5b502497ac15bc1afdc408a0c2a7f9e70e6c8c417a08ff83f7b2a1974096b6ec",
+        "observedExists": true,
+        "observedSha256": "5b502497ac15bc1afdc408a0c2a7f9e70e6c8c417a08ff83f7b2a1974096b6ec",
+        "unchanged": true
+      }
+    ]
+  },
+  "shutdown": {
+    "observedAt": "2026-11-02T00:00:00+08:00",
+    "testParentClosed": true,
+    "debugPort61357Closed": true,
+    "productionParentPID": 44468,
+    "productionParentAlive": true
+  },
+  "build": {
+    "file": "E:\\project\\zotero-doubao-translate\\dist\\doubao-translate-dev-57e05eff22750f9b.xpi",
+    "filename": "doubao-translate-dev-57e05eff22750f9b.xpi",
+    "version": "0.1.0",
+    "entries": 5,
+    "bytes": 18758,
+    "sha256": "57e05eff22750f9b3f8a85d1608d6f1f09a4b793fc222716cb1011392b7a3575"
+  }
+}

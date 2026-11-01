@@ -30,6 +30,7 @@ async function runProbe() {
   const request = await IOUtils.readJSON(requestPath);
   const bool = name => Services.prefs.getBoolPref(name, false);
   const win = Zotero.getMainWindow();
+  if (win) win.docShell.browsingContext.isActive = true;
   if (win) win.document.title = '[DEV TEST LIBRARY] Zotero — Doubao plugin development';
   if (win && !win.document.getElementById('doubao-dev-badge')) {
     const badge = win.document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
@@ -75,6 +76,28 @@ async function runProbe() {
     if (stopped) return;
     try {
       const command = await IOUtils.readJSON(requestPath);
+      if (command.runId === request.runId && command.action === 'run-suite' && command.suite === 'p1-reader' && !globalThis.__doubaoSuiteBusy) {
+        globalThis.__doubaoSuiteBusy = true;
+        try {
+          const projectRoot = PathUtils.parent(root);
+          const suiteFile = Zotero.File.pathToFile(PathUtils.join(projectRoot, 'tests', 'integration', 'p1-reader.js'));
+          const scope = { Zotero, Services, Components, ChromeUtils, IOUtils, PathUtils };
+          Services.scriptloader.loadSubScriptWithOptions(Services.io.newFileURI(suiteFile).spec, {target:scope,ignoreCache:true});
+          const controller = new win.AbortController();
+          let deadline;
+          const work = scope.runP1({ root: projectRoot, runtime: root, action: command.scenario || 'inspect', timers: timerAPI, nonce: command.nonce, signal:controller.signal });
+          let result;
+          try {
+            result = await Promise.race([work,new Promise((_,reject) => { deadline=timerAPI.setTimeout(() => {controller.abort();reject(new Error('P1 suite exceeded its deadline'));},80000); })]);
+          } finally { timerAPI.clearTimeout(deadline); }
+          await IOUtils.writeJSON(PathUtils.join(root, 'p1-report.json'), { ...result, nonce: command.nonce, generatedAt: new Date().toISOString() });
+        } catch (error) {
+          await IOUtils.writeJSON(PathUtils.join(root, 'p1-report.json'), { passed: false, nonce: command.nonce, error: String(error), stack: error.stack });
+        } finally {
+          await IOUtils.writeJSON(requestPath, { runId: request.runId, action: 'observe' });
+          globalThis.__doubaoSuiteBusy = false;
+        }
+      }
       if (command.runId === request.runId && command.action === 'quit') {
         stopped = true;
         timerAPI.clearInterval(timer);

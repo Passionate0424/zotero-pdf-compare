@@ -3,11 +3,47 @@
   "baselineTag": "baseline-plan",
   "acceptanceDocument": "docs/ACCEPTANCE.md",
   "milestones": [
-    {"id":"P0","title":"隔离基线","status":"completed","tag":"milestone/p0","report":"docs/reports/P0.json"},
-    {"id":"P1","title":"原生批注","status":"pending","tag":"milestone/p1","report":null},
-    {"id":"P2","title":"三模式与联动","status":"pending","tag":"milestone/p2","report":null},
-    {"id":"P3","title":"豆包任务","status":"pending","tag":"milestone/p3","report":null},
-    {"id":"P4","title":"完整归档","status":"pending","tag":"milestone/p4","report":null},
-    {"id":"P5","title":"回退交付","status":"pending","tag":"milestone/p5","report":null}
+    {
+      "id": "P0",
+      "title": "隔离基线",
+      "status": "completed",
+      "tag": "milestone/p0",
+      "report": "docs/reports/P0.json"
+    },
+    {
+      "id": "P1",
+      "title": "原生批注",
+      "status": "in_progress",
+      "tag": "milestone/p1",
+      "report": "docs/reports/P1.json"
+    },
+    {
+      "id": "P2",
+      "title": "三模式与联动",
+      "status": "pending",
+      "tag": "milestone/p2",
+      "report": null
+    },
+    {
+      "id": "P3",
+      "title": "豆包任务",
+      "status": "pending",
+      "tag": "milestone/p3",
+      "report": null
+    },
+    {
+      "id": "P4",
+      "title": "完整归档",
+      "status": "pending",
+      "tag": "milestone/p4",
+      "report": null
+    },
+    {
+      "id": "P5",
+      "title": "回退交付",
+      "status": "pending",
+      "tag": "milestone/p5",
+      "report": null
+    }
   ]
 }

@@ -1,3 +1,8 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {fileURLToPath} from 'node:url';
+import {rejectLinks} from './lib/path-guard.mjs';
 import net from 'node:net';
 import { execFileSync } from 'node:child_process';
 
@@ -44,9 +49,18 @@ try {
   console.log('CONNECTED', JSON.stringify({ pid: owner.PID, applicationType: hello.applicationType }));
   const root = await send({ to: 'root', type: 'getRoot' });
   console.log('ROOT', JSON.stringify(root));
-  if (process.argv[2] === 'install-probe') {
+  if (['install-probe', 'install-product', 'install-product-xpi'].includes(process.argv[2])) {
     if (!root.addonsActor) throw new Error('No addons actor');
-    const installed = await send({ to: root.addonsActor, type: 'installTemporaryAddon', addonPath: 'E:\\project\\zotero-doubao-translate\\tools\\probe-addon' });
+    const rootPath=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+    let addonPath=path.join(rootPath,process.argv[2]==='install-probe'?'tools/probe-addon':'addon');
+    if(process.argv[2]==='install-product-xpi'){
+      const marker=path.join(rootPath,'dist','current-dev-build.json');rejectLinks(marker);
+      const build=JSON.parse(fs.readFileSync(marker,'utf8'));
+      if(!/^doubao-translate-dev-[a-f0-9]{16}\.xpi$/.test(build.filename))throw new Error('Invalid build filename');
+      addonPath=path.join(rootPath,'dist',build.filename);rejectLinks(addonPath);
+      if(crypto.createHash('sha256').update(fs.readFileSync(addonPath)).digest('hex')!==build.sha256)throw new Error('Build hash mismatch');
+    }
+    const installed = await send({ to: root.addonsActor, type: 'installTemporaryAddon', addonPath });
     console.log('INSTALL', JSON.stringify(installed));
     if (installed.error) throw new Error(installed.message);
   }

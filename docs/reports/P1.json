@@ -1,0 +1,138 @@
+{
+  "milestone": "P1",
+  "status": "in_progress",
+  "recordedAt": "2026-11-02T00:02:48.249872+08:00",
+  "zoteroVersion": "10.0.7",
+  "checks": {
+    "nativeHostPreserved": true,
+    "existingAnnotations": true,
+    "annotationCRUD": true,
+    "annotationTagsComments": true,
+    "restartPersistence": true,
+    "disablePersistence": true,
+    "permissions": true,
+    "UI-01": true,
+    "UI-03": true,
+    "isolationAudit": false,
+    "addToNoteCopyDrag": false,
+    "UI-04": false
+  },
+  "unitTests": {
+    "passed": 15,
+    "failed": 0,
+    "skipped": 0
+  },
+  "integration": {
+    "cases": 13,
+    "passingAssertions": 76,
+    "scope": "Selected passing cases; negative experiments and uncovered steps listed in P1.md."
+  },
+  "evidence": [
+    "docs/reports/P1-evidence.json",
+    "docs/reports/P1.md",
+    "docs/reports/assets/p1-original.png",
+    "docs/reports/assets/p1-compare-1280.png",
+    "docs/reports/assets/p1-compare-1600.png",
+    "docs/reports/assets/p1-color-menu.png",
+    "docs/reports/assets/p1-tags-widget.png",
+    "docs/reports/assets/p1-native-note-drop.png",
+    "docs/reports/assets/p1-disabled.png",
+    "docs/reports/assets/p1-save-failure.png"
+  ],
+  "visualReview": {
+    "status": "partial",
+    "screenshots": [
+      {
+        "path": "docs/reports/assets/p1-original.png",
+        "sha256": "0534ea9bc932a2c75b58d335201ca5edca7ded04ac024ac8821fff324c3843f1",
+        "width": 2000,
+        "height": 1250,
+        "devicePixelRatio": 1.25,
+        "theme": "dark",
+        "description": "原文单栏，原生批注侧栏与插件模式按钮",
+        "method": "gecko-window-global-snapshot"
+      },
+      {
+        "path": "docs/reports/assets/p1-compare-1280.png",
+        "sha256": "f9e4cd53fff93e5bbb70a027c8171f5cb3e722676c51ce59135794506273a834",
+        "width": 1600,
+        "height": 1000,
+        "devicePixelRatio": 1.25,
+        "theme": "dark",
+        "description": "1280×800 窗口，对照、拖宽后、原生批注和笔记侧栏",
+        "method": "gecko-window-global-snapshot"
+      },
+      {
+        "path": "docs/reports/assets/p1-compare-1600.png",
+        "sha256": "3e2731cddf5a3f196ff7de73a7d70a11d7ec896ea8698e1022cd05b5639fd54f",
+        "width": 2000,
+        "height": 1250,
+        "devicePixelRatio": 1.25,
+        "theme": "dark",
+        "description": "1600×1000 窗口，对照与窄窗格导航行",
+        "method": "gecko-window-global-snapshot"
+      },
+      {
+        "path": "docs/reports/assets/p1-color-menu.png",
+        "sha256": "ea11fb8a59f8546497464b90c11726c2782b6af0dbb6a1afcf5c139a1acaea7f",
+        "width": 2000,
+        "height": 1250,
+        "devicePixelRatio": 1.25,
+        "theme": "dark",
+        "description": "原生颜色菜单，可信指针事件打开",
+        "method": "gecko-window-global-snapshot"
+      },
+      {
+        "path": "docs/reports/assets/p1-tags-widget.png",
+        "sha256": "9263884fd64f4f9f550c7943b79ad1f8c2874a6167ad3e94fd387018694a3e22",
+        "width": 375,
+        "height": 85,
+        "devicePixelRatio": 1.25,
+        "theme": "dark",
+        "description": "原生标签浮窗，按隔离进程归属单独捕获",
+        "method": "owned-native-popup-PrintWindow"
+      },
+      {
+        "path": "docs/reports/assets/p1-native-note-drop.png",
+        "sha256": "f8a1b257b94e25f7ce7502befbfcf4fe003316f2c7abde8fdcb923be27536cec",
+        "width": 2000,
+        "height": 1250,
+        "devicePixelRatio": 1.25,
+        "theme": "dark",
+        "description": "原生拖放处理后保存的笔记与原文、译文",
+        "method": "gecko-window-global-snapshot"
+      },
+      {
+        "path": "docs/reports/assets/p1-disabled.png",
+        "sha256": "399e89cd580552ae3a9a3c4031bb3425fe2f3890e48fc841545d16c420dc448d",
+        "width": 2000,
+        "height": 1250,
+        "devicePixelRatio": 1.25,
+        "theme": "dark",
+        "description": "禁用插件后原生阅读布局与批注保留",
+        "method": "gecko-window-global-snapshot"
+      },
+      {
+        "path": "docs/reports/assets/p1-save-failure.png",
+        "sha256": "dfbac774961b4820798e6141d315dcfcb93d799a234b5edac87d220e18c8ad81",
+        "width": 2000,
+        "height": 1250,
+        "devicePixelRatio": 1.25,
+        "theme": "dark",
+        "description": "注入保存失败，原生红色错误条与保护性只读",
+        "method": "gecko-window-global-snapshot"
+      }
+    ],
+    "findings": "原文、对照、颜色菜单、标签浮窗、笔记与禁用恢复已查看。1280×800 与 1600×1000 的窄栏导航换行已修复。UI-03 本阶段仅布局/分隔条，页内同步对齐仍属 P2；操作系统鼠标完整拖拽及其焦点交互未覆盖，UI-04 不标全通过。"
+  },
+  "blockers": [
+    "Protected production prefs.js changed at 2026-11-01 23:49:28.500911; source of write is not attributable from a hash-only baseline. User reports no interaction. Original baseline retained; test process closed.",
+    "Native dragstart/drop handlers and original backlinks pass, but an OS pointer drag into the note editor has not been covered."
+  ],
+  "limits": [
+    "Development XPI loads only in registered test profile/data; not a release.",
+    "Doubao worker, automatic import and synchronized scrolling are not implemented.",
+    "Original managed ReaderTab preserved; translation is read-only and the tested exported PDF has no text layer.",
+    "No OS-wide write audit or production-library full backup is claimed."
+  ]
+}

@@ -4,6 +4,7 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { spawn, execFileSync } from 'node:child_process';
 import { assertWritableTarget, rejectLinks } from './lib/path-guard.mjs';
+import { auditProtectedFiles } from './lib/protected-audit.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const runtime = path.join(root, 'runtime');
@@ -112,6 +113,11 @@ function prepare() {
 
 function start() {
   const c = config();
+  const initialBaselinePath = path.join(runtime,'protected-baseline.json');
+  if (fs.existsSync(initialBaselinePath)) {
+    const drift = auditProtectedFiles(readJSON(initialBaselinePath).files).filter(file=>!file.unchanged);
+    if (drift.length) throw new Error(`Protected baseline drift in ${drift.length} file(s); no test process started. Resolve the audit without resetting the baseline.`);
+  }
   const before = getProcesses();
   if (before.some(p => (p.CommandLine || '').toLowerCase().includes(c.profile.toLowerCase()))) throw new Error('Test instance already running.');
   const portOwner = execFileSync('powershell.exe', ['-NoProfile', '-Command', "Get-NetTCPConnection -State Listen -ErrorAction Stop | Where-Object { $_.LocalPort -eq 61357 } | Select-Object -ExpandProperty OwningProcess"], { encoding: 'utf8', windowsHide: true }).trim();
@@ -130,7 +136,8 @@ function start() {
   const logPath = path.join(runtime, 'logs', `${runId}.log`);
   const log = fs.openSync(logPath, 'wx');
   const args = ['-no-remote', '-profile', c.profile, '-datadir', c.data, '-ZoteroDebugText', '-start-debugger-server', '61357'];
-  const child = spawn(c.zotero, args, { detached: true, stdio: ['ignore', log, log], windowsHide: true });
+  // This is an interactive UI test app, not a hidden helper console.
+  const child = spawn(c.zotero, args, { detached: true, stdio: ['ignore', log, log], windowsHide: false });
   fs.closeSync(log);
   child.unref();
   if (!child.pid) throw new Error('Zotero failed to launch.');
@@ -152,7 +159,7 @@ function verify() {
   if (Number(probe.pid) !== parent.ProcessId) throw new Error('Probe PID does not match actual test process.');
   const preservedProcesses = before.processes.filter(p => !p.CommandLine?.includes('-contentproc')).map(p => ({ pid: p.ProcessId, alive: processes.some(q => q.ProcessId === p.ProcessId) }));
   const baseline = readJSON(path.join(runtime, 'protected-baseline.json'));
-  const files = baseline.files.map(p => ({ ...p, unchanged: fs.existsSync(p.path) === p.exists && (!p.exists || hash(p.path) === p.sha256) }));
+  const files = auditProtectedFiles(baseline.files);
   const checks = {
     actualProfile: true, actualData: true, parentProcess: true,
     noAccount: probe.userID == null || probe.userID === false || probe.userID === 0,
@@ -162,13 +169,22 @@ function verify() {
     productionProcessesPreserved: preservedProcesses.every(p => p.alive),
     protectedFilesUnchanged: files.every(p => p.unchanged),
     nativeDatabaseCreated: fs.existsSync(path.join(c.data, 'zotero.sqlite')),
-    emptyLibrary: probe.itemCount === 0,
     screenshot: probe.screenshot?.ok === true,
   };
+  if (c.libraryStage === 'p1-fixture') checks.testLibraryRegistered = true;
+  else checks.emptyLibrary = probe.itemCount === 0;
   const result = { runId: launch.runId, verifiedAt: new Date().toISOString(), passed: Object.values(checks).every(Boolean), checks, preservedProcesses, files, probe };
   writeJSON(path.join(runtime, 'verification.json'), result);
   if (!result.passed) throw new Error(`Isolation verification failed: ${JSON.stringify(checks)}`);
   return { runId: result.runId, passed: result.passed, checks };
+}
+
+function beginP1() {
+  const c = config();
+  if (findTestParent(getProcesses(), c)) throw new Error('Close test instance before registering the P1 fixture library.');
+  c.libraryStage = 'p1-fixture';
+  writeJSON(marker, c);
+  return { libraryStage: c.libraryStage, note: 'The same owned test library may now contain public fixtures and test annotations.' };
 }
 
 function stop() {
@@ -219,7 +235,17 @@ function snapshot() {
   return { destination, filesVerified: files.length };
 }
 
-const commands = { prepare, refresh, check: () => ({ ...config(), processes: getProcesses() }), start, verify, stop, snapshot };
+function protectedAudit() {
+  config();
+  const baseline=readJSON(path.join(runtime,'protected-baseline.json'));
+  const files=auditProtectedFiles(baseline.files);
+  const result={observedAt:new Date().toISOString(),passed:files.every(file=>file.unchanged),files};
+  writeJSON(path.join(runtime,'protected-audit.json'),result);
+  if(!result.passed)process.exitCode=1;
+  return result;
+}
+
+const commands = { 'protected-audit': protectedAudit, prepare, refresh, 'begin-p1': beginP1, check: () => ({ ...config(), processes: getProcesses() }), start, verify, stop, snapshot };
 const command = process.argv[2];
 try {
   if (!commands[command]) throw new Error('Use prepare, refresh, check, start, verify, stop, or snapshot.');
