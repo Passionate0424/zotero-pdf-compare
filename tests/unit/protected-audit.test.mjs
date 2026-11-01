@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import {auditProtectedFiles} from '../../tools/lib/protected-audit.mjs';
+import {auditProtectedFiles,assessHistoricalAudit} from '../../tools/lib/protected-audit.mjs';
 test('drift report preserves the original hash and records the different observed hash',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'doubao-audit-'));
   try{
@@ -18,4 +18,14 @@ test('drift report preserves the original hash and records the different observe
     fs.unlinkSync(file);const removed=auditProtectedFiles(baseline)[0];
     assert.equal(removed.unchanged,false);assert.equal(removed.observedSha256,null);
   }finally{fs.rmSync(path.join(dir,'owned-test-file'),{force:true});fs.rmdirSync(dir);}
+});
+
+test('only the named existing historical config can be accepted',()=>{
+  const prefs='C:/formal/prefs.js';
+  const changed={path:prefs,baselineExists:true,observedExists:true,unchanged:false};
+  assert.equal(assessHistoricalAudit([changed],prefs).passed,true);
+  assert.equal(assessHistoricalAudit([{...changed,path:'C:/other/prefs.js'}],prefs).passed,false);
+  assert.equal(assessHistoricalAudit([{...changed,observedExists:false}],prefs).passed,false);
+  assert.equal(assessHistoricalAudit([{...changed,path:'D:/Zotero/zotero.exe'}],prefs).passed,false);
+  assert.equal(changed.unchanged,false);
 });

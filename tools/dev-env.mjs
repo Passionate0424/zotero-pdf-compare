@@ -4,7 +4,7 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { spawn, execFileSync } from 'node:child_process';
 import { assertWritableTarget, rejectLinks } from './lib/path-guard.mjs';
-import { auditProtectedFiles } from './lib/protected-audit.mjs';
+import { auditProtectedFiles, assessHistoricalAudit } from './lib/protected-audit.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const runtime = path.join(root, 'runtime');
@@ -12,6 +12,8 @@ const marker = path.join(runtime, 'environment.local.json');
 const projectId = 'zotero-doubao-translate-dev-v1';
 const zotero = 'D:\\D_Applications\\Zotero\\zotero.exe';
 const formalProfile = path.join(process.env.APPDATA, 'Zotero', 'Zotero', 'Profiles', 'jza7s4xb.default');
+// User accepted pre-existing prefs drift on 2026-11-02; see docs/ISOLATION_DECISIONS.md.
+const acceptedHistoricalConfig = path.join(formalProfile,'prefs.js');
 const protectedPaths = ['D:\\Zoterodata', path.dirname(zotero), formalProfile];
 const prefValues = {
   'extensions.zotero.useDataDir': true,
@@ -115,8 +117,8 @@ function start() {
   const c = config();
   const initialBaselinePath = path.join(runtime,'protected-baseline.json');
   if (fs.existsSync(initialBaselinePath)) {
-    const drift = auditProtectedFiles(readJSON(initialBaselinePath).files).filter(file=>!file.unchanged);
-    if (drift.length) throw new Error(`Protected baseline drift in ${drift.length} file(s); no test process started. Resolve the audit without resetting the baseline.`);
+    const audit = assessHistoricalAudit(auditProtectedFiles(readJSON(initialBaselinePath).files),acceptedHistoricalConfig);
+    if (!audit.passed) throw new Error(`Unaccepted protected baseline drift in ${audit.blockingDrift.length} file(s); no test process started.`);
   }
   const before = getProcesses();
   if (before.some(p => (p.CommandLine || '').toLowerCase().includes(c.profile.toLowerCase()))) throw new Error('Test instance already running.');
@@ -159,7 +161,9 @@ function verify() {
   if (Number(probe.pid) !== parent.ProcessId) throw new Error('Probe PID does not match actual test process.');
   const preservedProcesses = before.processes.filter(p => !p.CommandLine?.includes('-contentproc')).map(p => ({ pid: p.ProcessId, alive: processes.some(q => q.ProcessId === p.ProcessId) }));
   const baseline = readJSON(path.join(runtime, 'protected-baseline.json'));
-  const files = auditProtectedFiles(baseline.files);
+  const initialBaselineFiles = auditProtectedFiles(baseline.files);
+  const initialBaselineAudit = assessHistoricalAudit(initialBaselineFiles,acceptedHistoricalConfig);
+  const files = auditProtectedFiles(before.files);
   const checks = {
     actualProfile: true, actualData: true, parentProcess: true,
     noAccount: probe.userID == null || probe.userID === false || probe.userID === 0,
@@ -168,12 +172,13 @@ function verify() {
     wordInstallSkipped: probe.wordSkip === true && probe.libreOfficeSkip === true,
     productionProcessesPreserved: preservedProcesses.every(p => p.alive),
     protectedFilesUnchanged: files.every(p => p.unchanged),
+    initialBaselinePolicy: initialBaselineAudit.passed,
     nativeDatabaseCreated: fs.existsSync(path.join(c.data, 'zotero.sqlite')),
     screenshot: probe.screenshot?.ok === true,
   };
   if (c.libraryStage === 'p1-fixture') checks.testLibraryRegistered = true;
   else checks.emptyLibrary = probe.itemCount === 0;
-  const result = { runId: launch.runId, verifiedAt: new Date().toISOString(), passed: Object.values(checks).every(Boolean), checks, preservedProcesses, files, probe };
+  const result = { runId: launch.runId, verifiedAt: new Date().toISOString(), passed: Object.values(checks).every(Boolean), checks, preservedProcesses, files, initialBaselineFiles, initialBaselineAudit, comparisonScope:'files compare against this run start; initial baseline retained separately', probe };
   writeJSON(path.join(runtime, 'verification.json'), result);
   if (!result.passed) throw new Error(`Isolation verification failed: ${JSON.stringify(checks)}`);
   return { runId: result.runId, passed: result.passed, checks };
@@ -239,7 +244,8 @@ function protectedAudit() {
   config();
   const baseline=readJSON(path.join(runtime,'protected-baseline.json'));
   const files=auditProtectedFiles(baseline.files);
-  const result={observedAt:new Date().toISOString(),passed:files.every(file=>file.unchanged),files};
+  const policy=assessHistoricalAudit(files,acceptedHistoricalConfig);
+  const result={observedAt:new Date().toISOString(),...policy,initialBaselineUnchanged:files.every(file=>file.unchanged),files,decision:'2026-11-02 user accepted historical prefs.js drift; cause not verified; in-run comparisons remain strict'};
   writeJSON(path.join(runtime,'protected-audit.json'),result);
   if(!result.passed)process.exitCode=1;
   return result;

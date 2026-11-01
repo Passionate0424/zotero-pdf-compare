@@ -1,0 +1,142 @@
+{
+  "runId": "ba8239bb-5ed3-4e71-9e63-847f1befda62",
+  "verifiedAt": "2026-11-01T16:20:31.822Z",
+  "passed": true,
+  "checks": {
+    "actualProfile": true,
+    "actualData": true,
+    "parentProcess": true,
+    "noAccount": true,
+    "syncOff": true,
+    "connectorOff": true,
+    "wordInstallSkipped": true,
+    "productionProcessesPreserved": true,
+    "protectedFilesUnchanged": true,
+    "initialBaselinePolicy": true,
+    "nativeDatabaseCreated": true,
+    "screenshot": true,
+    "testLibraryRegistered": true
+  },
+  "preservedProcesses": [
+    {
+      "pid": 44468,
+      "alive": true
+    }
+  ],
+  "files": [
+    {
+      "path": "D:\\D_Applications\\Zotero\\zotero.exe",
+      "baselineExists": true,
+      "baselineSha256": "ca77400c14cb0bb392d23d85e802e3af389dc8b76f9ab6a09414051cbae81b0f",
+      "observedExists": true,
+      "observedSha256": "ca77400c14cb0bb392d23d85e802e3af389dc8b76f9ab6a09414051cbae81b0f",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\D_Applications\\Zotero\\app\\application.ini",
+      "baselineExists": true,
+      "baselineSha256": "5ceacc82b67706f5770c5736faa5f72c8460fbd5e959bd324ed0a47f835d2fbc",
+      "observedExists": true,
+      "observedSha256": "5ceacc82b67706f5770c5736faa5f72c8460fbd5e959bd324ed0a47f835d2fbc",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\D_Applications\\Zotero\\app\\omni.ja",
+      "baselineExists": true,
+      "baselineSha256": "9573f63faaf1d8ddf0baa16d3e7f0d011e6b6d277e0ff8b5ab9b6db069b864a4",
+      "observedExists": true,
+      "observedSha256": "9573f63faaf1d8ddf0baa16d3e7f0d011e6b6d277e0ff8b5ab9b6db069b864a4",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\Users\\18522\\AppData\\Roaming\\Zotero\\Zotero\\Profiles\\jza7s4xb.default\\prefs.js",
+      "baselineExists": true,
+      "baselineSha256": "f9cd332027c70a4baef2a6f63f2a2aa7dd9039670e4c5ec0a0abc93933de6885",
+      "observedExists": true,
+      "observedSha256": "f9cd332027c70a4baef2a6f63f2a2aa7dd9039670e4c5ec0a0abc93933de6885",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\Users\\18522\\AppData\\Roaming\\Zotero\\Zotero\\profiles.ini",
+      "baselineExists": true,
+      "baselineSha256": "e6850bde598b5a8f0aa97eef1312a02e15ccd5b032d3feda9342fcaf6d53148e",
+      "observedExists": true,
+      "observedSha256": "e6850bde598b5a8f0aa97eef1312a02e15ccd5b032d3feda9342fcaf6d53148e",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\Users\\18522\\AppData\\Roaming\\Microsoft\\Word\\STARTUP\\Zotero.dotm",
+      "baselineExists": true,
+      "baselineSha256": "5b502497ac15bc1afdc408a0c2a7f9e70e6c8c417a08ff83f7b2a1974096b6ec",
+      "observedExists": true,
+      "observedSha256": "5b502497ac15bc1afdc408a0c2a7f9e70e6c8c417a08ff83f7b2a1974096b6ec",
+      "unchanged": true
+    }
+  ],
+  "initialBaselineFiles": [
+    {
+      "path": "D:\\D_Applications\\Zotero\\zotero.exe",
+      "baselineExists": true,
+      "baselineSha256": "ca77400c14cb0bb392d23d85e802e3af389dc8b76f9ab6a09414051cbae81b0f",
+      "observedExists": true,
+      "observedSha256": "ca77400c14cb0bb392d23d85e802e3af389dc8b76f9ab6a09414051cbae81b0f",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\D_Applications\\Zotero\\app\\application.ini",
+      "baselineExists": true,
+      "baselineSha256": "5ceacc82b67706f5770c5736faa5f72c8460fbd5e959bd324ed0a47f835d2fbc",
+      "observedExists": true,
+      "observedSha256": "5ceacc82b67706f5770c5736faa5f72c8460fbd5e959bd324ed0a47f835d2fbc",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\D_Applications\\Zotero\\app\\omni.ja",
+      "baselineExists": true,
+      "baselineSha256": "9573f63faaf1d8ddf0baa16d3e7f0d011e6b6d277e0ff8b5ab9b6db069b864a4",
+      "observedExists": true,
+      "observedSha256": "9573f63faaf1d8ddf0baa16d3e7f0d011e6b6d277e0ff8b5ab9b6db069b864a4",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\Users\\18522\\AppData\\Roaming\\Zotero\\Zotero\\Profiles\\jza7s4xb.default\\prefs.js",
+      "baselineExists": true,
+      "baselineSha256": "e507cf55f2ebe2988cd731fbf8ceefb503a1515b61d4deb64e591dc49271b6f2",
+      "observedExists": true,
+      "observedSha256": "f9cd332027c70a4baef2a6f63f2a2aa7dd9039670e4c5ec0a0abc93933de6885",
+      "unchanged": false
+    },
+    {
+      "path": "C:\\Users\\18522\\AppData\\Roaming\\Zotero\\Zotero\\profiles.ini",
+      "baselineExists": true,
+      "baselineSha256": "e6850bde598b5a8f0aa97eef1312a02e15ccd5b032d3feda9342fcaf6d53148e",
+      "observedExists": true,
+      "observedSha256": "e6850bde598b5a8f0aa97eef1312a02e15ccd5b032d3feda9342fcaf6d53148e",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\Users\\18522\\AppData\\Roaming\\Microsoft\\Word\\STARTUP\\Zotero.dotm",
+      "baselineExists": true,
+      "baselineSha256": "5b502497ac15bc1afdc408a0c2a7f9e70e6c8c417a08ff83f7b2a1974096b6ec",
+      "observedExists": true,
+      "observedSha256": "5b502497ac15bc1afdc408a0c2a7f9e70e6c8c417a08ff83f7b2a1974096b6ec",
+      "unchanged": true
+    }
+  ],
+  "initialBaselineAudit": {
+    "passed": true,
+    "acceptedHistoricalDrift": [
+      {
+        "path": "C:\\Users\\18522\\AppData\\Roaming\\Zotero\\Zotero\\Profiles\\jza7s4xb.default\\prefs.js",
+        "baselineExists": true,
+        "baselineSha256": "e507cf55f2ebe2988cd731fbf8ceefb503a1515b61d4deb64e591dc49271b6f2",
+        "observedExists": true,
+        "observedSha256": "f9cd332027c70a4baef2a6f63f2a2aa7dd9039670e4c5ec0a0abc93933de6885",
+        "unchanged": false
+      }
+    ],
+    "blockingDrift": []
+  },
+  "comparisonScope": "files compare against this run start; initial baseline retained separately",
+  "userDecision": "docs/ISOLATION_DECISIONS.md"
+}

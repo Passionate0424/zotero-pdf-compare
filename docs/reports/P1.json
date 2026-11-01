@@ -1,7 +1,7 @@
 {
   "milestone": "P1",
   "status": "in_progress",
-  "recordedAt": "2026-11-02T00:02:48.249872+08:00",
+  "recordedAt": "2026-11-02T00:22:11.111318+08:00",
   "zoteroVersion": "10.0.7",
   "checks": {
     "nativeHostPreserved": true,
@@ -13,12 +13,12 @@
     "permissions": true,
     "UI-01": true,
     "UI-03": true,
-    "isolationAudit": false,
+    "isolationAudit": true,
     "addToNoteCopyDrag": false,
     "UI-04": false
   },
   "unitTests": {
-    "passed": 15,
+    "passed": 16,
     "failed": 0,
     "skipped": 0
   },
@@ -37,7 +37,9 @@
     "docs/reports/assets/p1-tags-widget.png",
     "docs/reports/assets/p1-native-note-drop.png",
     "docs/reports/assets/p1-disabled.png",
-    "docs/reports/assets/p1-save-failure.png"
+    "docs/reports/assets/p1-save-failure.png",
+    "docs/ISOLATION_DECISIONS.md",
+    "docs/reports/P1-resumed-isolation.json"
   ],
   "visualReview": {
     "status": "partial",
@@ -126,7 +128,6 @@
     "findings": "原文、对照、颜色菜单、标签浮窗、笔记与禁用恢复已查看。1280×800 与 1600×1000 的窄栏导航换行已修复。UI-03 本阶段仅布局/分隔条，页内同步对齐仍属 P2；操作系统鼠标完整拖拽及其焦点交互未覆盖，UI-04 不标全通过。"
   },
   "blockers": [
-    "Protected production prefs.js changed at 2026-11-01 23:49:28.500911; source of write is not attributable from a hash-only baseline. User reports no interaction. Original baseline retained; test process closed.",
     "Native dragstart/drop handlers and original backlinks pass, but an OS pointer drag into the note editor has not been covered."
   ],
   "limits": [
@@ -134,5 +135,12 @@
     "Doubao worker, automatic import and synchronized scrolling are not implemented.",
     "Original managed ReaderTab preserved; translation is read-only and the tested exported PDF has no text layer.",
     "No OS-wide write audit or production-library full backup is claimed."
-  ]
+  ],
+  "acceptedHistoricalConfigChange": {
+    "decision": "docs/ISOLATION_DECISIONS.md",
+    "causeVerified": false,
+    "initialBaselinePreserved": true,
+    "resumedRunReport": "docs/reports/P1-resumed-isolation.json",
+    "inRunFilesUnchanged": 6
+  }
 }
