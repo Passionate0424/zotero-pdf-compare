@@ -1,0 +1,38 @@
+{
+  "createdAt": "2026-11-01T17:33:39.2493606+08:00",
+  "originalURL": "https://arxiv.org/pdf/2609.16074",
+  "distribution": "Local test evidence only; review rights before public redistribution",
+  "files": [
+    {
+      "path": "docs/research/开源复用与插件实现方案.md",
+      "bytes": 14440,
+      "sha256": "0b5141beea7033493e79b3fde067c1932a3fa6004c5e35f4ae29d4db47bde87f"
+    },
+    {
+      "path": "docs/research/豆包PDF翻译脚本探查记录.md",
+      "bytes": 5745,
+      "sha256": "df02705b2d02feab8012e21273971249f5d1cc6353c983f6c6c5f85b8e41cd93",
+      "originalCopiedSha256": "85b34ccaa0ef6c12bef6533146a3f888a979b8b1f53b017cfebfd728748487c1"
+    },
+    {
+      "path": "fixtures/public/doubao-19p/world-action-models.zh-CN.doubao.pdf",
+      "bytes": 16091295,
+      "sha256": "bdcc263bccfc1b61b2e63cbd2ca75b3ffc749bf865349b30ee74270bf86e8d32"
+    },
+    {
+      "path": "fixtures/public/doubao-19p/world-action-models.original.pdf",
+      "bytes": 4531144,
+      "sha256": "c410bbbd06e25c4592a043acf66ca2dcab5ef03eeae601c29093e50898338df4"
+    },
+    {
+      "path": "fixtures/public/doubao-19p/doubao-pdf-validation.json",
+      "bytes": 9595,
+      "sha256": "804f6df9ec35b60c039767b2a5dd50a9b8a70ba76aab278da508b4181092ecb8"
+    },
+    {
+      "path": "fixtures/public/doubao-19p/doubao-formula-comparison.png",
+      "bytes": 118709,
+      "sha256": "c04bf322952e65c4313f75616e55f75e268308aefb24506e84278f9ad1f1a512"
+    }
+  ]
+}

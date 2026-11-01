@@ -1,0 +1,396 @@
+{
+  "original": {
+    "file": "C:\\Users\\18522\\Documents\\Codex\\2026-11-01\\zotero-zotero-x20-x20-1-python-3\\work\\doubao-probe\\sample-original.pdf",
+    "bytes": 4531144,
+    "pages": 19,
+    "text_characters": 119857,
+    "chinese_characters": 0,
+    "font_references": 147,
+    "image_references": 77,
+    "page_details": [
+      {
+        "page": 1,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 5677,
+        "chinese_characters": 0,
+        "fonts": 30,
+        "images": 0
+      },
+      {
+        "page": 2,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 6665,
+        "chinese_characters": 0,
+        "fonts": 3,
+        "images": 0
+      },
+      {
+        "page": 3,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 5588,
+        "chinese_characters": 0,
+        "fonts": 10,
+        "images": 0
+      },
+      {
+        "page": 4,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 3846,
+        "chinese_characters": 0,
+        "fonts": 13,
+        "images": 10
+      },
+      {
+        "page": 5,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 4445,
+        "chinese_characters": 0,
+        "fonts": 6,
+        "images": 23
+      },
+      {
+        "page": 6,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 5356,
+        "chinese_characters": 0,
+        "fonts": 13,
+        "images": 9
+      },
+      {
+        "page": 7,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 5450,
+        "chinese_characters": 0,
+        "fonts": 8,
+        "images": 0
+      },
+      {
+        "page": 8,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 4993,
+        "chinese_characters": 0,
+        "fonts": 6,
+        "images": 23
+      },
+      {
+        "page": 9,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 4649,
+        "chinese_characters": 0,
+        "fonts": 5,
+        "images": 12
+      },
+      {
+        "page": 10,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 6225,
+        "chinese_characters": 0,
+        "fonts": 3,
+        "images": 0
+      },
+      {
+        "page": 11,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 6285,
+        "chinese_characters": 0,
+        "fonts": 4,
+        "images": 0
+      },
+      {
+        "page": 12,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 6219,
+        "chinese_characters": 0,
+        "fonts": 13,
+        "images": 0
+      },
+      {
+        "page": 13,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 6302,
+        "chinese_characters": 0,
+        "fonts": 4,
+        "images": 0
+      },
+      {
+        "page": 14,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 5564,
+        "chinese_characters": 0,
+        "fonts": 9,
+        "images": 0
+      },
+      {
+        "page": 15,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 7279,
+        "chinese_characters": 0,
+        "fonts": 4,
+        "images": 0
+      },
+      {
+        "page": 16,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 8798,
+        "chinese_characters": 0,
+        "fonts": 5,
+        "images": 0
+      },
+      {
+        "page": 17,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 8993,
+        "chinese_characters": 0,
+        "fonts": 5,
+        "images": 0
+      },
+      {
+        "page": 18,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 8826,
+        "chinese_characters": 0,
+        "fonts": 2,
+        "images": 0
+      },
+      {
+        "page": 19,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 8697,
+        "chinese_characters": 0,
+        "fonts": 4,
+        "images": 0
+      }
+    ],
+    "metadata": {
+      "format": "PDF 1.7",
+      "title": "World-Action Models for Robot Learning and Control: A Survey",
+      "author": "Zuxing Lu; Hongjia Zhai; Guanzhi Wang; Huajian Zeng; Jiaqi Yang; Jingyu Liu; Lei Cheng; Yuantai Zhang; Yuheng Qiu; Zezhou Cheng; Ivan Laptev; Danfei Xu; Benjamin Riviere; Giuseppe Loianno; Eric Xing; Xingxing Zuo",
+      "subject": "",
+      "keywords": "",
+      "creator": "arXiv GenPDF (tex2pdf:0d14211)",
+      "producer": "pikepdf 8.15.1",
+      "creationDate": "",
+      "modDate": "",
+      "trapped": "",
+      "encryption": null
+    }
+  },
+  "translated": {
+    "file": "C:\\Users\\18522\\Documents\\Codex\\2026-11-01\\zotero-zotero-x20-x20-1-python-3\\outputs\\world-action-models.zh-CN.doubao.pdf",
+    "bytes": 16091295,
+    "pages": 19,
+    "text_characters": 0,
+    "chinese_characters": 0,
+    "font_references": 0,
+    "image_references": 19,
+    "page_details": [
+      {
+        "page": 1,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 2,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 3,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 4,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 5,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 6,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 7,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 8,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 9,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 10,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 11,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 12,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 13,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 14,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 15,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 16,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 17,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 18,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      },
+      {
+        "page": 19,
+        "width_pt": 612.0,
+        "height_pt": 792.0,
+        "text_characters": 0,
+        "chinese_characters": 0,
+        "fonts": 0,
+        "images": 1
+      }
+    ],
+    "metadata": {
+      "format": "PDF 1.7",
+      "title": "",
+      "author": "",
+      "subject": "",
+      "keywords": "",
+      "creator": "pdf-lib (https://github.com/Hopding/pdf-lib)",
+      "producer": "pdf-lib (https://github.com/Hopding/pdf-lib)",
+      "creationDate": "D:20261101052823Z",
+      "modDate": "D:20261101052823Z",
+      "trapped": "",
+      "encryption": null
+    }
+  },
+  "comparison": {
+    "same_page_count": true,
+    "same_page_sizes": true
+  }
+}
