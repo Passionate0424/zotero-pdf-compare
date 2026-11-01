@@ -1,0 +1,72 @@
+{
+  "milestone": "P0",
+  "completedAt": "2026-11-01T18:18:37.2435309+08:00",
+  "status": "passed",
+  "zoteroVersion": "10.0.7",
+  "checks": {
+    "pathGuardTests": true,
+    "actualProfile": true,
+    "actualData": true,
+    "parentProcess": true,
+    "noAccount": true,
+    "syncOff": true,
+    "connectorOff": true,
+    "wordInstallSkipped": true,
+    "productionProcessesPreserved": true,
+    "protectedFilesUnchanged": true,
+    "nativeDatabaseCreated": true,
+    "emptyLibrary": true,
+    "restartVerified": true,
+    "closedSnapshotVerified": true,
+    "visualReview": true
+  },
+  "unitTests": {
+    "skipped": 0,
+    "failed": 0,
+    "passed": 8
+  },
+  "protectedFiles": {
+    "checked": 6,
+    "unchanged": 6
+  },
+  "snapshot": {
+    "itemCount": 0,
+    "filesVerified": 829,
+    "databaseQuickCheck": "ok",
+    "restoredDataFilesVerified": 773
+  },
+  "shutdown": {
+    "debuggerClosed": true,
+    "productionParentPreserved": true,
+    "testClosed": true
+  },
+  "evidence": [
+    "runtime/verification.json",
+    "runtime/snapshot-verification.json",
+    "artifacts/p0/first-successful-verification.json",
+    "artifacts/p0/unified-start-verification.json",
+    "docs/reports/assets/p0-empty-library.png",
+    "tests/unit/path-guard.test.mjs",
+    "tests/unit/milestone-gate.test.mjs"
+  ],
+  "visualReview": {
+    "screenshots": [
+      {
+        "path": "docs/reports/assets/p0-empty-library.png",
+        "sha256": "9cb2babbfb316533ac5d12a9fb8083197f8c2222a0e4de1e38c388f5d5e5c1eb",
+        "width": 1000,
+        "height": 601,
+        "devicePixelRatio": 2,
+        "theme": "dark"
+      }
+    ],
+    "findings": "已查看真实测试窗口：空库，无正式文献；顶部 E 盘开发测试标识清晰，菜单与侧栏可见，无遮挡。仅为 P0 初始视觉基线，不代表产品三模式或批注 UI 已通过。",
+    "status": "passed"
+  },
+  "limits": [
+    "Only the P0 empty-library environment is accepted; P1-P5 remain pending.",
+    "File baseline covers six declared protected files, not a copy or full hash of the active production library.",
+    "P0 restore validates an empty DB copy; full app restore with annotations is required in P5.",
+    "Runtime and diagnostic data are local and excluded from Git."
+  ]
+}

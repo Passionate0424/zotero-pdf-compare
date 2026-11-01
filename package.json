@@ -1,0 +1,17 @@
+{
+  "name": "zotero-doubao-translate",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {"node": ">=24"},
+  "scripts": {
+    "test": "node --test tests/unit/*.test.mjs",
+    "dev:prepare": "node tools/dev-env.mjs prepare",
+    "dev:check": "node tools/dev-env.mjs check",
+    "dev:start": "node tools/start-dev.mjs",
+    "dev:stop": "node tools/dev-env.mjs stop",
+    "dev:verify": "node tools/dev-env.mjs verify",
+    "dev:snapshot": "node tools/dev-env.mjs snapshot",
+    "milestone:check": "node tools/check-milestone.mjs"
+  }
+}

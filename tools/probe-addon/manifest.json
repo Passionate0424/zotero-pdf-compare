@@ -1,0 +1,8 @@
+{
+  "manifest_version": 2,
+  "name": "Doubao Development Isolation Probe",
+  "version": "0.0.1",
+  "description": "Test-profile-only identity and screenshot probe. No library writes.",
+  "author": "Local development",
+  "applications": {"zotero":{"id":"doubao-dev-probe@local.invalid","update_url":"https://example.invalid/zotero-doubao-dev-probe/updates.json","strict_min_version":"10.0","strict_max_version":"10.0.*"}}
+}
