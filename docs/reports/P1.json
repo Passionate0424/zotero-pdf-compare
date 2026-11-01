@@ -1,6 +1,6 @@
 {
   "milestone": "P1",
-  "status": "in_progress",
+  "status": "passed",
   "recordedAt": "2026-11-02T00:22:11.111318+08:00",
   "zoteroVersion": "10.0.7",
   "checks": {
@@ -14,8 +14,8 @@
     "UI-01": true,
     "UI-03": true,
     "isolationAudit": true,
-    "addToNoteCopyDrag": false,
-    "UI-04": false
+    "addToNoteCopyDrag": true,
+    "UI-04": true
   },
   "unitTests": {
     "passed": 16,
@@ -39,10 +39,11 @@
     "docs/reports/assets/p1-disabled.png",
     "docs/reports/assets/p1-save-failure.png",
     "docs/ISOLATION_DECISIONS.md",
-    "docs/reports/P1-resumed-isolation.json"
+    "docs/reports/P1-resumed-isolation.json",
+    "docs/reports/P1-manual.json"
   ],
   "visualReview": {
-    "status": "partial",
+    "status": "passed",
     "screenshots": [
       {
         "path": "docs/reports/assets/p1-original.png",
@@ -125,11 +126,9 @@
         "method": "gecko-window-global-snapshot"
       }
     ],
-    "findings": "原文、对照、颜色菜单、标签浮窗、笔记与禁用恢复已查看。1280×800 与 1600×1000 的窄栏导航换行已修复。UI-03 本阶段仅布局/分隔条，页内同步对齐仍属 P2；操作系统鼠标完整拖拽及其焦点交互未覆盖，UI-04 不标全通过。"
+    "findings": "原文、对照、颜色菜单、标签浮窗、笔记与禁用恢复已查看。1280×800 与 1600×1000 的窄栏导航换行已修复。UI-03 本阶段仅布局/分隔条，页内同步对齐仍属 P2；操作系统鼠标完整拖拽及其焦点交互未覆盖，UI-04 不标全通过。 用户后续在独立实例手动完成模式、拖拽、复制粘贴、编辑与焦点四项，确认全部正常；见 P1-manual.json。"
   },
-  "blockers": [
-    "Native dragstart/drop handlers and original backlinks pass, but an OS pointer drag into the note editor has not been covered."
-  ],
+  "blockers": [],
   "limits": [
     "Development XPI loads only in registered test profile/data; not a release.",
     "Doubao worker, automatic import and synchronized scrolling are not implemented.",
@@ -142,5 +141,19 @@
     "initialBaselinePreserved": true,
     "resumedRunReport": "docs/reports/P1-resumed-isolation.json",
     "inRunFilesUnchanged": 6
+  },
+  "completedAt": "2026-11-02T01:11:11.766336+08:00",
+  "manualReview": {
+    "recordedAt": "2026-11-02T01:11:11.766336+08:00",
+    "reviewer": "user",
+    "method": "manual in isolated test instance",
+    "statement": "全都没问题",
+    "checks": {
+      "modeSwitches": true,
+      "dragAnnotationToNativeNote": true,
+      "copyPasteAnnotation": true,
+      "annotationEditingAndFocus": true
+    },
+    "scope": "User confirmed the four requested P1 manual checks. No claim that Codex performed OS pointer gestures."
   }
 }

@@ -76,6 +76,25 @@ async function runProbe() {
     if (stopped) return;
     try {
       const command = await IOUtils.readJSON(requestPath);
+      if (command.runId === request.runId && command.action === 'install-product' && !globalThis.__doubaoSuiteBusy) {
+        globalThis.__doubaoSuiteBusy = true;
+        try {
+          if (!/^doubao-translate-dev-[a-f0-9]{16}\.xpi$/.test(command.filename)) throw new Error('Invalid development package');
+          const {AddonManager}=ChromeUtils.importESModule('resource://gre/modules/AddonManager.sys.mjs');
+          const current=await AddonManager.getAddonByID('doubao-translate@local.invalid');
+          if(current?.temporarilyInstalled)await current.uninstall();
+          const file=Zotero.File.pathToFile(PathUtils.join(PathUtils.parent(root),'dist',command.filename));
+          const install=await AddonManager.getInstallForFile(file);
+          await install.install();
+          const installed=await AddonManager.getAddonByID('doubao-translate@local.invalid');
+          await IOUtils.writeJSON(PathUtils.join(root,'product-install-report.json'),{nonce:command.nonce,passed:installed?.isActive===true&&!installed.temporarilyInstalled,isActive:installed?.isActive,userDisabled:installed?.userDisabled,temporary:installed?.temporarilyInstalled,version:installed?.version,controllerLoaded:!!win.DoubaoTranslate});
+        } catch(error) {
+          await IOUtils.writeJSON(PathUtils.join(root,'product-install-report.json'),{nonce:command.nonce,passed:false,error:String(error)});
+        } finally {
+          await IOUtils.writeJSON(requestPath,{runId:request.runId,action:'observe'});
+          globalThis.__doubaoSuiteBusy=false;
+        }
+      }
       if (command.runId === request.runId && command.action === 'run-suite' && command.suite === 'p1-reader' && !globalThis.__doubaoSuiteBusy) {
         globalThis.__doubaoSuiteBusy = true;
         try {

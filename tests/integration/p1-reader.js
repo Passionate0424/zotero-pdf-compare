@@ -50,6 +50,20 @@ var runP1 = async function(ctx) {
     fixture.seedKey = annotation.key; await persist();
   }
   const win = Zotero.getMainWindow();
+  if(ctx.action==='plugin-state') {
+    const {AddonManager}=ChromeUtils.importESModule('resource://gre/modules/AddonManager.sys.mjs');
+    const installed=await AddonManager.getAddonByID('doubao-translate@local.invalid');
+    return {passed:true,stage:'read_only_plugin_state',installed:!!installed,isActive:installed?.isActive,userDisabled:installed?.userDisabled,appDisabled:installed?.appDisabled,version:installed?.version,controllerLoaded:!!win.DoubaoTranslate,stateCount:win.DoubaoTranslate?.states.size,selectedTab:win.Zotero_Tabs.selectedID,readers:Zotero.Reader._readers.map(r=>({tabID:r.tabID,itemID:r.itemID,buttons:r._iframeWindow?.document.querySelectorAll('.doubao-reading-modes').length,connected:r._iframe?.isConnected}))};
+  }
+  if(ctx.action==='paint-reset') {
+    const results=[];
+    const visit=w=>{
+      try{const u=Components.utils.unwaiveXrays(w).windowUtils;u.restoreNormalRefresh();if(typeof u.redraw==='function')u.redraw(0);results.push({href:String(w.location.href),restored:true});}catch(error){results.push({error:String(error)});}
+      for(let i=0;i<w.frames.length;i++)visit(w.frames[i]);
+    };
+    visit(win);await pause(300);
+    return{passed:true,stage:'debug_paint_reset',results};
+  }
   const addon = win.DoubaoTranslate;
   if (!addon) throw new Error('Product development add-on is not installed.');
   addon.pair(source, translated);

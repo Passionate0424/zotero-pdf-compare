@@ -13,7 +13,7 @@
     {
       "id": "P1",
       "title": "原生批注",
-      "status": "in_progress",
+      "status": "completed",
       "tag": "milestone/p1",
       "report": "docs/reports/P1.json"
     },

@@ -1,0 +1,13 @@
+{
+  "recordedAt": "2026-11-02T01:11:11.766336+08:00",
+  "reviewer": "user",
+  "method": "manual in isolated test instance",
+  "statement": "全都没问题",
+  "checks": {
+    "modeSwitches": true,
+    "dragAnnotationToNativeNote": true,
+    "copyPasteAnnotation": true,
+    "annotationEditingAndFocus": true
+  },
+  "scope": "User confirmed the four requested P1 manual checks. No claim that Codex performed OS pointer gestures."
+}
