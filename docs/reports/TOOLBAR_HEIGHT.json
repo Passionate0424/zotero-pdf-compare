@@ -1,0 +1,197 @@
+{
+  "date": "2026-11-02",
+  "version": "0.3.3",
+  "checkpoint": "ba68b69f020ff8724d4bd346a98f7bcdb433e3cd",
+  "build": {
+    "file": "E:\\project\\zotero-doubao-translate\\dist\\doubao-translate-dev-91bb65a414b134f4.xpi",
+    "filename": "doubao-translate-dev-91bb65a414b134f4.xpi",
+    "version": "0.3.3",
+    "entries": 8,
+    "bytes": 30391,
+    "sha256": "91bb65a414b134f495a899c2029d9ce37cfd601824f982f9e689430dd28f4e1b"
+  },
+  "layout": {
+    "passed": true,
+    "checks": {
+      "equalSingleToolbarHeight": true,
+      "singleControlsFit": true,
+      "pageCountDoesNotOverlapAnnotationTools": true,
+      "compareOnlyActionsHiddenInSingle": true,
+      "compareUsesResponsiveLayout": true,
+      "compareActionsReturn": true,
+      "originalAnnotationToolsAvailable": true,
+      "translatedAnnotationToolsHidden": true,
+      "cacheStillReused": true
+    },
+    "sizes": [
+      {
+        "width": 1600,
+        "original": 41,
+        "translated": 41,
+        "originalFit": true,
+        "translatedFit": true,
+        "originalHidden": true,
+        "translatedHidden": true,
+        "originalPageCountClear": true
+      },
+      {
+        "width": 1280,
+        "original": 41,
+        "translated": 41,
+        "originalFit": true,
+        "translatedFit": true,
+        "originalHidden": true,
+        "translatedHidden": true,
+        "originalPageCountClear": true
+      }
+    ],
+    "nonce": "f008dce0-9563-41b7-b248-8c5c0a7762b5",
+    "generatedAt": "2026-11-02T09:03:58.689Z"
+  },
+  "tests": {
+    "toolbar-modes-release": {
+      "passed": true,
+      "checks": {
+        "twentySwitches": true,
+        "singlePane": true,
+        "dragResize": true,
+        "nativeHostPreserved": true,
+        "finalModeWins": true,
+        "noPaneAfterOriginal": true,
+        "cachedSyncStopped": true,
+        "noQueueLeak": true
+      },
+      "nonce": "8a522cdf-587f-4f62-b168-72b529f9cf44",
+      "generatedAt": "2026-11-02T09:07:01.645Z"
+    },
+    "toolbar-annotations-release": {
+      "passed": true,
+      "checks": {
+        "existingAnnotations": true,
+        "existingPositionUnchanged": true,
+        "createdInOriginal": true,
+        "updatedCommentTagsColor": true,
+        "deletedFromDatabase": true,
+        "retainedOriginalParent": true,
+        "nativeCallbacksPreserved": true,
+        "nativeHostPreserved": true,
+        "dragSerializationOriginalIdentity": true,
+        "copyRichText": true
+      },
+      "nonce": "d4d3425b-e36a-44d8-906e-5c7cb923083b",
+      "generatedAt": "2026-11-02T09:07:07.176Z"
+    },
+    "toolbar-cache-release": {
+      "passed": true,
+      "nonce": "1d22e118-2814-4982-a195-84e6ab494511",
+      "generatedAt": "2026-11-02T09:07:10.104Z",
+      "samples": [
+        {
+          "iteration": 0,
+          "elapsedMs": 1474
+        },
+        {
+          "iteration": 1,
+          "elapsedMs": 18
+        },
+        {
+          "iteration": 2,
+          "elapsedMs": 17
+        },
+        {
+          "iteration": 3,
+          "elapsedMs": 18
+        },
+        {
+          "iteration": 4,
+          "elapsedMs": 17
+        }
+      ]
+    },
+    "toolbar-isolation-release": {
+      "passed": true,
+      "checks": {
+        "actualProfile": true,
+        "actualData": true,
+        "parentProcess": true,
+        "noAccount": true,
+        "syncOff": true,
+        "connectorOff": true,
+        "wordInstallSkipped": true,
+        "productionProcessesPreserved": true,
+        "protectedFilesUnchanged": true,
+        "initialBaselinePolicy": true,
+        "nativeDatabaseCreated": true,
+        "screenshot": true,
+        "testLibraryRegistered": true
+      }
+    },
+    "toolbar-fresh-state": {
+      "passed": true,
+      "nonce": "1554605c-cb65-416a-a2bc-143b770bc52c",
+      "generatedAt": "2026-11-02T09:07:31.548Z",
+      "isActive": true,
+      "version": "0.3.3"
+    }
+  },
+  "unit": {
+    "passed": 41,
+    "failed": 0
+  },
+  "screenshots": [
+    {
+      "path": "assets/toolbar-original-1600.png",
+      "width": 2000,
+      "height": 1250,
+      "dpr": 1.25,
+      "method": "gecko-window-global-snapshot",
+      "sha256": "b91f68b620d196d6b436edcb3c856bc80df4ff098f4ef6966ae40b63570c43fa",
+      "reviewed": true
+    },
+    {
+      "path": "assets/toolbar-translation-1600.png",
+      "width": 2000,
+      "height": 1250,
+      "dpr": 1.25,
+      "method": "gecko-window-global-snapshot",
+      "sha256": "9cb387245f9f74beed7088a25c36f433f3a6d749a33b8fdd2c28762e47576fdd",
+      "reviewed": true
+    },
+    {
+      "path": "assets/toolbar-original-1280.png",
+      "width": 1600,
+      "height": 1000,
+      "dpr": 1.25,
+      "method": "gecko-window-global-snapshot",
+      "sha256": "a7b6d8ab1608d821bbaf43d35472d1f5ed21c41b5ac79c749e5f210adc65c3aa",
+      "reviewed": true
+    },
+    {
+      "path": "assets/toolbar-translation-1280.png",
+      "width": 1600,
+      "height": 1000,
+      "dpr": 1.25,
+      "method": "gecko-window-global-snapshot",
+      "sha256": "97a662d9596c341225954a12f96d7cfefa46cd989f70b79e46419076a43d0460",
+      "reviewed": true
+    }
+  ],
+  "before": [
+    {
+      "width": 1600,
+      "original": 41,
+      "translated": 81
+    },
+    {
+      "width": 1280,
+      "original": 41,
+      "translated": 81
+    }
+  ],
+  "intermediateFailures": [
+    "Read-only mode retained comparison layout",
+    "Narrow single-mode group wrapped while fixed native toolbar height remained 41px",
+    "Reserving page-count width initially forced another mode button wrap; single-mode group now does not shrink/wrap"
+  ],
+  "scope": "Windows Zotero 10.0.7 DPR 1.25; 1280 and 1600 widths; isolated test profile only"
+}

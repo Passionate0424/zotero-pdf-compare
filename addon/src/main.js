@@ -98,6 +98,9 @@ var DoubaoTranslateAddon = class {
     group.setAttribute('role', 'group');
     group.setAttribute('aria-label', 'PDF 阅读模式');
     group.style.cssText = 'display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin:0 4px;flex-shrink:1;';
+    const counterStyle=doc.createElement('style');
+    counterStyle.textContent='.toolbar #numPages {white-space:nowrap;flex:0 0 auto;align-items:center;} .toolbar #numPages div {position:static;} html:not(.doubao-compare-layout) .doubao-reading-modes {flex-wrap:nowrap !important;flex-shrink:0 !important;}';
+    group.appendChild(counterStyle);
     const importButton=doc.createElement('button');
     importButton.className='toolbar-button doubao-import-button';importButton.textContent='导入译文';
     importButton.title='选择手动下载的译文 PDF，保存为独立附件并与此原文配对';
@@ -158,11 +161,12 @@ var DoubaoTranslateAddon = class {
     const state=this.states.get(reader.tabID),active=state?.mode==='compare'&&!state.closed;
     for(const group of this.buttons){
       if(group.dataset.sourceTab!==reader.tabID)continue;
+      const scroll=group.querySelector('.doubao-sync-button');if(scroll)scroll.style.display=active?'':'none';
       for(const [selector,pressed,title] of [
         ['.doubao-swap-button',!!state?.swapped,state?.swapped?'当前左译文、右原文；点击互换':'当前左原文、右译文；点击互换'],
         ['.doubao-zoom-button',!!state?.zoom?.enabled,'同步倍率或适应模式，并同步当前页内查看区域；滚动联动可独立开关']
       ]){
-        const button=group.querySelector(selector);if(!button)continue;button.disabled=!active||!state?.zoom;
+        const button=group.querySelector(selector);if(!button)continue;button.disabled=!active||!state?.zoom;button.style.display=active?'':'none';
         button.title=title;button.setAttribute('aria-label',selector==='.doubao-swap-button'?'互换原文和译文位置':'同步缩放与查看区域');
         button.setAttribute('aria-pressed',String(active&&pressed));button.style.background=active&&pressed?'#2563eb':'transparent';
         button.style.color=active&&pressed?'white':'var(--fill-primary,#ddd)';
@@ -254,6 +258,7 @@ var DoubaoTranslateAddon = class {
     for(const other of [...this.states.values()])if(other!==state&&other.mode==='original')this.restore(other);
     state.zoom?.dispose();state.sync?.dispose();state.mode='original';
     state.restoreSourceLayout?.();state.restoreSourceLayout=null;
+    state.restoreRightLayout?.();state.restoreRightLayout=null;
     state.right.style.display='none';state.divider.style.display='none';
     state.right.docShellIsActive=false;state.right.browsingContext.isActive=false;
     this.restoreNativeLayout(state);state.reader._updateDocShellActivity();this.updateSyncButtons(state.reader,null);
@@ -390,10 +395,15 @@ var DoubaoTranslateAddon = class {
       await this.waitFor(() => state.rightInternal._primaryView?._iframeWindow?.document?.querySelector('.page'),state);
       await this.waitFor(() => content.document.querySelector('.toolbar'),state);
       const toolbar = content.document.querySelector('.toolbar');
+      // Read-only controls stay hidden in every mode; compact single-pane
+      // layout must not depend on the multi-row comparison stylesheet.
+      state.readOnlyStyle=content.document.createElement('style');
+      state.readOnlyStyle.textContent='.toolbar > .tools {display:none !important;}';
+      content.document.head.appendChild(state.readOnlyStyle);
       state.rightControls = this.createButtons(content.document, reader);
       toolbar.querySelector('.end').prepend(state.rightControls);
       if(initialMode==='compare')state.restoreSourceLayout = this.responsiveToolbar(reader._iframeWindow.document);
-      state.restoreRightLayout = this.responsiveToolbar(content.document,true);
+      if(initialMode==='compare')state.restoreRightLayout = this.responsiveToolbar(content.document,true);
       const leftView=reader._internalReader._primaryView,rightView=state.rightInternal._primaryView;
       // Flush the nested PDF viewport layout before waiting for first-page
       // initialization; sizing the outer XUL browser alone does not flush it.
@@ -477,6 +487,10 @@ var DoubaoTranslateAddon = class {
       if(mode==='compare'){
         state.resize(0.5);
         if(!state.restoreSourceLayout)state.restoreSourceLayout=this.responsiveToolbar(reader._iframeWindow.document);
+        if(!state.restoreRightLayout)state.restoreRightLayout=this.responsiveToolbar(state.right.contentDocument,true);
+      }else{
+        state.restoreSourceLayout?.();state.restoreSourceLayout=null;
+        state.restoreRightLayout?.();state.restoreRightLayout=null;
       }
       state.sourceBrowser.style.display = mode === 'translation' ? 'none' : '';
       state.divider.style.display = mode === 'translation' ? 'none' : '';
@@ -506,6 +520,7 @@ var DoubaoTranslateAddon = class {
     state.closeObserver?.disconnect();
     if (state.selectionListener) state.container.removeEventListener('tab-selection-change',state.selectionListener);
     state.restoreSourceLayout?.(); state.restoreRightLayout?.();
+    state.readOnlyStyle?.remove();
     if (state.rightControls) { this.buttons.delete(state.rightControls); state.rightControls.remove(); }
     try { state.rightInternal?.uninit?.(); } catch (error) { Zotero.logError(error); }
     state.right.remove(); state.divider.remove();

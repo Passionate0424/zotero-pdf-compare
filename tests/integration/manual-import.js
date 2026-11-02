@@ -31,6 +31,31 @@ var runManualImport=async function(ctx){
   return{path,width:canvas.width,height:canvas.height,dpr:win.devicePixelRatio,method:'gecko-window-global-snapshot'};
  };
  const checks={},screenshots=[];
+ if(ctx.action==='toolbar-height'){
+  const sizes=[];
+  const controlsFit=doc=>{const bar=doc.querySelector('.toolbar').getBoundingClientRect();return [...doc.querySelectorAll('.toolbar button,.toolbar input')].every(el=>{const r=el.getBoundingClientRect();return !r.width||!r.height||(r.top>=bar.top-1&&r.bottom<=bar.bottom+1&&r.left>=bar.left-1&&r.right<=bar.right+1);});};
+  const compareActionsHidden=doc=>[...doc.querySelectorAll('.doubao-sync-button,.doubao-swap-button,.doubao-zoom-button')].every(el=>el.getBoundingClientRect().width===0);
+  const pageCountClear=doc=>{const text=doc.querySelector('#numPages div')?.getBoundingClientRect(),tools=doc.querySelector('.toolbar > .tools')?.getBoundingClientRect();return !text?.width||!tools?.width||text.right<=tools.left+1;};
+  for(const width of [1600,1280]){
+   win.resizeTo(width,width===1600?1000:800);await addon.setMode(reader,'original');
+   const original=reader._iframeWindow.document.querySelector('.toolbar').getBoundingClientRect().height;
+   screenshots.push(await screenshot('toolbar-original-'+width));
+   const originalFit=controlsFit(reader._iframeWindow.document),originalHidden=compareActionsHidden(reader._iframeWindow.document),originalPageCountClear=pageCountClear(reader._iframeWindow.document);
+   await addon.setMode(reader,'translation');const s=addon.states.get(reader.tabID),translated=s.right.contentDocument.querySelector('.toolbar').getBoundingClientRect().height;
+   screenshots.push(await screenshot('toolbar-translation-'+width));sizes.push({width,original,translated,originalFit,translatedFit:controlsFit(s.right.contentDocument),originalHidden,translatedHidden:compareActionsHidden(s.right.contentDocument),originalPageCountClear});
+  }
+  checks.equalSingleToolbarHeight=sizes.every(s=>Math.abs(s.original-s.translated)<1);
+  checks.singleControlsFit=sizes.every(s=>s.originalFit&&s.translatedFit);
+  checks.pageCountDoesNotOverlapAnnotationTools=sizes.every(s=>s.originalPageCountClear);
+  checks.compareOnlyActionsHiddenInSingle=sizes.every(s=>s.originalHidden&&s.translatedHidden);
+  await addon.setMode(reader,'compare');const s=addon.states.get(reader.tabID),identity=s.rightInternal;
+  checks.compareUsesResponsiveLayout=[reader._iframeWindow.document,s.right.contentDocument].every(d=>d.documentElement.classList.contains('doubao-compare-layout'));
+  checks.compareActionsReturn=[reader._iframeWindow.document,s.right.contentDocument].every(d=>!compareActionsHidden(d));
+  checks.originalAnnotationToolsAvailable=reader._iframeWindow.getComputedStyle(reader._iframeWindow.document.querySelector('.toolbar > .tools')).display!=='none'&&!reader._isReadOnly();
+  checks.translatedAnnotationToolsHidden=s.right.contentWindow.getComputedStyle(s.right.contentDocument.querySelector('.toolbar > .tools')).display==='none';
+  await addon.setMode(reader,'original');await addon.setMode(reader,'translation');checks.cacheStillReused=addon.states.get(reader.tabID).rightInternal===identity;
+  win.resizeTo(1600,1000);return{passed:Object.values(checks).every(Boolean),checks,sizes,screenshots,screenshot:screenshots[1]};
+ }
  if(ctx.action==='cache-transition'){
   const prior=addon.states.get(reader.tabID);if(prior)addon.restore(prior);
   let samples=0,split=false;const timer=ctx.timers.setInterval(()=>{const s=addon.states.get(reader.tabID);if(!s)return;const a=s.sourceBrowser.getBoundingClientRect(),b=s.right.getBoundingClientRect();samples++;if(a.width>0&&b.width>0&&(a.right<=b.left+1||b.right<=a.left+1))split=true;},8);

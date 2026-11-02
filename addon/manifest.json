@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "豆包 PDF 对照阅读（开发版）",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "保留原文原生阅读器的 PDF 对照原型，仅用于独立开发配置。",
   "author": "Zotero Doubao Translate contributors",
   "applications": {"zotero": {"id":"doubao-translate@local.invalid","update_url":"https://example.invalid/zotero-doubao-translate/updates.json","strict_min_version":"10.0","strict_max_version":"10.0.*"}}
