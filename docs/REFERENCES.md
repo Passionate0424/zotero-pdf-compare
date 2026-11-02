@@ -39,3 +39,10 @@
 - `fixtures/public/manifest.json` 记录复制入项目的样本指纹；不包含登录状态。
 
 旧浏览器 profile 与 Cookie 不迁移。旧源码下载与脚本仍保留在原工作区，新项目后续只提取需要、可审计且不含凭据的实现。
+
+## 2026-11-02：手动译文对照候选复核
+
+- [Z-Transplit 中文说明](https://github.com/Liozhang/z-transplit/blob/main/README.zh-CN.md)：面向 Zotero 10，可直接对比同一父条目下另一 PDF，声明滚动、翻页、缩放双向同步。[当前分屏配置](https://github.com/Liozhang/z-transplit/blob/main/src/core/pdf/splitview/readerConfig.ts) 使用空 annotations 和 readOnly:true，并注明原文可在未来开放编辑。因此存在现成对照方案，但不能据此保证用户要求的对照中原文完整批注。
+- [Split-View Reader](https://github.com/zerolfl/zotero-split-view-reader)：支持不同 PDF 同标签对照、主视图滚动缩放同步；当前 manifest 限制 Zotero 8–9，不可直接认为兼容本机 10.0.7。
+
+以上为当日 README/源码核对，没有在正式库安装这两个项目。当前手动导入模块自行实现，没有新增复制上游代码。

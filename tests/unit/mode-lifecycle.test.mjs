@@ -5,6 +5,7 @@ import vm from 'node:vm';
 
 function createAddon() {
   const context = vm.createContext({ChromeUtils:{importESModule:()=>({setTimeout})},Promise,Date});
+  vm.runInContext(fs.readFileSync(new URL('../../addon/src/manual-import.js',import.meta.url),'utf8'),context);
   vm.runInContext(fs.readFileSync(new URL('../../addon/src/main.js',import.meta.url),'utf8'),context);
   return new context.DoubaoTranslateAddon('unit-test');
 }

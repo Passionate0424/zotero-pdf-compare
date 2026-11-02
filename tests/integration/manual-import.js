@@ -1,0 +1,166 @@
+/* Runs only through the isolated development probe. File selection is stubbed;
+ * the actual toolbar, import, PDF worker, database, storage and reader are real. */
+var runManualImport=async function(ctx){
+ if(Zotero.DataDirectory.dir.toLowerCase()!==PathUtils.join(ctx.runtime,'zotero-data').toLowerCase())throw new Error('Not the owned test database');
+ const win=Zotero.getMainWindow(),addon=win.DoubaoTranslate,service=addon?.manual;
+ if(!service)throw new Error('Manual import product not loaded');
+ const pause=ms=>new Promise(r=>ctx.timers.setTimeout(r,ms));
+ const wait=async(fn)=>{const end=Date.now()+20000;while(Date.now()<end){if(ctx.signal.aborted)throw new Error('Aborted');const value=fn();if(value)return value;await pause(50);}throw new Error('Manual test readiness timeout');};
+ const file=PathUtils.join(ctx.runtime,'manual-fixture.json');
+ let fixture=await IOUtils.exists(file)?await IOUtils.readJSON(file):null;
+ const originalPath=PathUtils.join(ctx.root,'fixtures','public','doubao-19p','world-action-models.original.pdf');
+ const selectedPath=PathUtils.join(ctx.root,'fixtures','public','doubao-19p','world-action-models.zh-CN.doubao.pdf');
+ if(!fixture){
+  const parent=new Zotero.Item('journalArticle');parent.libraryID=Zotero.Libraries.userLibraryID;parent.setField('title','[DEV MANUAL] 手动译文导入与原生批注');parent.addTag('doubao-dev-fixture');await parent.saveTx();
+  const source=await Zotero.Attachments.importFromFile({file:Zotero.File.pathToFile(originalPath),parentItemID:parent.id,title:'[原文] 手动导入验收'});
+  const key=Zotero.DataObjectUtilities.generateKey();const annotation=await Zotero.Annotations.saveFromJSON(source,{key,type:'highlight',color:'#ffd400',pageLabel:'1',sortIndex:'00000|000100|00000',text:'Manual import annotation preservation',comment:'导入前已有批注',tags:[],position:{pageIndex:0,rects:[[72,675,310,691]]}});
+  fixture={libraryID:source.libraryID,parentKey:parent.key,sourceKey:source.key,annotationKey:annotation.key};await IOUtils.writeJSON(file,fixture);
+ }
+ const source=Zotero.Items.getByLibraryAndKey(fixture.libraryID,fixture.sourceKey),parent=Zotero.Items.getByLibraryAndKey(fixture.libraryID,fixture.parentKey);
+ let reader=await Zotero.Reader.open(source.id)||Zotero.Reader._readers.find(r=>r.itemID===source.id);await reader._initPromise;
+ win.docShell.browsingContext.isActive=true;reader._updateDocShellActivity();
+ const originalReader=reader._internalReader,originalBrowser=reader._iframe;
+ const screenshot=async name=>{
+  const state=addon.states.get(reader.tabID),windows=[win,reader._iframeWindow,reader._internalReader._primaryView._iframeWindow,state?.right.contentWindow,state?.rightInternal?._primaryView?._iframeWindow].filter(Boolean),utils=windows.map(w=>Components.utils.unwaiveXrays(w).windowUtils);
+  const pdfWindows=[reader._internalReader._primaryView._iframeWindow,state?.rightInternal?._primaryView?._iframeWindow].filter(Boolean);
+  const pending=()=>pdfWindows.some(w=>[...w.document.querySelectorAll('.page')].some(p=>{const r=p.getBoundingClientRect();return r.bottom>0&&r.top<w.innerHeight&&(p.classList.contains('loading')||!p.querySelector('.canvasWrapper canvas'));}));
+  try{for(let n=0;n<250;n++){utils.forEach(u=>u.advanceTimeAndRefresh(17));await pause(20);if(n>=25&&!pending())break;}}finally{utils.forEach(u=>u.restoreNormalRefresh());}
+  const shot=await win.docShell.browsingContext.currentWindowGlobal.drawSnapshot(null,win.devicePixelRatio,'rgb(255,255,255)',false);
+  const canvas=win.document.createElementNS('http://www.w3.org/1999/xhtml','canvas');canvas.width=shot.width;canvas.height=shot.height;canvas.getContext('2d').drawImage(shot,0,0);shot.close();
+  const binary=win.atob(canvas.toDataURL('image/png').split(',')[1]),path=PathUtils.join(ctx.runtime,name+'.png');await IOUtils.write(path,Uint8Array.from(binary,c=>c.charCodeAt(0)));
+  return{path,width:canvas.width,height:canvas.height,dpr:win.devicePixelRatio,method:'gecko-window-global-snapshot'};
+ };
+ const checks={},screenshots=[];
+ if(ctx.action==='ux-diagnose'){
+  await addon.setMode(reader,'original');
+  const frames=[],transitions=[];let observing=true;
+  const capture=()=>{const s=addon.states.get(reader.tabID);if(s)frames.push({t:Date.now(),mode:s.mode,left:s.sourceBrowser.getBoundingClientRect().width,right:s.right.getBoundingClientRect().width,visible:s.right.ownerGlobal.getComputedStyle(s.right).visibility});};
+  const sample=ctx.timers.setInterval(capture,10);
+  await addon.setMode(reader,'translation');ctx.timers.clearInterval(sample);capture();
+  transitions.push({request:'original-to-translation',frames});
+  await addon.setMode(reader,'original');await addon.setMode(reader,'compare');await pause(500);
+  const s=addon.states.get(reader.tabID),sync=s.sync,u=Components.utils.unwaiveXrays(win).windowUtils;
+  const bounds=()=>({container:s.container.getBoundingClientRect().toJSON(),source:s.sourceBrowser.getBoundingClientRect().toJSON(),right:s.right.getBoundingClientRect().toJSON(),divider:s.divider.getBoundingClientRect().toJSON(),ratio:s.ratio,styles:{source:s.sourceBrowser.getAttribute('style'),right:s.right.getAttribute('style')},computed:{source:win.getComputedStyle(s.sourceBrowser).flex,right:win.getComputedStyle(s.right).flex}});
+  const initial=bounds(),events=[];
+  const record=e=>events.push({type:e.type,x:e.clientX,ratio:s.ratio,left:s.sourceBrowser.getBoundingClientRect().width});
+  for(const name of ['pointerdown','pointermove','pointerup'])s.divider.addEventListener(name,record);
+  const d=s.divider.getBoundingClientRect(),b=s.container.getBoundingClientRect(),x=d.x+2;
+  u.sendMouseEvent('mousedown',x,d.y+100,0,1,0);
+  for(let n=0;n<6;n++){u.sendMouseEvent('mousemove',x-10*n,d.y+100,0,0,0);await pause(25);}
+  u.sendMouseEvent('mouseup',x-50,d.y+100,0,1,0);await pause(80);
+  for(const name of ['pointerdown','pointermove','pointerup'])s.divider.removeEventListener(name,record);
+  const dragged=bounds(),samples=[];const applied=sync.onApply;sync.onApply=sample=>samples.push({...sample,t:Date.now()});
+  const input=[];
+  for(const side of ['left','right']){
+   const v=sync.views[side];v.window.document.dispatchEvent(new v.window.WheelEvent('wheel',{deltaY:50,bubbles:true}));
+   for(let n=0;n<60;n++){v.viewer.scrollTop+=10;input.push({side,t:Date.now(),top:v.viewer.scrollTop});await pause(8);}
+   await pause(200);
+  }
+  sync.onApply=applied;
+  await addon.setMode(reader,'translation');await addon.setMode(reader,'compare');const reentered=bounds();
+  await addon.setMode(reader,'original');const restoredFlex=reader._iframe.getAttribute('flex');
+  await addon.setMode(reader,'compare');
+  checks.equalInitialPanes=Math.abs(initial.source.width-initial.right.width)<1;
+  checks.noVisibleIntermediateCompare=frames.every(f=>f.mode!=='compare'||f.visible!=='visible'||f.left===0||f.right===0);
+  checks.dragMatchesPointer=Math.abs(dragged.source.width-(initial.source.width-50))<2;
+  checks.firstMoveDoesNotJump=Math.abs(events.find(e=>e.type==='pointermove').left-initial.source.width)<1;
+  checks.compareReentersAtHalf=Math.abs(reentered.source.width-reentered.right.width)<1;
+  checks.nativeFlexRestored=restoredFlex==='1';
+  checks.nativeHostPreserved=reader._iframe===originalBrowser&&reader._internalReader===originalReader;
+  for(const side of ['left','right'])checks[side+'DenseInputFollowed']=samples.filter(s=>s.source===side).length>=input.filter(i=>i.side===side).length*.9;
+  screenshots.push(await screenshot('manual-ux-fixed'));
+  return{passed:Object.values(checks).every(Boolean),checks,transitions,initial,dragged,reentered,events,input,samples,screenshots,screenshot:screenshots[0]};
+ }
+ if(ctx.action==='visual'){
+  await addon.setMode(reader,'original');const pref='extensions.doubaoTranslate.pairs',old=Zotero.Prefs.get(pref,true),pairs=addon.getPairs();delete pairs[source.libraryID+':'+source.key];
+  try{Zotero.Prefs.set(pref,JSON.stringify(pairs),true);addon.refreshControls(source.id);screenshots.push(await screenshot('manual-before-import'));}
+  finally{Zotero.Prefs.set(pref,old,true);addon.refreshControls(source.id);}
+  await addon.setMode(reader,'compare');screenshots.push(await screenshot('manual-import-compare'));
+  win.resizeTo(1280,800);screenshots.push(await screenshot('manual-compare-1280'));
+  const groups=[reader._iframeWindow,...(addon.states.get(reader.tabID)?[addon.states.get(reader.tabID).right.contentWindow]:[])];
+  checks.narrowControlsReachable=groups.every(w=>{const r=w.document.querySelector('.doubao-reading-modes').getBoundingClientRect();return r.x>=0&&r.right<=w.innerWidth+1;});
+  win.resizeTo(1600,1000);
+  return{passed:Object.values(checks).every(Boolean),checks,screenshots,screenshot:screenshots[1]};
+ }
+ if(ctx.action==='replacement-menu'){
+  const previous=addon.translationFor(reader),n=parent.getAttachments().length;
+  const changed=await service.importFile(source,PathUtils.join(ctx.runtime,'p2-mismatch-two-pages.pdf'));
+  await addon.setMode(reader,'compare');await wait(()=>addon.states.get(reader.tabID)?.rightInternal);
+  const button=reader._iframeWindow.document.querySelector('.doubao-sync-button');
+  checks.mismatchImported=changed.pageCountMismatch;checks.mismatchLinkDisabled=button.disabled&&button.textContent==='页数不同';
+  checks.previousTranslationRetained=Zotero.Items.get(previous.id)?.id===previous.id;
+  screenshots.push(await screenshot('manual-page-mismatch'));
+  const restored=await service.importFile(source,selectedPath);checks.restoreExistingPair=!restored.created&&restored.translated.id===previous.id;
+  await addon.setMode(reader,'original');await win.ZoteroPane.selectItem(source.id);win.Zotero_Tabs.select('zotero-pane');await win.ZoteroPane.buildItemContextMenu();
+  const popup=win.document.getElementById('zotero-itemmenu');popup.openPopup(win.document.documentElement,'after_start',300,100,false,false);await pause(150);
+  const menu=popup.querySelector('[label="导入已有译文 PDF…"]');checks.nativeMenuVisible=!!menu&&!menu.disabled&&!menu.hidden;
+  screenshots.push(await screenshot('manual-library-menu'));popup.hidePopup();
+  await Zotero.Reader.open(source.id);await addon.setMode(reader,'compare');
+  return{passed:Object.values(checks).every(Boolean),checks,screenshots,screenshot:screenshots[1],countBefore:n,countAfter:parent.getAttachments().length};
+ }
+ if(ctx.action==='persistence'){
+  const translated=addon.translationFor(reader),annotation=Zotero.Items.getByLibraryAndKey(fixture.libraryID,fixture.annotationKey);
+  checks.pairPersisted=translated?.key===fixture.translatedKey;checks.recordPersisted=service.records().some(r=>r.sourceKey===source.key&&r.translatedKey===translated.key);
+  checks.originalAnnotationPersisted=annotation?.parentID===source.id;
+  await addon.setMode(reader,'compare');await wait(()=>addon.states.get(reader.tabID)?.rightInternal);
+  checks.nativeSourceWritable=!reader._isReadOnly();checks.readOnlyTranslation=addon.states.get(reader.tabID).rightInternal._state.readOnly===true;
+  screenshots.push(await screenshot('manual-after-restart'));
+  return{passed:Object.values(checks).every(Boolean),checks,screenshots,screenshot:screenshots[0],fixture};
+ }
+ if(ctx.action==='disable-reenable'){
+  await addon.setMode(reader,'compare');const state=addon.states.get(reader.tabID),sync=state.sync;
+  const {AddonManager}=ChromeUtils.importESModule('resource://gre/modules/AddonManager.sys.mjs');
+  const installed=await AddonManager.getAddonByID('doubao-translate@local.invalid');
+  try{
+   await installed.disable();
+   checks.controllerRemoved=!win.DoubaoTranslate;checks.panesRemoved=!win.document.querySelector('.doubao-translation-pane');
+   checks.toolbarRemoved=!reader._iframeWindow.document.querySelector('.doubao-reading-modes');
+   checks.nativeFlexRestored=reader._iframe.getAttribute('flex')==='1';
+   checks.timersDisposed=sync.disposed&&sync.poll===null&&sync.frame===null&&sync.cleanup.length===0;
+   await win.ZoteroPane.buildItemContextMenu();checks.menuRemoved=!win.document.getElementById('zotero-itemmenu').querySelector('[label="导入已有译文 PDF…"]');
+   checks.originalAnnotationPreserved=Zotero.Items.getByLibraryAndKey(fixture.libraryID,fixture.annotationKey)?.parentID===source.id;
+  }finally{await installed.enable();await wait(()=>win.DoubaoTranslate&&!win.DoubaoTranslate.stopped);}
+  checks.reenabled=!!reader._iframeWindow.document.querySelector('.doubao-import-button');
+  await win.DoubaoTranslate.setMode(reader,'compare');
+  return{passed:Object.values(checks).every(Boolean),checks};
+ }
+ if(ctx.action!=='import')throw new Error('Unknown manual scenario');
+ await addon.setMode(reader,'original');
+ const sourceBefore=service.hash(await IOUtils.read(await source.getFilePathAsync())),selectedBefore=service.hash(await IOUtils.read(selectedPath));
+ const annotationBefore=Zotero.Items.getByLibraryAndKey(fixture.libraryID,fixture.annotationKey).annotationPosition;
+ const count=()=>parent.getAttachments().length;
+ const initialCount=count();const button=reader._iframeWindow.document.querySelector('.doubao-import-button');
+ checks.importEntryWithoutPair=!!button;
+ screenshots.push(await screenshot('manual-before-import'));
+ const choose=service.pickFile;service.pickFile=async()=>null;await addon.openManualImport(source,win,reader);checks.cancelNoWrite=count()===initialCount;
+ service.pickFile=async()=>selectedPath;
+ try{button.click();await wait(()=>addon.translationFor(reader)&&addon.states.get(reader.tabID)?.rightInternal&&!service.pending.size);}
+ finally{service.pickFile=choose;}
+ const translated=addon.translationFor(reader);fixture.translatedKey=translated.key;await IOUtils.writeJSON(file,fixture);
+ const afterCount=count();
+ checks.storedSibling=translated.parentID===parent.id&&translated.attachmentLinkMode===Zotero.Attachments.LINK_MODE_IMPORTED_FILE;
+ checks.correctPair=translated.id!==source.id&&translated.libraryID===source.libraryID;
+ checks.copyMatchesSelected=service.hash(await IOUtils.read(await translated.getFilePathAsync()))===selectedBefore;
+ checks.parseNineteenPages=service.records().some(r=>r.sourceKey===source.key&&r.translatedPages===19&&r.sourcePages===19);
+ checks.sourceHostPreserved=reader._internalReader===originalReader&&reader._iframe===originalBrowser;
+ checks.nativeAnnotationPreserved=Zotero.Items.getByLibraryAndKey(fixture.libraryID,fixture.annotationKey).annotationPosition===annotationBefore;
+ screenshots.push(await screenshot('manual-import-compare'));
+ const duplicate=await service.importFile(source,selectedPath);
+ checks.duplicateNoNewAttachment=!duplicate.created&&duplicate.translated.id===translated.id&&count()===afterCount;
+ for(const [label,path] of [['sameAsOriginal',originalPath],['invalidFile',PathUtils.join(ctx.runtime,'manual-inputs','invalid.pdf')]]){
+  let rejected=false;try{await service.importFile(source,path);}catch{rejected=true;}checks[label+'Rejected']=rejected&&count()===afterCount;
+ }
+ const oldPair=addon.getPairs()[source.libraryID+':'+source.key],oldRecords=JSON.stringify(service.records()),pair=addon.pair;
+ addon.pair=()=>{throw new Error('Injected pairing failure');};let failed=false;
+ try{await service.importFile(source,PathUtils.join(ctx.runtime,'manual-inputs','rollback-three-pages.pdf'));}catch{failed=true;}finally{addon.pair=pair;}
+ checks.failureRollback=failed&&count()===afterCount&&addon.getPairs()[source.libraryID+':'+source.key]===oldPair&&JSON.stringify(service.records())===oldRecords;
+ checks.originalAndDownloadUnchanged=service.hash(await IOUtils.read(await source.getFilePathAsync()))===sourceBefore&&service.hash(await IOUtils.read(selectedPath))===selectedBefore;
+ // Persist a standalone original as well, without reparenting either PDF.
+ let standalone=fixture.standaloneSourceKey&&Zotero.Items.getByLibraryAndKey(fixture.libraryID,fixture.standaloneSourceKey);
+ if(!standalone){standalone=await Zotero.Attachments.importFromFile({file:Zotero.File.pathToFile(originalPath),libraryID:fixture.libraryID,title:'[DEV MANUAL] 独立原文 PDF'});fixture.standaloneSourceKey=standalone.key;await IOUtils.writeJSON(file,fixture);}
+ const top=await service.importFile(standalone,selectedPath),again=await service.importFile(standalone,selectedPath);
+ checks.standalonePair=!standalone.parentID&&!top.translated.parentID&&top.translated.libraryID===standalone.libraryID&&again.translated.id===top.translated.id&&!again.created;
+ await addon.setMode(reader,'compare');
+ checks.buttonsEnabled=[...reader._iframeWindow.document.querySelectorAll('[data-doubao-mode]')].every(b=>!b.disabled);
+ return{passed:Object.values(checks).every(Boolean),checks,screenshots,screenshot:screenshots[1],fixture,attachmentCountBefore:initialCount,attachmentCountAfter:afterCount};
+};

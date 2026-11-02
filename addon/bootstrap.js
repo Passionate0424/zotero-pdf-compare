@@ -13,6 +13,7 @@ async function startup({ rootURI, id }) {
   }
   const scope = { Zotero, Services, Components, ChromeUtils, IOUtils, PathUtils };
   Services.scriptloader.loadSubScriptWithOptions(rootURI + 'src/scroll-sync.js', {target:scope,ignoreCache:true});
+  Services.scriptloader.loadSubScriptWithOptions(rootURI + 'src/manual-import.js', {target:scope,ignoreCache:true});
   Services.scriptloader.loadSubScriptWithOptions(rootURI + 'src/main.js', {target:scope,ignoreCache:true});
   addon = new scope.DoubaoTranslateAddon(id);
   addon.start();

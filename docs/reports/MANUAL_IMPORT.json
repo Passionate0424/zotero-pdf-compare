@@ -1,0 +1,254 @@
+{
+  "date": "2026-11-02",
+  "status": "manual_workflow_checkpoint_not_full_P4",
+  "version": "0.3.0",
+  "checkpointBeforeUxFix": "65f66af4623578f400606281535f93155078f5d5",
+  "build": {
+    "file": "E:\\project\\zotero-doubao-translate\\dist\\doubao-translate-dev-0cb552e1eff9ae64.xpi",
+    "filename": "doubao-translate-dev-0cb552e1eff9ae64.xpi",
+    "version": "0.3.0",
+    "entries": 7,
+    "bytes": 27189,
+    "sha256": "0cb552e1eff9ae646204101c8203996d4390396adf92e82b9d4461398d22046a"
+  },
+  "tests": {
+    "manual-import-regression": {
+      "passed": true,
+      "checks": {
+        "importEntryWithoutPair": true,
+        "cancelNoWrite": true,
+        "storedSibling": true,
+        "correctPair": true,
+        "copyMatchesSelected": true,
+        "parseNineteenPages": true,
+        "sourceHostPreserved": true,
+        "nativeAnnotationPreserved": true,
+        "duplicateNoNewAttachment": true,
+        "sameAsOriginalRejected": true,
+        "invalidFileRejected": true,
+        "failureRollback": true,
+        "originalAndDownloadUnchanged": true,
+        "standalonePair": true,
+        "buttonsEnabled": true
+      },
+      "nonce": "132abd83-bec6-468e-8553-7d7ef6299162",
+      "generatedAt": "2026-11-02T04:06:43.507Z",
+      "scenario": "import"
+    },
+    "manual-replacement-final": {
+      "passed": true,
+      "checks": {
+        "mismatchImported": true,
+        "mismatchLinkDisabled": true,
+        "previousTranslationRetained": true,
+        "restoreExistingPair": true,
+        "nativeMenuVisible": true
+      },
+      "nonce": "be1a666b-4ef0-45b4-b382-b1fcd22453b3",
+      "generatedAt": "2026-11-02T04:06:51.373Z",
+      "scenario": "replacement-menu"
+    },
+    "manual-persistence-final": {
+      "passed": true,
+      "checks": {
+        "pairPersisted": true,
+        "recordPersisted": true,
+        "originalAnnotationPersisted": true,
+        "nativeSourceWritable": true,
+        "readOnlyTranslation": true
+      },
+      "nonce": "869f0c50-1039-44a7-855b-8731620670e2",
+      "generatedAt": "2026-11-02T04:08:53.525Z",
+      "scenario": "persistence"
+    },
+    "manual-disable-final": {
+      "passed": true,
+      "checks": {
+        "controllerRemoved": true,
+        "panesRemoved": true,
+        "toolbarRemoved": true,
+        "nativeFlexRestored": true,
+        "timersDisposed": true,
+        "menuRemoved": true,
+        "originalAnnotationPreserved": true,
+        "reenabled": true
+      },
+      "nonce": "50788810-c29d-4044-bdfc-eff7880a21e4",
+      "generatedAt": "2026-11-02T04:09:34.834Z",
+      "scenario": "disable-reenable"
+    },
+    "manual-visual-final": {
+      "passed": true,
+      "checks": {
+        "narrowControlsReachable": true
+      },
+      "nonce": "4de572e2-84a8-403c-b5be-4896a30796e5",
+      "generatedAt": "2026-11-02T04:08:58.721Z",
+      "scenario": "visual"
+    },
+    "ux-final": {
+      "passed": true,
+      "checks": {
+        "equalInitialPanes": true,
+        "noVisibleIntermediateCompare": true,
+        "dragMatchesPointer": true,
+        "firstMoveDoesNotJump": true,
+        "compareReentersAtHalf": true,
+        "nativeFlexRestored": true,
+        "nativeHostPreserved": true,
+        "leftDenseInputFollowed": true,
+        "rightDenseInputFollowed": true
+      },
+      "nonce": "7fbe4a98-d73d-4bd0-9cd8-94a9cb4ab0a5",
+      "generatedAt": "2026-11-02T04:06:59.468Z",
+      "scenario": "ux-diagnose"
+    },
+    "ux-alignment": {
+      "passed": true,
+      "checks": {
+        "nineteenPagesBothDirections": true,
+        "anchorError": true,
+        "latencyP95": true
+      },
+      "nonce": "6614659a-9dd7-4449-9caa-3261d7285894",
+      "generatedAt": "2026-11-02T04:03:48.693Z",
+      "scenario": "alignment",
+      "p95Ms": 48,
+      "maximumError": 0.0013154554781120709,
+      "sampleCount": 120
+    },
+    "ux-annotations": {
+      "passed": true,
+      "checks": {
+        "existingAnnotations": true,
+        "existingPositionUnchanged": true,
+        "createdInOriginal": true,
+        "updatedCommentTagsColor": true,
+        "deletedFromDatabase": true,
+        "retainedOriginalParent": true,
+        "nativeCallbacksPreserved": true,
+        "nativeHostPreserved": true,
+        "dragSerializationOriginalIdentity": true,
+        "copyRichText": true
+      },
+      "nonce": "7d1a3986-c0ca-40d0-86ce-3aa94a04c5bb",
+      "generatedAt": "2026-11-02T04:03:55.295Z",
+      "scenario": "annotations-api"
+    },
+    "ux-lifecycle": {
+      "passed": true,
+      "checks": {
+        "twentySwitches": true,
+        "singlePane": true,
+        "dragResize": true,
+        "nativeHostPreserved": true,
+        "finalModeWins": true,
+        "noPaneAfterOriginal": true,
+        "noQueueLeak": true
+      },
+      "nonce": "c9e83667-46f5-4e79-93a5-a5282c3e477a",
+      "generatedAt": "2026-11-02T04:05:33.041Z",
+      "scenario": "mode-lifecycle"
+    },
+    "ux-cleanup-final": {
+      "passed": true,
+      "checks": {
+        "leftNativeNavigation": true,
+        "rightNativeNavigation": true,
+        "disabledIndependent": true,
+        "reenabledAligned": true,
+        "annotationGestureNoReverseJump": true,
+        "nativeHostPreserved": true,
+        "cleanup": true
+      },
+      "nonce": "818d750a-7fc3-47d5-af08-a69842868b6a",
+      "generatedAt": "2026-11-02T04:09:45.934Z",
+      "scenario": "navigation"
+    }
+  },
+  "unit": {
+    "passed": 37,
+    "failed": 0
+  },
+  "denseScrolling": {
+    "measurement": "native scroll offset updates, normal clock, no forced refresh inside timing interval; not screen present latency",
+    "before": [
+      {
+        "side": "left",
+        "inputCount": 60,
+        "updateCount": 33,
+        "meanUpdateIntervalMs": 31.53125,
+        "maxUpdateIntervalMs": 47
+      },
+      {
+        "side": "right",
+        "inputCount": 60,
+        "updateCount": 31,
+        "meanUpdateIntervalMs": 31.166666666666668,
+        "maxUpdateIntervalMs": 47
+      }
+    ],
+    "after": [
+      {
+        "side": "left",
+        "inputCount": 60,
+        "updateCount": 60,
+        "meanUpdateIntervalMs": 15.728813559322035,
+        "maxUpdateIntervalMs": 25
+      },
+      {
+        "side": "right",
+        "inputCount": 60,
+        "updateCount": 60,
+        "meanUpdateIntervalMs": 15.440677966101696,
+        "maxUpdateIntervalMs": 20
+      }
+    ]
+  },
+  "screenshots": [
+    {
+      "path": "assets/manual-import-compare.png",
+      "sha256": "cfccc381f69a7c68145ad3f2d1116ef4a96d0b3c6f2f34f9e62cc9ab4e5ec845",
+      "reviewed": true,
+      "dpr": 1.25
+    },
+    {
+      "path": "assets/manual-compare-1280.png",
+      "sha256": "312b0b062275b682c43a2b6679de51d17346eb17b7d83a0ab1dd2224ce21044d",
+      "reviewed": true,
+      "dpr": 1.25
+    },
+    {
+      "path": "assets/manual-after-restart.png",
+      "sha256": "ff0a01b4bfbe82c3047c01967f383144ce779aa53e8f5e0e63761936cf1eb0ab",
+      "reviewed": true,
+      "dpr": 1.25
+    }
+  ],
+  "isolation": {
+    "runId": "bd87d593-f5a1-4f43-b24f-e10dced4902a",
+    "passed": true,
+    "checks": {
+      "actualProfile": true,
+      "actualData": true,
+      "parentProcess": true,
+      "noAccount": true,
+      "syncOff": true,
+      "connectorOff": true,
+      "wordInstallSkipped": true,
+      "productionProcessesPreserved": true,
+      "protectedFilesUnchanged": true,
+      "initialBaselinePolicy": true,
+      "nativeDatabaseCreated": true,
+      "screenshot": true,
+      "testLibraryRegistered": true
+    }
+  },
+  "limitations": [
+    "OS file selection result stubbed in test",
+    "P2 real keyboard and scrollbar gestures not fully verified",
+    "P3 live downloads 0/3, CAPTCHA route stopped",
+    "pairing metadata local profile only",
+    "earlier pre-restart protectedFilesUnchanged failure did not retain exact diff; see report"
+  ]
+}

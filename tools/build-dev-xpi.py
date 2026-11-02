@@ -8,7 +8,7 @@ import subprocess
 
 root = Path(__file__).resolve().parent.parent
 files = {"manifest.json": "addon/manifest.json", "bootstrap.js": "addon/bootstrap.js",
-         "src/main.js": "addon/src/main.js", "src/scroll-sync.js": "addon/src/scroll-sync.js", "LICENSE": "LICENSE", "NOTICE.md": "NOTICE.md"}
+         "src/main.js": "addon/src/main.js", "src/scroll-sync.js": "addon/src/scroll-sync.js", "src/manual-import.js": "addon/src/manual-import.js", "LICENSE": "LICENSE", "NOTICE.md": "NOTICE.md"}
 manifest = json.loads((root / files["manifest.json"]).read_text(encoding="utf-8"))
 if manifest["applications"]["zotero"]["id"] != "doubao-translate@local.invalid":
     raise SystemExit("Unexpected development add-on ID")

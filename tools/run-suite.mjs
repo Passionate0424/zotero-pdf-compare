@@ -9,8 +9,8 @@ const probe = JSON.parse(fs.readFileSync(path.join(runtime, 'probe-report.json')
 if (launch.runId !== probe.runId || path.resolve(probe.data).toLowerCase() !== path.join(runtime, 'zotero-data').toLowerCase()) throw new Error('Not a verified current test environment.');
 const nonce = crypto.randomUUID();
 const suite=process.argv[3]||'p1-reader';
-if(!['p1-reader','p2-sync'].includes(suite))throw new Error('Unknown test suite');
-const stage=suite==='p2-sync'?'p2':'p1';
+if(!['p1-reader','p2-sync','manual-import'].includes(suite))throw new Error('Unknown test suite');
+const stage={'p2-sync':'p2','p1-reader':'p1','manual-import':'manual'}[suite];
 fs.writeFileSync(path.join(runtime, 'probe-request.json'), JSON.stringify({ runId: launch.runId, action: 'run-suite', suite, scenario: process.argv[2] || 'inspect', nonce }));
 const deadline = Date.now() + 90000;
 while (Date.now() < deadline) {

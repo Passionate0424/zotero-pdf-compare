@@ -181,6 +181,11 @@ function verify() {
   else checks.emptyLibrary = probe.itemCount === 0;
   const result = { runId: launch.runId, verifiedAt: new Date().toISOString(), passed: Object.values(checks).every(Boolean), checks, preservedProcesses, files, initialBaselineFiles, initialBaselineAudit, comparisonScope:'files compare against this run start; initial baseline retained separately', probe };
   writeJSON(path.join(runtime, 'verification.json'), result);
+  // Retain failed as well as successful run evidence before a later startup
+  // replaces the latest report and its per-run comparison baseline.
+  const auditDir=assertWritableTarget(path.join(runtime,'audits'),root,protectedPaths);
+  fs.mkdirSync(auditDir,{recursive:true});
+  writeJSON(path.join(auditDir,`${launch.runId}-${result.verifiedAt.replace(/[:.]/g,'-')}.json`),result);
   if (!result.passed) throw new Error(`Isolation verification failed: ${JSON.stringify(checks)}`);
   return { runId: result.runId, passed: result.passed, checks };
 }

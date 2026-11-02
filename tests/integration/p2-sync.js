@@ -161,7 +161,7 @@ var runP2=async function(ctx){
   pointerWindow.document.dispatchEvent(new pointerWindow.PointerEvent('pointerup',{bubbles:true,pointerId:7,button:0}));
   await addon.setMode(reader,'original');
   checks.nativeHostPreserved=reader._iframe===identity.browser&&reader._internalReader===identity.internal&&reader._iframe.parentNode===identity.parent;
-  checks.cleanup=sync.disposed&&sync.cleanup.length===0&&sync.timer===null&&sync.poll===null&&!addon.states.has(reader.tabID);
+  checks.cleanup=sync.disposed&&sync.cleanup.length===0&&sync.timer===null&&sync.poll===null&&sync.frame===null&&!addon.states.has(reader.tabID);
   return{passed:Object.values(checks).every(Boolean),stage:'native_navigation_and_cleanup',checks,actions};
  }
  if(ctx.action==='engine-input'){

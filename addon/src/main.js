@@ -12,12 +12,25 @@ var DoubaoTranslateAddon = class {
     this.modeRequests = new Map();
     this.translationPositions = new Map();
     this.stopped = false;
+    this.manual = new DoubaoManualImport(this);
+    this.menuID='doubao-manual-import';
     this.timers = ChromeUtils.importESModule('resource://gre/modules/Timer.sys.mjs');
     this.onToolbar = event => this.renderToolbar(event);
   }
   start() {
     Zotero.Reader.registerEventListener('renderToolbar', this.onToolbar, this.id);
     for (const win of Zotero.getMainWindows()) win.DoubaoTranslate = this;
+    Zotero.MenuManager.registerMenu({menuID:this.menuID,pluginID:this.id,target:'main/library/item',menus:[{
+      menuType:'menuitem',onShowing:(_event,ctx)=>{
+        ctx.menuElem.setAttribute('label','导入已有译文 PDF…');
+        try{const source=this.manual.sourceForSelection(Zotero.getMainWindow().ZoteroPane.getSelectedItems());this.manual.assertSource(source);ctx.setEnabled(true);ctx.menuElem.setAttribute('tooltiptext','选择已下载的译文 PDF，并与选中的原文配对');}
+        catch(error){ctx.setEnabled(false);ctx.menuElem.setAttribute('tooltiptext',error.message);}
+      },onCommand:(_event,ctx)=>{
+        const win=ctx.menuElem.ownerGlobal;
+        try{const source=this.manual.sourceForSelection(win.ZoteroPane.getSelectedItems());this.openManualImport(source,win);}
+        catch(error){Services.prompt.alert(win,'导入译文',error.message);}
+      }
+    }]});
     for (const reader of Zotero.Reader._readers) {
       const doc = reader._iframeWindow?.document;
       const end = doc?.querySelector('.toolbar > .end');
@@ -26,6 +39,7 @@ var DoubaoTranslateAddon = class {
   }
   stop() {
     this.stopped = true;
+    Zotero.MenuManager.unregisterMenu(this.menuID);
     for (const observer of this.hostWatches.values()) observer.disconnect();
     this.hostWatches.clear();
     Zotero.Reader.unregisterEventListener('renderToolbar', this.onToolbar);
@@ -51,13 +65,15 @@ var DoubaoTranslateAddon = class {
   }
   translationFor(reader) {
     const source = Zotero.Items.get(reader.itemID);
+    if(!source||source.deleted)return null;
     const key = this.getPairs()[`${source.libraryID}:${source.key}`];
     return key ? Zotero.Items.getByLibraryAndKey(source.libraryID, key) : null;
   }
   renderToolbar({ reader, doc, append }) {
-    if (!reader._tabContainer || !this.translationFor(reader) || doc.querySelector('.doubao-reading-modes')) return;
+    if (!reader._tabContainer || !Zotero.Items.get(reader.itemID)?.isPDFAttachment() || doc.querySelector('.doubao-reading-modes')) return;
     const group = this.createButtons(doc, reader);
     append(group);
+    this.refreshControls(reader.itemID);
     if (!this.hostWatches.has(reader.tabID)) {
       const container=reader._tabContainer;
       const observer=new container.ownerDocument.defaultView.MutationObserver(() => {
@@ -79,7 +95,13 @@ var DoubaoTranslateAddon = class {
     group.dataset.sourceTab=reader.tabID;
     group.setAttribute('role', 'group');
     group.setAttribute('aria-label', 'PDF 阅读模式');
-    group.style.cssText = 'display:flex;gap:3px;align-items:center;margin:0 4px;flex-shrink:0;';
+    group.style.cssText = 'display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin:0 4px;flex-shrink:1;';
+    const importButton=doc.createElement('button');
+    importButton.className='toolbar-button doubao-import-button';importButton.textContent='导入译文';
+    importButton.title='选择手动下载的译文 PDF，保存为独立附件并与此原文配对';
+    importButton.style.cssText='font:inherit;font-size:11px;height:26px;width:auto;padding:0 5px;flex-shrink:0;border:1px solid var(--fill-tertiary,#888);border-radius:4px;';
+    importButton.addEventListener('click',()=>this.openManualImport(Zotero.Items.get(reader.itemID),reader._iframe.ownerGlobal,reader));
+    group.appendChild(importButton);
     for (const [mode, label] of [['original','原文'],['translation','译文'],['compare','对照']]) {
       const button = doc.createElement('button');
       button.textContent = label;
@@ -101,7 +123,31 @@ var DoubaoTranslateAddon = class {
     link.addEventListener('click',()=>{const state=this.states.get(reader.tabID);if(state?.sync){state.linkWanted=!state.sync.enabled;state.sync.setEnabled(state.linkWanted);}});
     group.appendChild(link);
     this.buttons.add(group);
+    this.refreshControls(reader.itemID);
     return group;
+  }
+  refreshControls(itemID) {
+    for(const reader of Zotero.Reader._readers.filter(r=>r.itemID===itemID)){
+      const source=Zotero.Items.get(itemID);if(!source)continue;
+      const paired=!!this.translationFor(reader);
+      const pending=this.manual.pending.has(source.libraryID+':'+source.key);
+      for(const group of this.buttons){
+        if(group.dataset.sourceTab!==reader.tabID)continue;
+        for(const button of group.querySelectorAll('[data-doubao-mode]'))button.disabled=button.dataset.doubaoMode!=='original'&&!paired;
+        const button=group.querySelector('.doubao-import-button');
+        if(button){let allowed=true;try{this.manual.assertSource(source);}catch{allowed=false;}button.disabled=!allowed||pending;button.textContent=pending?'导入中…':paired?'更换译文':'导入译文';}
+        if(!this.states.has(reader.tabID)){const link=group.querySelector('.doubao-sync-button');if(link)link.disabled=true;}
+      }
+    }
+  }
+  async openManualImport(source,win,reader) {
+    let imported=false;
+    try{
+      const result=await this.manual.choose(source,win);if(result.cancelled||this.stopped)return;
+      imported=true;reader=reader||await Zotero.Reader.open(source.id)||Zotero.Reader._readers.find(r=>r.itemID===source.id);
+      await reader._initPromise;await this.setMode(reader,'compare');
+      if(result.pageCountMismatch)Services.prompt.alert(win,'译文已导入','原文和译文页数不同，已暂停联动；仍可分别阅读。');
+    }catch(error){if(this.stopped)return;Zotero.logError(error);Services.prompt.alert(win,imported?'译文已导入':'导入译文失败',imported?'文件已保存，请回到原文重试打开对照。':error.message);}
   }
   responsiveToolbar(doc, readonly = false) {
     const root = doc.documentElement;
@@ -110,7 +156,7 @@ var DoubaoTranslateAddon = class {
       html.doubao-compare-layout .toolbar {height:auto !important;min-height:81px;flex-wrap:wrap;align-content:flex-start;justify-content:space-between;}
       html.doubao-compare-layout .toolbar > .start {flex:1 0 100%;min-width:0;min-height:40px;flex-wrap:wrap;}
       html.doubao-compare-layout .toolbar > .center {flex:0 0 auto;min-height:40px;}
-      html.doubao-compare-layout .toolbar > .end {flex:0 0 auto;min-height:40px;margin-inline-start:auto;padding-inline-end:0;gap:4px;}
+      html.doubao-compare-layout .toolbar > .end {flex:0 1 auto;flex-wrap:wrap;max-width:100%;min-height:40px;margin-inline-start:auto;padding-inline-end:0;gap:4px;}
       html.doubao-compare-layout .toolbar > .start > * {flex-shrink:0;}
       html.doubao-compare-layout .toolbar #numPages {white-space:nowrap;flex:0 0 auto;align-items:center;}
       html.doubao-compare-layout .toolbar #numPages div {position:static;}
@@ -143,7 +189,7 @@ var DoubaoTranslateAddon = class {
     }
     throw new Error('译文阅读器未能就绪，请切回原文后重试。');
   }
-  async ensureState(reader) {
+  async ensureState(reader, initialMode = 'compare') {
     const existing = this.states.get(reader.tabID);
     if (existing) return existing;
     const translated = this.translationFor(reader);
@@ -170,6 +216,7 @@ var DoubaoTranslateAddon = class {
       reader, sourceBrowser, container, right, divider, translated, mode: 'compare',
       originalContainerStyle: container.getAttribute('style'),
       originalBrowserStyle: sourceBrowser.getAttribute('style'),
+      originalBrowserFlex: sourceBrowser.getAttribute('flex'),
       nativeInternal: reader._internalReader, originalParent: sourceBrowser.parentNode, linkWanted:true,
     };
     state.ratio = 0.5;
@@ -179,16 +226,17 @@ var DoubaoTranslateAddon = class {
       right.style.flex = `${1-state.ratio} 1 0`;
       divider.setAttribute('aria-valuenow',String(Math.round(state.ratio*100)));
     };
+    state.resize=resize;
     divider.setAttribute('aria-valuenow','50');
     divider.addEventListener('pointerdown',event => {
       if (event.button !== 0) return;
       event.preventDefault();state.dragPointer = event.pointerId;
+      state.dragStart={x:event.clientX,ratio:state.ratio,width:Math.max(1,container.getBoundingClientRect().width-5)};
       divider.setPointerCapture(event.pointerId);
     });
     divider.addEventListener('pointermove',event => {
       if (state.dragPointer !== event.pointerId) return;
-      const bounds=container.getBoundingClientRect();
-      resize((event.clientX-bounds.left)/Math.max(1,bounds.width-5));
+      resize(state.dragStart.ratio+(event.clientX-state.dragStart.x)/state.dragStart.width);
     });
     const finishDrag = event => {
       if (state.dragPointer !== event.pointerId) return;
@@ -198,6 +246,7 @@ var DoubaoTranslateAddon = class {
     divider.addEventListener('pointerup',finishDrag);
     divider.addEventListener('pointercancel',finishDrag);
     divider.addEventListener('lostpointercapture',()=>{state.dragPointer=null;});
+    divider.addEventListener('dblclick',()=>resize(0.5));
     divider.addEventListener('keydown',event => {
       if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
       event.preventDefault();
@@ -208,7 +257,15 @@ var DoubaoTranslateAddon = class {
     container.style.flexDirection = 'row';
     container.style.minWidth = '0';
     sourceBrowser.style.flex = '1 1 0';
+    // XUL's flex attribute overrides even !important inline CSS. Restore it
+    // verbatim when returning to the native layout.
+    sourceBrowser.removeAttribute('flex');
     sourceBrowser.style.minWidth = '0';
+    if(initialMode==='translation'){
+      container.style.position='relative';
+      right.style.position='absolute';right.style.inset='0';right.style.visibility='hidden';
+      divider.style.display='none';
+    }
     container.appendChild(divider);
     container.appendChild(right);
     right.setAttribute('src', 'resource://zotero/reader/reader.html');
@@ -246,7 +303,7 @@ var DoubaoTranslateAddon = class {
       const toolbar = content.document.querySelector('.toolbar');
       state.rightControls = this.createButtons(content.document, reader);
       toolbar.querySelector('.end').prepend(state.rightControls);
-      state.restoreSourceLayout = this.responsiveToolbar(reader._iframeWindow.document);
+      if(initialMode==='compare')state.restoreSourceLayout = this.responsiveToolbar(reader._iframeWindow.document);
       state.restoreRightLayout = this.responsiveToolbar(content.document,true);
       const leftView=reader._internalReader._primaryView,rightView=state.rightInternal._primaryView;
       await this.waitFor(()=>leftView._iframeWindow?.document.getElementById('viewerContainer')&&rightView._iframeWindow?.document.getElementById('viewerContainer'),state);
@@ -317,11 +374,16 @@ var DoubaoTranslateAddon = class {
         }
       }
     } else {
-      const state = await this.ensureState(reader);
+      const state = await this.ensureState(reader,mode);
       if(state.closed||this.stopped)return;
       const leader=state.mode==='translation'?'right':state.sync.leader;
       const anchor=state.sync.anchor(leader);
       state.mode = mode;
+      state.right.style.removeProperty('position');state.right.style.removeProperty('inset');state.right.style.removeProperty('visibility');
+      if(mode==='compare'){
+        state.resize(0.5);
+        if(!state.restoreSourceLayout)state.restoreSourceLayout=this.responsiveToolbar(reader._iframeWindow.document);
+      }
       state.sourceBrowser.style.display = mode === 'translation' ? 'none' : '';
       state.divider.style.display = mode === 'translation' ? 'none' : '';
       const primaryTarget=DoubaoScrollMath.target(anchor,state.sync.metrics(leader));
@@ -350,6 +412,8 @@ var DoubaoTranslateAddon = class {
     if (state.rightControls) { this.buttons.delete(state.rightControls); state.rightControls.remove(); }
     try { state.rightInternal?.uninit?.(); } catch (error) { Zotero.logError(error); }
     state.right.remove(); state.divider.remove();
+    if(state.originalBrowserFlex===null)state.sourceBrowser.removeAttribute('flex');
+    else state.sourceBrowser.setAttribute('flex',state.originalBrowserFlex);
     this.updateSyncButtons(state.reader,null);
     for (const [node, style] of [[state.container,state.originalContainerStyle],[state.sourceBrowser,state.originalBrowserStyle]]) {
       if (style == null) node.removeAttribute('style'); else node.setAttribute('style', style);

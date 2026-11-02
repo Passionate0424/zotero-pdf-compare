@@ -28,6 +28,7 @@ var DoubaoScrollSync = class {
   constructor({left,right,timers,onState,onNavigate}) {
     this.views={left,right};this.timers=timers;this.onState=onState||(()=>{});this.onNavigate=onNavigate||(()=>{});
     this.enabled=true;this.disposed=false;this.leader='left';this.pending=null;this.timer=null;this.expected={};this.cleanup=[];
+    this.frameWindow=left.host?.ownerGlobal;this.frame=null;this.lastFrame=0;
     this.stats={applies:0,suppressed:0,clamped:0,samples:[]};
     this.lastObserved={left:left.viewer.scrollTop,right:right.viewer.scrollTop};
     const listen=(target,type,callback,options)=>{target.addEventListener(type,callback,options);this.cleanup.push(()=>target.removeEventListener(type,callback,options));};
@@ -63,12 +64,19 @@ var DoubaoScrollSync = class {
         this.cleanup.push(()=>observer.disconnect());
       }
     }
-    // Background Gecko documents can defer scroll events. Poll only two numeric
-    // offsets; full page geometry is read only when an offset actually changes.
-    this.poll=this.timers.setInterval(()=>{
+    // Share the chrome window's frame clock between both documents. The timer
+    // also covers background windows whose animation frames are suspended.
+    const tick=()=>{
       if(this.disposed||!this.enabled)return;
       for(const side of ['left','right'])if(Math.abs(this.views[side].viewer.scrollTop-this.lastObserved[side])>0.25)this.onScroll(side);
-    },24);
+      const pending=this.pending;this.pending=null;
+      if(pending)this.alignFrom(pending.side,pending.at);
+    };
+    if(this.frameWindow?.requestAnimationFrame){
+      const frame=()=>{if(this.disposed)return;this.lastFrame=Date.now();tick();this.frame=this.frameWindow.requestAnimationFrame(frame);};
+      this.frame=this.frameWindow.requestAnimationFrame(frame);
+    }
+    this.poll=this.timers.setInterval(()=>{if(Date.now()-this.lastFrame>24)tick();},8);
     this.notify();
   }
   metrics(side) {
@@ -104,8 +112,6 @@ var DoubaoScrollSync = class {
   schedule(side,reason='scroll') {
     if(!this.enabled||this.disposed)return;
     this.pending={side,reason,at:Date.now()};
-    if(this.timer!==null)return;
-    this.timer=this.timers.setTimeout(()=>{this.timer=null;const pending=this.pending;this.pending=null;if(pending)this.alignFrom(pending.side,pending.at);},12);
   }
   alignFrom(side,started=Date.now(),anchor=null) {
     if(!this.enabled||this.disposed)return null;
@@ -132,6 +138,7 @@ var DoubaoScrollSync = class {
     if(this.timer!==null)this.timers.clearTimeout(this.timer);
     this.timer=null;this.pending=null;
     this.timers.clearInterval(this.poll);this.poll=null;
+    if(this.frame!==null)this.frameWindow.cancelAnimationFrame(this.frame);this.frame=null;
     for(const cleanup of this.cleanup.splice(0))cleanup();
     this.expected={};
   }
