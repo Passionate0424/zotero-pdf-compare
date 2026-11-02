@@ -28,7 +28,7 @@ while (Date.now() < deadline) {
       fs.writeFileSync(path.join(archive,'report.json'),JSON.stringify(report,null,2)+'\n');
       fs.writeFileSync(output,JSON.stringify(report,null,2)+'\n');
       console.log(JSON.stringify(report, null, 2));
-      if (report.passed === false) process.exitCode = 1;
+      if (report.passed !== true) process.exitCode = 1;
       break;
     }
   }

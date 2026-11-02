@@ -293,7 +293,17 @@ var DoubaoTranslateAddon = class {
     right.style.cssText = 'flex:1 1 0;min-width:0;max-width:none;overflow:hidden;';
     const divider = doc.createXULElement('box');
     divider.className = 'doubao-divider';
-    divider.style.cssText = 'width:5px;min-width:5px;flex:0 0 5px;background:var(--fill-secondary,#777);cursor:col-resize;touch-action:none;';
+    divider.style.cssText = 'width:12px;min-width:12px;flex:0 0 12px;position:relative;display:flex;align-items:center;justify-content:center;background:transparent;cursor:col-resize;touch-action:none;';
+    const rail = doc.createElementNS('http://www.w3.org/1999/xhtml','div');
+    rail.style.cssText = 'position:absolute;top:0;bottom:0;width:1px;background:var(--fill-secondary,#777);opacity:.45;pointer-events:none;';
+    const grip = doc.createElementNS('http://www.w3.org/1999/xhtml','div');
+    grip.style.cssText = 'position:relative;width:5px;height:30px;border-radius:5px;background:var(--fill-secondary,#777);box-shadow:0 0 0 3px var(--material-background,#252525);opacity:.8;pointer-events:none;';
+    divider.append(rail,grip);
+    const highlight = active => { grip.style.opacity=active?'1':'.8'; grip.style.background=active?'var(--accent-blue,#0a84ff)':'var(--fill-secondary,#777)'; rail.style.opacity=active?'.8':'.45'; };
+    divider.addEventListener('pointerenter',()=>highlight(true));
+    divider.addEventListener('pointerleave',()=>highlight(false));
+    divider.addEventListener('focus',()=>highlight(true));
+    divider.addEventListener('blur',()=>highlight(false));
     divider.setAttribute('role','separator');
     divider.setAttribute('aria-label','调整原文和译文宽度');
     divider.setAttribute('aria-orientation','vertical');
@@ -322,7 +332,7 @@ var DoubaoTranslateAddon = class {
     divider.addEventListener('pointerdown',event => {
       if (event.button !== 0) return;
       event.preventDefault();state.dragPointer = event.pointerId;
-      state.dragStart={x:event.clientX,ratio:state.ratio,width:Math.max(1,container.getBoundingClientRect().width-5)};
+      state.dragStart={x:event.clientX,ratio:state.ratio,width:Math.max(1,container.getBoundingClientRect().width-12)};
       divider.setPointerCapture(event.pointerId);
     });
     divider.addEventListener('pointermove',event => {
