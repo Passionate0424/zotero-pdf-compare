@@ -31,13 +31,87 @@ var runManualImport=async function(ctx){
   return{path,width:canvas.width,height:canvas.height,dpr:win.devicePixelRatio,method:'gecko-window-global-snapshot'};
  };
  const checks={},screenshots=[];
+ if(ctx.action==='cache-transition'){
+  const prior=addon.states.get(reader.tabID);if(prior)addon.restore(prior);
+  let samples=0,split=false;const timer=ctx.timers.setInterval(()=>{const s=addon.states.get(reader.tabID);if(!s)return;const a=s.sourceBrowser.getBoundingClientRect(),b=s.right.getBoundingClientRect();samples++;if(a.width>0&&b.width>0&&(a.right<=b.left+1||b.right<=a.left+1))split=true;},8);
+  try{await addon.setMode(reader,'translation');}finally{ctx.timers.clearInterval(timer);}
+  return{passed:!split&&samples>0,samples,visibleSplitObserved:split};
+ }
+ if(ctx.action==='cache-reading-position'){
+  await addon.setMode(reader,'translation');let state=addon.states.get(reader.tabID);const w=state.sync.views.right.window;w.document.dispatchEvent(new w.WheelEvent('wheel',{deltaY:1,bubbles:true}));
+  await addon.setMode(reader,'original');await reader.navigate({pageIndex:5});reader._internalReader._primaryView._iframeWindow.PDFViewerApplication.pdfViewer.update();
+  const expected=state.sync.anchor('left');await addon.setMode(reader,'translation');state=addon.states.get(reader.tabID);const actual=state.sync.anchor('right');
+  return{passed:Math.abs(expected.pageIndex+expected.fraction-actual.pageIndex-actual.fraction)<.02,expected,actual};
+ }
+ if(ctx.action==='cache-memory'){
+  const manager=Components.classes['@mozilla.org/memory-reporter-manager;1'].getService(Components.interfaces.nsIMemoryReporterManager);
+  const collect=async()=>{await pause(300);for(let n=0;n<2;n++){Components.utils.forceGC();if(typeof Components.utils.forceCC==='function')Components.utils.forceCC();await pause(100);}return{residentBytes:manager.resident,heapAllocatedBytes:manager.heapAllocated};};
+  for(const state of [...addon.states.values()])addon.restore(state);
+  const before=await collect();await addon.setMode(reader,'translation');await addon.setMode(reader,'original');
+  const hiddenCount=[...addon.states.values()].filter(s=>s.mode==='original').length,hidden=await collect();
+  addon.restore(addon.states.get(reader.tabID));const released=await collect();
+  return{passed:hiddenCount===1&&addon.states.size===0,hiddenCount,releasedCount:addon.states.size,before,hidden,released,scope:'test parent process snapshots after GC; includes other tabs/native caches; not a per-file guarantee'};
+ }
+ if(ctx.action==='cache-activity')return{passed:true,sourceActive:reader._iframe.docShellIsActive,sourceVisible:reader._iframe.getBoundingClientRect().width,sourcePDFVisibility:reader._internalReader._primaryView._iframeWindow.document.visibilityState,mode:addon.states.get(reader.tabID)?.mode};
+ if(ctx.action==='cache-layout'){
+  await addon.setMode(reader,'compare');await addon.setMode(reader,'translation');const s=addon.states.get(reader.tabID);
+  const width=s.right.getBoundingClientRect().width,total=s.container.getBoundingClientRect().width;
+  return{passed:Math.abs(width-total)<1,width,total};
+ }
+ if(ctx.action==='cache-reset-fixture'){
+  addon.pair(source,Zotero.Items.getByLibraryAndKey(fixture.libraryID,fixture.translatedKey));return{passed: addon.translationFor(reader).key===fixture.translatedKey};
+ }
+ if(ctx.action==='cache-lifecycle'){
+  let modeStep=0;const cacheMode=async(r,mode)=>{modeStep++;try{return await addon.setMode(r,mode);}catch(error){throw new Error(JSON.stringify({modeStep,itemID:r.itemID,mode,checks,error:String(error)}));}};
+  await cacheMode(reader,'translation');const state=addon.states.get(reader.tabID),native=state.rightInternal,browser=state.right,sync=state.sync,zoom=state.zoom;
+  const annotation=Zotero.Items.getByLibraryAndKey(fixture.libraryID,fixture.annotationKey),position=annotation.annotationPosition;
+  await cacheMode(reader,'original');
+  checks.retainedReader=addon.states.get(reader.tabID)===state&&state.rightInternal===native&&!state.closed;
+  checks.hiddenOnly=state.mode==='original'&&browser.getBoundingClientRect().width===0&&!browser.docShellIsActive;
+  checks.noBackgroundWork=sync.disposed&&sync.poll===null&&sync.frame===null&&sync.cleanup.length===0&&zoom.disposed&&zoom.cleanup.length===0;
+  checks.nativeLayoutRestored=reader._iframe.getAttribute('style')===state.originalBrowserStyle&&reader._iframe.getAttribute('flex')===state.originalBrowserFlex;
+  const quiet=sync.stats.applies;await pause(200);checks.noHiddenSyncUpdates=sync.stats.applies===quiet;
+  const start=Date.now();await cacheMode(reader,'translation');const warmMs=Date.now()-start;
+  checks.reusesSameBrowserAndPdf=addon.states.get(reader.tabID).right===browser&&addon.states.get(reader.tabID).rightInternal===native;
+  checks.resumesFreshSync=state.sync!==sync&&!state.sync.disposed;
+  checks.warmSwitchUnder250ms=warmMs<250;
+  await cacheMode(reader,'original');
+  const path=await state.translated.getFilePathAsync(),stat=await IOUtils.stat(path);
+  try{await IOUtils.setModificationTime(path,stat.lastModified+2000);await cacheMode(reader,'translation');checks.changedFileInvalidates=state.closed&&addon.states.get(reader.tabID).rightInternal!==native;}
+  finally{await IOUtils.setModificationTime(path,stat.lastModified);}
+  await cacheMode(reader,'original');
+  const secondSource=Zotero.Items.getByLibraryAndKey(fixture.libraryID,fixture.standaloneSourceKey);
+  let other=await Zotero.Reader.open(secondSource.id)||Zotero.Reader._readers.find(r=>r.itemID===secondSource.id);await other._initPromise;
+  await cacheMode(other,'translation');await cacheMode(other,'original');
+  checks.oneHiddenCache=[...addon.states.values()].filter(s=>s.mode==='original').length===1&&!addon.states.has(reader.tabID);
+  const cached=addon.states.get(other.tabID);other.close();await wait(()=>!addon.states.has(other.tabID));
+  checks.closeReleasesCachedReader=cached.closed&&!cached.right.isConnected;
+  checks.annotationUnchanged=annotation.parentID===source.id&&annotation.annotationPosition===position;
+  await Zotero.Reader.open(source.id);await cacheMode(reader,'original');screenshots.push(await screenshot('cache-original'));
+  await cacheMode(reader,'translation');screenshots.push(await screenshot('cache-translation'));
+  await cacheMode(reader,'compare');screenshots.push(await screenshot('cache-compare'));
+  return{passed:Object.values(checks).every(Boolean),checks,warmMs,screenshots,screenshot:screenshots[0]};
+ }
+ if(['cache-benchmark','cache-benchmark-force-cold'].includes(ctx.action)){
+  const prior=addon.states.get(reader.tabID);if(prior)addon.restore(prior);
+  const memory=()=>{try{return Components.classes['@mozilla.org/memory-reporter-manager;1'].getService(Components.interfaces.nsIMemoryReporterManager).resident;}catch{return null;}};
+  const before=memory(),samples=[],identities=[];
+  for(let n=0;n<5;n++){
+   if(ctx.action==='cache-benchmark-force-cold'){const cached=addon.states.get(reader.tabID);if(cached)addon.restore(cached);}
+   const start=Date.now();await addon.setMode(reader,'translation');const elapsedMs=Date.now()-start;
+   const s=addon.states.get(reader.tabID);identities.push(s.right.browsingContext.id);samples.push({iteration:n,elapsedMs});
+   await addon.setMode(reader,'original');
+  }
+  return{passed:true,benchmark:true,samples,readerReused:identities.slice(1).every(x=>x===identities[0]),memory:{beforeResidentBytes:before,afterResidentBytes:memory(),scope:'test parent process resident; includes rendering/GC and other tabs; not retained cache size'},cachedState:!!addon.states.get(reader.tabID)};
+ }
  if(ctx.action==='swap-zoom-inspect'){
   const s=addon.states.get(reader.tabID),sync=s?.sync;
   return{passed:true,diagnostic:true,swapped:s?.swapped,zoomEnabled:s?.zoom.enabled,scrollEnabled:sync?.enabled,leader:sync?.leader,expected:sync?.expected,views:sync&&Object.fromEntries(Object.entries(sync.views).map(([side,v])=>[side,{scale:v.window.PDFViewerApplication.pdfViewer.currentScale,value:v.window.PDFViewerApplication.pdfViewer.currentScaleValue,focus:sync.focus(side),metrics:sync.metrics(side)}])),samples:sync?.stats.samples.slice(-5)};
  }
  if(ctx.action==='swap-zoom'||ctx.action==='swap-zoom-persistence'){
   if(ctx.action==='swap-zoom'){
-   await addon.setMode(reader,'original');Zotero.Prefs.set('extensions.doubaoTranslate.translationOnLeft',false,true);Zotero.Prefs.set('extensions.doubaoTranslate.syncZoom',true,true);
+   await addon.setMode(reader,'original');const cached=addon.states.get(reader.tabID);if(cached)addon.restore(cached);
+   Zotero.Prefs.set('extensions.doubaoTranslate.translationOnLeft',false,true);Zotero.Prefs.set('extensions.doubaoTranslate.syncZoom',true,true);
   }
   await addon.setMode(reader,'compare');
   let s=addon.states.get(reader.tabID),sync=s.sync;
@@ -45,7 +119,7 @@ var runManualImport=async function(ctx){
   const focusError=()=>{const a=sync.focus('left'),b=sync.focus('right');return Math.max(Math.abs(a.pageIndex+a.fraction-b.pageIndex-b.fraction),Math.abs(a.xFraction-b.xFraction));};
   const settle=async(fn,phase)=>{try{await wait(fn);}catch(error){const trace={phase,checks,views:Object.fromEntries(Object.entries(apps).map(([side,a])=>[side,{scale:a.pdfViewer.currentScale,value:a.pdfViewer.currentScaleValue,focus:sync.focus(side)}]))};await IOUtils.writeJSON(PathUtils.join(ctx.runtime,'swap-zoom-trace.json'),trace);throw new Error(JSON.stringify(trace));}};
   const intent=side=>{const w=sync.views[side].window;w.document.dispatchEvent(new w.WheelEvent('wheel',{deltaY:1,bubbles:true}));};
-  const place=(side,anchor)=>{intent(side);const m=sync.metrics(side),p=m.pages[anchor.pageIndex],v=sync.views[side].viewer;v.scrollTop=p.top+p.height*anchor.fraction-m.clientHeight/2;v.scrollLeft=p.left+p.width*anchor.xFraction-m.clientWidth/2;};
+  const place=(side,anchor)=>{intent(side);const m=sync.metrics(side),p=m.pages[anchor.pageIndex],v=sync.views[side].viewer;v.scrollTop=p.top+p.height*anchor.fraction-m.clientHeight/2;v.scrollLeft=p.left+p.width*anchor.xFraction-m.clientWidth/2;apps[side].pdfViewer.update();};
   if(ctx.action==='swap-zoom-persistence'){
    checks.swapRemembered=s.swapped&&s.sourceBrowser.getBoundingClientRect().x>s.right.getBoundingClientRect().x;
    checks.zoomRemembered=s.zoomWanted&&s.zoom.enabled;
@@ -71,7 +145,7 @@ var runManualImport=async function(ctx){
   reader._iframeWindow.document.querySelector('.doubao-swap-button').click();
   reader._iframeWindow.document.querySelector('.doubao-sync-button').click();
   checks.zoomIndependentOfScrollToggle=!sync.enabled&&s.zoom.enabled;
-  intent('left');reader._internalReader.zoomIn();await settle(()=>Math.abs(apps.left.pdfViewer.currentScale-apps.right.pdfViewer.currentScale)<.0001&&focusError()<.005,'zoom-scroll-off');
+  intent('left');apps.left.pdfViewer.update();reader._internalReader.zoomIn();await settle(()=>Math.abs(apps.left.pdfViewer.currentScale-apps.right.pdfViewer.currentScale)<.0001&&focusError()<.005,'zoom-scroll-off');
   checks.zoomStillCopiesRegionWithScrollOff=focusError()<.005;regionCases.push({action:'zoom-scroll-off',error:focusError(),left:sync.focus('left'),right:sync.focus('right')});
   const idle=sync.focus('right');place('left',{pageIndex:8,fraction:.5,xFraction:.6});await pause(150);
   checks.scrollOffAllowsIndependentPan=Math.abs(sync.focus('right').pageIndex+sync.focus('right').fraction-idle.pageIndex-idle.fraction)<.001;
@@ -148,6 +222,7 @@ var runManualImport=async function(ctx){
  }
  if(ctx.action==='replacement-menu'){
   const previous=addon.translationFor(reader),n=parent.getAttachments().length;
+  try{
   const changed=await service.importFile(source,PathUtils.join(ctx.runtime,'p2-mismatch-two-pages.pdf'));
   await addon.setMode(reader,'compare');await wait(()=>addon.states.get(reader.tabID)?.rightInternal);
   const button=reader._iframeWindow.document.querySelector('.doubao-sync-button');
@@ -161,6 +236,7 @@ var runManualImport=async function(ctx){
   screenshots.push(await screenshot('manual-library-menu'));popup.hidePopup();
   await Zotero.Reader.open(source.id);await addon.setMode(reader,'compare');
   return{passed:Object.values(checks).every(Boolean),checks,screenshots,screenshot:screenshots[1],countBefore:n,countAfter:parent.getAttachments().length};
+  }finally{if(addon.translationFor(reader)?.id!==previous.id)addon.pair(source,previous);}
  }
  if(ctx.action==='persistence'){
   const translated=addon.translationFor(reader),annotation=Zotero.Items.getByLibraryAndKey(fixture.libraryID,fixture.annotationKey);
@@ -171,10 +247,11 @@ var runManualImport=async function(ctx){
   screenshots.push(await screenshot('manual-after-restart'));
   return{passed:Object.values(checks).every(Boolean),checks,screenshots,screenshot:screenshots[0],fixture};
  }
- if(ctx.action==='disable-reenable'){
+ if(ctx.action==='disable-reenable'||ctx.action==='disable-reenable-hidden'){
   await addon.setMode(reader,'compare');const state=addon.states.get(reader.tabID),sync=state.sync;
   const {AddonManager}=ChromeUtils.importESModule('resource://gre/modules/AddonManager.sys.mjs');
   const installed=await AddonManager.getAddonByID('doubao-translate@local.invalid');
+  if(ctx.action==='disable-reenable-hidden')await addon.setMode(reader,'original');
   try{
    await installed.disable();
    checks.controllerRemoved=!win.DoubaoTranslate;checks.panesRemoved=!win.document.querySelector('.doubao-translation-pane');
@@ -185,7 +262,6 @@ var runManualImport=async function(ctx){
    checks.originalAnnotationPreserved=Zotero.Items.getByLibraryAndKey(fixture.libraryID,fixture.annotationKey)?.parentID===source.id;
   }finally{await installed.enable();await wait(()=>win.DoubaoTranslate&&!win.DoubaoTranslate.stopped);}
   checks.reenabled=!!reader._iframeWindow.document.querySelector('.doubao-import-button');
-  await win.DoubaoTranslate.setMode(reader,'compare');
   return{passed:Object.values(checks).every(Boolean),checks};
  }
  if(ctx.action!=='import')throw new Error('Unknown manual scenario');

@@ -1,0 +1,464 @@
+{
+  "date": "2026-11-02",
+  "version": "0.3.2",
+  "checkpointBeforeChanges": "279d36ef8ffd123ecaff54c19724c16087ba5f21",
+  "build": {
+    "file": "E:\\project\\zotero-doubao-translate\\dist\\doubao-translate-dev-04d28c1a4a9b518b.xpi",
+    "filename": "doubao-translate-dev-04d28c1a4a9b518b.xpi",
+    "version": "0.3.2",
+    "entries": 8,
+    "bytes": 30144,
+    "sha256": "04d28c1a4a9b518b9597a7655f817a48f307c0a0c07fa9578c137495334e519b"
+  },
+  "unit": {
+    "passed": 41,
+    "failed": 0
+  },
+  "tests": {
+    "cache-lifecycle-delivery": {
+      "passed": true,
+      "checks": {
+        "retainedReader": true,
+        "hiddenOnly": true,
+        "noBackgroundWork": true,
+        "nativeLayoutRestored": true,
+        "noHiddenSyncUpdates": true,
+        "reusesSameBrowserAndPdf": true,
+        "resumesFreshSync": true,
+        "warmSwitchUnder250ms": true,
+        "changedFileInvalidates": true,
+        "oneHiddenCache": true,
+        "closeReleasesCachedReader": true,
+        "annotationUnchanged": true
+      },
+      "nonce": "91c55f26-ace5-468c-8119-ee14797ea270",
+      "generatedAt": "2026-11-02T07:59:15.542Z",
+      "scenario": "cache-lifecycle",
+      "readiness": {
+        "refreshPreparations": 3,
+        "coldInitUsesTestRefresh": true,
+        "warmSwitchTimingUsesNormalClocks": true
+      },
+      "warmMs": 12
+    },
+    "cache-swap-zoom-delivery": {
+      "passed": true,
+      "checks": {
+        "controlsPresent": true,
+        "zoomAndRegionLeftToRight": true,
+        "horizontalPanAloneFollows": true,
+        "regionRightToLeft": true,
+        "numericZoomRightToLeft": true,
+        "swappedPhysically": true,
+        "originalHostPreserved": true,
+        "swappedDividerPhysicalDirection": true,
+        "swapFromTranslationControls": true,
+        "zoomIndependentOfScrollToggle": true,
+        "zoomStillCopiesRegionWithScrollOff": true,
+        "scrollOffAllowsIndependentPan": true,
+        "zoomOffIndependent": true,
+        "enableFromTranslationCopiesScaleAndRegion": true,
+        "fitPresetMirrored": true,
+        "annotationParentUnchanged": true,
+        "translationOnlyHidesOriginal": true,
+        "modeRetainsSwappedAndZoom": true,
+        "narrowControlsReachable": true,
+        "zoomListenersDisposed": true,
+        "sourceOrderRestored": true
+      },
+      "nonce": "9b8f7f4e-9eca-4ba9-a67f-c71632cd5291",
+      "generatedAt": "2026-11-02T07:59:21.766Z",
+      "scenario": "swap-zoom",
+      "readiness": {
+        "refreshPreparations": 1,
+        "coldInitUsesTestRefresh": true,
+        "warmSwitchTimingUsesNormalClocks": true
+      }
+    },
+    "cache-position-final": {
+      "passed": true,
+      "nonce": "39a89c90-5801-45f6-a973-bbbc3eb12f4d",
+      "generatedAt": "2026-11-02T07:59:07.464Z",
+      "scenario": "cache-reading-position",
+      "readiness": {
+        "refreshPreparations": 1,
+        "coldInitUsesTestRefresh": true,
+        "warmSwitchTimingUsesNormalClocks": true
+      }
+    },
+    "cache-layout-final": {
+      "passed": true,
+      "nonce": "24281582-78be-4195-9b87-0fffcaa66a97",
+      "generatedAt": "2026-11-02T07:40:16.934Z",
+      "scenario": "cache-layout",
+      "readiness": {
+        "refreshPreparations": 1,
+        "coldInitUsesTestRefresh": true,
+        "warmSwitchTimingUsesNormalClocks": true
+      }
+    },
+    "cache-transition": {
+      "passed": true,
+      "nonce": "e364c4de-1248-484d-9dbe-a07ccda12337",
+      "generatedAt": "2026-11-02T08:06:24.797Z",
+      "scenario": "cache-transition",
+      "readiness": {
+        "refreshPreparations": 1,
+        "coldInitUsesTestRefresh": true,
+        "warmSwitchTimingUsesNormalClocks": true
+      }
+    },
+    "cache-annotations-delivery": {
+      "passed": true,
+      "checks": {
+        "existingAnnotations": true,
+        "existingPositionUnchanged": true,
+        "createdInOriginal": true,
+        "updatedCommentTagsColor": true,
+        "deletedFromDatabase": true,
+        "retainedOriginalParent": true,
+        "nativeCallbacksPreserved": true,
+        "nativeHostPreserved": true,
+        "dragSerializationOriginalIdentity": true,
+        "copyRichText": true
+      },
+      "nonce": "10f1eb88-ef0b-44c2-9028-8a02d17759e7",
+      "generatedAt": "2026-11-02T08:04:47.420Z",
+      "scenario": "annotations-api",
+      "readiness": {
+        "refreshPreparations": 1,
+        "coldInitUsesTestRefresh": true,
+        "warmSwitchTimingUsesNormalClocks": true
+      }
+    },
+    "cache-modes-delivery": {
+      "passed": true,
+      "checks": {
+        "twentySwitches": true,
+        "singlePane": true,
+        "dragResize": true,
+        "nativeHostPreserved": true,
+        "finalModeWins": true,
+        "noPaneAfterOriginal": true,
+        "cachedSyncStopped": true,
+        "noQueueLeak": true
+      },
+      "nonce": "8b82972e-d12f-4797-b771-03dbc84ae11d",
+      "generatedAt": "2026-11-02T08:04:55.767Z",
+      "scenario": "mode-lifecycle",
+      "readiness": {
+        "refreshPreparations": 0,
+        "coldInitUsesTestRefresh": false,
+        "warmSwitchTimingUsesNormalClocks": true
+      }
+    },
+    "cache-replacement-delivery": {
+      "passed": true,
+      "checks": {
+        "mismatchImported": true,
+        "mismatchLinkDisabled": true,
+        "previousTranslationRetained": true,
+        "restoreExistingPair": true,
+        "nativeMenuVisible": true
+      },
+      "nonce": "528b9a27-c676-458b-bfa1-d3b58f7303a4",
+      "generatedAt": "2026-11-02T08:05:03.388Z",
+      "scenario": "replacement-menu",
+      "readiness": {
+        "refreshPreparations": 2,
+        "coldInitUsesTestRefresh": true,
+        "warmSwitchTimingUsesNormalClocks": true
+      }
+    },
+    "cache-disable-delivery": {
+      "passed": true,
+      "checks": {
+        "controllerRemoved": true,
+        "panesRemoved": true,
+        "toolbarRemoved": true,
+        "nativeFlexRestored": true,
+        "timersDisposed": true,
+        "menuRemoved": true,
+        "originalAnnotationPreserved": true,
+        "reenabled": true
+      },
+      "nonce": "538aec6a-335e-4d76-a1e0-fd48141e66e4",
+      "generatedAt": "2026-11-02T08:05:04.155Z",
+      "scenario": "disable-reenable",
+      "readiness": {
+        "refreshPreparations": 0,
+        "coldInitUsesTestRefresh": false,
+        "warmSwitchTimingUsesNormalClocks": true
+      }
+    },
+    "cache-navigation-delivery": {
+      "passed": true,
+      "checks": {
+        "leftNativeNavigation": true,
+        "rightNativeNavigation": true,
+        "disabledIndependent": true,
+        "reenabledAligned": true,
+        "annotationGestureNoReverseJump": true,
+        "nativeHostPreserved": true,
+        "cleanup": true
+      },
+      "nonce": "4e1b8efb-111f-4b37-94bf-5e92f60c583c",
+      "generatedAt": "2026-11-02T08:05:12.113Z",
+      "scenario": "navigation",
+      "readiness": {
+        "refreshPreparations": 1,
+        "coldInitUsesTestRefresh": true,
+        "warmSwitchTimingUsesNormalClocks": true
+      }
+    },
+    "cache-persistence": {
+      "passed": true,
+      "checks": {
+        "swapRemembered": true,
+        "zoomRemembered": true,
+        "nativeSourceWritable": true
+      },
+      "nonce": "e9103f6b-fa7f-481f-8303-af894cffd997",
+      "generatedAt": "2026-11-02T07:55:56.405Z",
+      "scenario": "swap-zoom-persistence",
+      "readiness": {
+        "refreshPreparations": 1,
+        "coldInitUsesTestRefresh": true,
+        "warmSwitchTimingUsesNormalClocks": true
+      }
+    },
+    "cache-isolation-ready": {
+      "passed": true,
+      "checks": {
+        "actualProfile": true,
+        "actualData": true,
+        "parentProcess": true,
+        "noAccount": true,
+        "syncOff": true,
+        "connectorOff": true,
+        "wordInstallSkipped": true,
+        "productionProcessesPreserved": true,
+        "protectedFilesUnchanged": true,
+        "initialBaselinePolicy": true,
+        "nativeDatabaseCreated": true,
+        "screenshot": true,
+        "testLibraryRegistered": true
+      }
+    },
+    "cache-disable-hidden": {
+      "passed": true,
+      "checks": {
+        "controllerRemoved": true,
+        "panesRemoved": true,
+        "toolbarRemoved": true,
+        "nativeFlexRestored": true,
+        "timersDisposed": true,
+        "menuRemoved": true,
+        "originalAnnotationPreserved": true,
+        "reenabled": true
+      },
+      "nonce": "0b27740c-19f8-4a10-9537-c595d5ba7fa8",
+      "generatedAt": "2026-11-02T08:09:36.249Z",
+      "readiness": {
+        "refreshPreparations": 0,
+        "coldInitUsesTestRefresh": false,
+        "warmSwitchTimingUsesNormalClocks": true
+      }
+    },
+    "cache-isolation-user-ready": {
+      "runId": "0a2491d6-a8e4-432b-aac9-63caf7acf1b1",
+      "passed": true,
+      "checks": {
+        "actualProfile": true,
+        "actualData": true,
+        "parentProcess": true,
+        "noAccount": true,
+        "syncOff": true,
+        "connectorOff": true,
+        "wordInstallSkipped": true,
+        "productionProcessesPreserved": true,
+        "protectedFilesUnchanged": true,
+        "initialBaselinePolicy": true,
+        "nativeDatabaseCreated": true,
+        "screenshot": true,
+        "testLibraryRegistered": true
+      }
+    }
+  },
+  "benchmark": {
+    "passed": true,
+    "benchmark": true,
+    "samples": [
+      {
+        "iteration": 0,
+        "elapsedMs": 895
+      },
+      {
+        "iteration": 1,
+        "elapsedMs": 17
+      },
+      {
+        "iteration": 2,
+        "elapsedMs": 11
+      },
+      {
+        "iteration": 3,
+        "elapsedMs": 14
+      },
+      {
+        "iteration": 4,
+        "elapsedMs": 11
+      }
+    ],
+    "readerReused": true,
+    "memory": {
+      "beforeResidentBytes": 1564274688,
+      "afterResidentBytes": 1471074304,
+      "scope": "test parent process resident; includes rendering/GC and other tabs; not retained cache size"
+    },
+    "cachedState": true,
+    "readiness": {
+      "refreshPreparations": 1,
+      "coldInitUsesTestRefresh": true,
+      "warmSwitchTimingUsesNormalClocks": true
+    },
+    "nonce": "b86fa1fb-6a78-4795-aa91-b80b6a8ffc66",
+    "generatedAt": "2026-11-02T07:59:23.874Z",
+    "scenario": "cache-benchmark"
+  },
+  "coldControl": {
+    "passed": true,
+    "benchmark": true,
+    "samples": [
+      {
+        "iteration": 0,
+        "elapsedMs": 900
+      },
+      {
+        "iteration": 1,
+        "elapsedMs": 951
+      },
+      {
+        "iteration": 2,
+        "elapsedMs": 1433
+      },
+      {
+        "iteration": 3,
+        "elapsedMs": 1284
+      },
+      {
+        "iteration": 4,
+        "elapsedMs": 1049
+      }
+    ],
+    "readerReused": false,
+    "memory": {
+      "beforeResidentBytes": 2721316864,
+      "afterResidentBytes": 3230744576,
+      "scope": "test parent process resident; includes rendering/GC and other tabs; not retained cache size"
+    },
+    "cachedState": true,
+    "readiness": {
+      "refreshPreparations": 5,
+      "coldInitUsesTestRefresh": true,
+      "warmSwitchTimingUsesNormalClocks": true
+    },
+    "nonce": "a6cf7f9c-a76e-43a9-ab88-623b94e3a4e5",
+    "generatedAt": "2026-11-02T07:55:35.592Z",
+    "scenario": "cache-benchmark-force-cold"
+  },
+  "afterRestart": {
+    "passed": true,
+    "benchmark": true,
+    "samples": [
+      {
+        "iteration": 0,
+        "elapsedMs": 979
+      },
+      {
+        "iteration": 1,
+        "elapsedMs": 16
+      },
+      {
+        "iteration": 2,
+        "elapsedMs": 11
+      },
+      {
+        "iteration": 3,
+        "elapsedMs": 16
+      },
+      {
+        "iteration": 4,
+        "elapsedMs": 16
+      }
+    ],
+    "readerReused": true,
+    "memory": {
+      "beforeResidentBytes": 1121906688,
+      "afterResidentBytes": 1141497856,
+      "scope": "test parent process resident; includes rendering/GC and other tabs; not retained cache size"
+    },
+    "cachedState": true,
+    "readiness": {
+      "refreshPreparations": 1,
+      "coldInitUsesTestRefresh": true,
+      "warmSwitchTimingUsesNormalClocks": true
+    },
+    "nonce": "61a9bb6c-52a6-44b1-937b-4f160f751143",
+    "generatedAt": "2026-11-02T07:55:58.877Z",
+    "scenario": "cache-benchmark"
+  },
+  "memory": {
+    "passed": true,
+    "hiddenCount": 1,
+    "releasedCount": 0,
+    "before": {
+      "residentBytes": 924909568,
+      "heapAllocatedBytes": 202101856
+    },
+    "hidden": {
+      "residentBytes": 993140736,
+      "heapAllocatedBytes": 324379616
+    },
+    "released": {
+      "residentBytes": 809627648,
+      "heapAllocatedBytes": 163969280
+    },
+    "scope": "test parent process snapshots after GC; includes other tabs/native caches; not a per-file guarantee",
+    "readiness": {
+      "refreshPreparations": 1,
+      "coldInitUsesTestRefresh": true,
+      "warmSwitchTimingUsesNormalClocks": true
+    },
+    "nonce": "ee43c3c1-b625-4447-a8de-050db4eb0ee2",
+    "generatedAt": "2026-11-02T07:59:27.133Z",
+    "scenario": "cache-memory",
+    "residentDeltaMiB": 65.0703125
+  },
+  "screenshots": [
+    {
+      "path": "assets/cache-original.png",
+      "sha256": "7efe326565dadd87366f987f11530c32e17d27da3c2fdab639f7f8d89cba572d",
+      "reviewed": true,
+      "dpr": 1.25
+    },
+    {
+      "path": "assets/cache-translation.png",
+      "sha256": "36c6ee15334ea5aeda9875f988ac5e7a54ea2cfab5e51e941eaa77e5dbfcc02e",
+      "reviewed": true,
+      "dpr": 1.25
+    },
+    {
+      "path": "assets/cache-compare.png",
+      "sha256": "b9bfb8b6d662046141c56489336e37488d15863b79adf805d94c73b5dcf6a984",
+      "reviewed": true,
+      "dpr": 1.25
+    }
+  ],
+  "limitations": [
+    "at most one hidden cache, active comparisons separate",
+    "cold startup test preparation uses refresh advancement; warm timing does not",
+    "RSS snapshots include other tabs and native caches, not per-file guarantees",
+    "native keyboard/scrollbar P2 gates and unattended P3 remain incomplete"
+  ]
+}

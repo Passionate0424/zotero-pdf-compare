@@ -55,6 +55,7 @@ var DoubaoTranslateAddon = class {
     for (const win of Zotero.getMainWindows()) if (win.DoubaoTranslate === this) delete win.DoubaoTranslate;
   }
   pair(source, translated) {
+    for(const state of [...this.states.values()])if(state.reader.itemID===source.id&&state.translated.key!==translated.key)this.restore(state);
     const pairs = this.getPairs();
     pairs[`${source.libraryID}:${source.key}`] = translated.key;
     Zotero.Prefs.set('extensions.doubaoTranslate.pairs', JSON.stringify(pairs), true);
@@ -67,7 +68,8 @@ var DoubaoTranslateAddon = class {
     const source = Zotero.Items.get(reader.itemID);
     if(!source||source.deleted)return null;
     const key = this.getPairs()[`${source.libraryID}:${source.key}`];
-    return key ? Zotero.Items.getByLibraryAndKey(source.libraryID, key) : null;
+    const item=key?Zotero.Items.getByLibraryAndKey(source.libraryID,key):null;
+    return item&&!item.deleted&&item.isPDFAttachment()?item:null;
   }
   renderToolbar({ reader, doc, append }) {
     if (!reader._tabContainer || !Zotero.Items.get(reader.itemID)?.isPDFAttachment() || doc.querySelector('.doubao-reading-modes')) return;
@@ -224,11 +226,57 @@ var DoubaoTranslateAddon = class {
     }
     throw new Error('译文阅读器未能就绪，请切回原文后重试。');
   }
+  async translationStamp(item) {
+    const path=await item.getFilePathAsync();if(!path)throw new Error('译文 PDF 文件尚未下载或已不存在。');
+    const stat=await IOUtils.stat(path);return `${path}|${stat.size}|${stat.lastModified}`;
+  }
+  createStateSync(state) {
+    const {reader,right,rightInternal}=state,leftView=reader._internalReader._primaryView,rightView=rightInternal._primaryView;
+    state.sync=new DoubaoScrollSync({
+      left:{host:reader._iframe,window:leftView._iframeWindow,viewer:leftView._iframeWindow.document.getElementById('viewerContainer'),outerDocument:reader._iframeWindow.document},
+      right:{host:right,window:rightView._iframeWindow,viewer:rightView._iframeWindow.document.getElementById('viewerContainer'),outerDocument:right.contentDocument},
+      timers:this.timers,onState:status=>this.updateSyncButtons(reader,status),
+      onNavigate:(side,anchor)=>{if(side==='right')this.translationPositions.set(reader.itemID,anchor);},
+    });
+    const leftApp=leftView._iframeWindow.PDFViewerApplication,rightApp=rightView._iframeWindow.PDFViewerApplication;
+    state.zoom=new DoubaoZoomSync({left:{pdfViewer:leftApp.pdfViewer,eventBus:leftApp.eventBus},right:{pdfViewer:rightApp.pdfViewer,eventBus:rightApp.eventBus},scroll:state.sync});
+  }
+  restoreNativeLayout(state) {
+    if(state.originalBrowserFlex===null)state.sourceBrowser.removeAttribute('flex');
+    else state.sourceBrowser.setAttribute('flex',state.originalBrowserFlex);
+    for(const [node,style] of [[state.container,state.originalContainerStyle],[state.sourceBrowser,state.originalBrowserStyle]]){
+      if(style===null)node.removeAttribute('style');else node.setAttribute('style',style);
+    }
+  }
+  hideTranslation(state) {
+    // Keep at most one hidden translation. Other visible comparisons retain
+    // their own lifecycle, but hidden readers must not accumulate across tabs.
+    for(const other of [...this.states.values()])if(other!==state&&other.mode==='original')this.restore(other);
+    state.zoom?.dispose();state.sync?.dispose();state.mode='original';
+    state.restoreSourceLayout?.();state.restoreSourceLayout=null;
+    state.right.style.display='none';state.divider.style.display='none';
+    state.right.docShellIsActive=false;state.right.browsingContext.isActive=false;
+    this.restoreNativeLayout(state);state.reader._updateDocShellActivity();this.updateSyncButtons(state.reader,null);
+  }
+  activateLayout(state,mode) {
+    state.container.style.display='flex';state.container.style.flexDirection='row';state.container.style.minWidth='0';
+    state.sourceBrowser.removeAttribute('flex');state.sourceBrowser.style.minWidth='0';
+    state.right.style.display='';this.applyPaneOrder(state);
+    state.right.docShellIsActive=true;state.right.browsingContext.isActive=true;
+    state.sourceBrowser.style.display=mode==='translation'?'none':'';
+    state.divider.style.display=mode==='translation'?'none':'';
+    if(mode==='translation')state.right.style.flex='1 1 0';
+    state.reader._updateDocShellActivity();
+    if(!state.sync||state.sync.disposed)this.createStateSync(state);
+  }
   async ensureState(reader, initialMode = 'compare') {
     const existing = this.states.get(reader.tabID);
-    if (existing) return existing;
     const translated = this.translationFor(reader);
-    if (!translated) throw new Error('尚未找到这份 PDF 对应的译文附件。');
+    if(!translated){if(existing)this.restore(existing);throw new Error('尚未找到这份 PDF 对应的译文附件。');}
+    let stamp;
+    try{stamp=await this.translationStamp(translated);}catch(error){if(existing)this.restore(existing);throw error;}
+    if(existing){if(existing.translated.key===translated.key&&existing.translationStamp===stamp)return existing;this.restore(existing);}
+    for(const other of [...this.states.values()])if(other.mode==='original')this.restore(other);
     const sourceBrowser = reader._iframe;
     const container = reader._tabContainer;
     if (!sourceBrowser || sourceBrowser.parentNode !== container) throw new Error('当前 Zotero 阅读器布局暂不兼容。');
@@ -249,6 +297,7 @@ var DoubaoTranslateAddon = class {
     divider.setAttribute('aria-valuemax','80');
     const state = {
       reader, sourceBrowser, container, right, divider, translated, mode: 'compare',
+      translationStamp:stamp,
       originalContainerStyle: container.getAttribute('style'),
       originalBrowserStyle: sourceBrowser.getAttribute('style'),
       originalBrowserFlex: sourceBrowser.getAttribute('flex'),
@@ -299,8 +348,10 @@ var DoubaoTranslateAddon = class {
     sourceBrowser.removeAttribute('flex');
     sourceBrowser.style.minWidth = '0';
     if(initialMode==='translation'){
-      container.style.position='relative';
-      right.style.position='absolute';right.style.inset='0';right.style.visibility='hidden';
+      // Both native PDFs must finish startup. Keep the source laid out behind
+      // the full-size translation until then; no intermediate split is shown.
+      container.style.position='relative';right.style.position='absolute';right.style.inset='0';
+      const bounds=container.getBoundingClientRect();right.style.width=`${bounds.width}px`;right.style.height=`${bounds.height}px`;
       divider.style.display='none';
     }
     container.appendChild(divider);
@@ -344,20 +395,16 @@ var DoubaoTranslateAddon = class {
       if(initialMode==='compare')state.restoreSourceLayout = this.responsiveToolbar(reader._iframeWindow.document);
       state.restoreRightLayout = this.responsiveToolbar(content.document,true);
       const leftView=reader._internalReader._primaryView,rightView=state.rightInternal._primaryView;
+      // Flush the nested PDF viewport layout before waiting for first-page
+      // initialization; sizing the outer XUL browser alone does not flush it.
+      rightView._iframeWindow.document.getElementById('viewerContainer')?.getBoundingClientRect();
       // Native PDF initialization reapplies its saved scale/position after all
       // pages load. Waiting only for .page elements exposes that later reset.
       let pdfReady=false,pdfInitError;
       Promise.all([leftView.initializedPromise,rightView.initializedPromise]).then(()=>{pdfReady=true;},error=>{pdfInitError=error;pdfReady=true;});
       await this.waitFor(()=>pdfReady,state);if(pdfInitError)throw pdfInitError;
       await this.waitFor(()=>leftView._iframeWindow?.document.getElementById('viewerContainer')&&rightView._iframeWindow?.document.getElementById('viewerContainer'),state);
-      state.sync=new DoubaoScrollSync({
-        left:{host:reader._iframe,window:leftView._iframeWindow,viewer:leftView._iframeWindow.document.getElementById('viewerContainer'),outerDocument:reader._iframeWindow.document},
-        right:{host:right,window:rightView._iframeWindow,viewer:rightView._iframeWindow.document.getElementById('viewerContainer'),outerDocument:content.document},
-        timers:this.timers,onState:status=>this.updateSyncButtons(reader,status),
-        onNavigate:(side,anchor)=>{if(side==='right')this.translationPositions.set(reader.itemID,anchor);},
-      });
-      const leftApp=leftView._iframeWindow.PDFViewerApplication,rightApp=rightView._iframeWindow.PDFViewerApplication;
-      state.zoom=new DoubaoZoomSync({left:{pdfViewer:leftApp.pdfViewer,eventBus:leftApp.eventBus},right:{pdfViewer:rightApp.pdfViewer,eventBus:rightApp.eventBus},scroll:state.sync});
+      this.createStateSync(state);
       const saved=this.translationPositions.get(reader.itemID);
       if(saved){const target=DoubaoScrollMath.target(saved,state.sync.metrics('right'));if(target)state.sync.views.right.viewer.scrollTop=target.top;}
       state.sync.alignFrom('left');
@@ -365,7 +412,7 @@ var DoubaoTranslateAddon = class {
         if (!container.isConnected) this.restore(state);
       });
       state.closeObserver.observe(container.parentNode, { childList: true });
-      state.selectionListener = event => { right.docShellIsActive = !!event.detail.selected; };
+      state.selectionListener = event => { right.docShellIsActive = !!event.detail.selected&&state.mode!=='original'; };
       container.addEventListener('tab-selection-change',state.selectionListener);
       return state;
     } catch (error) { this.restore(state); throw error; }
@@ -408,7 +455,7 @@ var DoubaoTranslateAddon = class {
       const state = this.states.get(reader.tabID);
       if (state) {
         const translatedAnchor=state.mode==='translation'?state.sync.anchor('right'):null;
-        this.restore(state);
+        this.hideTranslation(state);
         if(translatedAnchor){
           reader._iframe.getBoundingClientRect();
           await new Promise(resolve=>this.timers.setTimeout(resolve,140));
@@ -422,10 +469,11 @@ var DoubaoTranslateAddon = class {
     } else {
       const state = await this.ensureState(reader,mode);
       if(state.closed||this.stopped)return;
-      const leader=state.mode==='translation'?'right':state.sync.leader;
+      const leader=state.mode==='original'?'left':state.mode==='translation'?'right':state.sync.leader;
       const anchor=state.sync.anchor(leader);
       state.mode = mode;
-      state.right.style.removeProperty('position');state.right.style.removeProperty('inset');state.right.style.removeProperty('visibility');
+      this.activateLayout(state,mode);
+      for(const property of ['position','inset','width','height'])state.right.style.removeProperty(property);
       if(mode==='compare'){
         state.resize(0.5);
         if(!state.restoreSourceLayout)state.restoreSourceLayout=this.responsiveToolbar(reader._iframeWindow.document);
@@ -433,8 +481,9 @@ var DoubaoTranslateAddon = class {
       state.sourceBrowser.style.display = mode === 'translation' ? 'none' : '';
       state.divider.style.display = mode === 'translation' ? 'none' : '';
       state.zoom.setEnabled(mode==='compare'&&state.zoomWanted,leader);
-      const primaryTarget=DoubaoScrollMath.target(anchor,state.sync.metrics(leader));
-      if(primaryTarget)state.sync.views[leader].viewer.scrollTop=primaryTarget.top;
+      const primarySide=mode==='translation'?'right':leader;
+      const primaryTarget=DoubaoScrollMath.target(anchor,state.sync.metrics(primarySide));
+      if(primaryTarget)state.sync.views[primarySide].viewer.scrollTop=primaryTarget.top;
       state.sync.setEnabled(mode==='compare'&&state.linkWanted,leader);
       if(mode==='compare'&&state.linkWanted){if(state.zoom.enabled)state.sync.alignViewportFrom(leader);else state.sync.alignFrom(leader,Date.now(),anchor);}
     }
@@ -450,7 +499,7 @@ var DoubaoTranslateAddon = class {
   }
   restore(state) {
     if (state.closed) return;
-    const anchor=state.sync?.anchor('right');if(anchor)this.translationPositions.set(state.reader.itemID,anchor);
+    try{const anchor=state.sync?.anchor('right');if(anchor)this.translationPositions.set(state.reader.itemID,anchor);}catch{}
     state.zoom?.dispose();
     state.sync?.dispose();
     state.closed = true;
@@ -460,12 +509,8 @@ var DoubaoTranslateAddon = class {
     if (state.rightControls) { this.buttons.delete(state.rightControls); state.rightControls.remove(); }
     try { state.rightInternal?.uninit?.(); } catch (error) { Zotero.logError(error); }
     state.right.remove(); state.divider.remove();
-    if(state.originalBrowserFlex===null)state.sourceBrowser.removeAttribute('flex');
-    else state.sourceBrowser.setAttribute('flex',state.originalBrowserFlex);
     this.updateSyncButtons(state.reader,null);
-    for (const [node, style] of [[state.container,state.originalContainerStyle],[state.sourceBrowser,state.originalBrowserStyle]]) {
-      if (style == null) node.removeAttribute('style'); else node.setAttribute('style', style);
-    }
+    this.restoreNativeLayout(state);
     if (this.states.get(state.reader.tabID) === state) this.states.delete(state.reader.tabID);
   }
 };

@@ -103,10 +103,13 @@ async function runProbe() {
           const projectRoot = PathUtils.parent(root);
           const suiteFile = Zotero.File.pathToFile(PathUtils.join(projectRoot, 'tests', 'integration', spec.file));
           const scope = { Zotero, Services, Components, ChromeUtils, IOUtils, PathUtils };
+          const setupFile=Zotero.File.pathToFile(PathUtils.join(projectRoot,'tests','integration','native-startup.js'));
+          Services.scriptloader.loadSubScriptWithOptions(Services.io.newFileURI(setupFile).spec,{target:scope,ignoreCache:true});
           Services.scriptloader.loadSubScriptWithOptions(Services.io.newFileURI(suiteFile).spec, {target:scope,ignoreCache:true});
           const controller = new win.AbortController();
           let deadline;
-          const work = scope[spec.run]({ root: projectRoot, runtime: root, action: command.scenario || 'inspect', timers: timerAPI, nonce: command.nonce, signal:controller.signal });
+          const context={root:projectRoot,runtime:root,action:command.scenario||'inspect',timers:timerAPI,nonce:command.nonce,signal:controller.signal};
+          const work = scope.withNativePdfStartup(win.DoubaoTranslate,context,()=>scope[spec.run](context));
           let result;
           try {
             result = await Promise.race([work,new Promise((_,reject) => { deadline=timerAPI.setTimeout(() => {controller.abort();reject(new Error('P1 suite exceeded its deadline'));},80000); })]);

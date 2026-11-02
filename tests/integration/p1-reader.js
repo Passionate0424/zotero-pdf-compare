@@ -203,8 +203,10 @@ var runP1 = async function(ctx) {
       screenshots.push(await screenshot(`p1-layout-${width}x${height}`));
     }
     await Promise.all(['compare','original','translation','original'].map(mode=>addon.setMode(reader,mode)));
-    checks.finalModeWins=!addon.states.has(reader.tabID);
-    checks.noPaneAfterOriginal=reader._tabContainer.querySelectorAll('.doubao-translation-pane').length===0;
+    const cached=addon.states.get(reader.tabID);
+    checks.finalModeWins=cached?.mode==='original';
+    checks.noPaneAfterOriginal=[...reader._tabContainer.querySelectorAll('.doubao-translation-pane')].every(node=>node.getBoundingClientRect().width===0);
+    checks.cachedSyncStopped=cached?.sync.disposed&&cached.sync.poll===null&&cached.sync.frame===null;
     checks.noQueueLeak=addon.modeQueues.size===0&&addon.modeRequests.size===0;
     return {passed:Object.values(checks).every(Boolean),stage:'mode_lifecycle',checks,ratio:state.ratio,sequence,screenshots,screenshot:await screenshot('p1-mode-restored')};
   }
