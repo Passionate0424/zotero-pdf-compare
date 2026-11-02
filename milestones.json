@@ -27,9 +27,9 @@
     {
       "id": "P3",
       "title": "豆包任务",
-      "status": "pending",
+      "status": "in_progress",
       "tag": "milestone/p3",
-      "report": null
+      "report": "docs/reports/P3.json"
     },
     {
       "id": "P4",

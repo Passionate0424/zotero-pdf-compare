@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "license": "AGPL-3.0-only",
   "type": "module",
-  "engines": {"node": ">=24"},
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "test": "node --test tests/unit/*.test.mjs",
     "dev:prepare": "node tools/dev-env.mjs prepare",
@@ -13,6 +15,13 @@
     "dev:stop": "node tools/dev-env.mjs stop",
     "dev:verify": "node tools/dev-env.mjs verify",
     "dev:snapshot": "node tools/dev-env.mjs snapshot",
-    "milestone:check": "node tools/check-milestone.mjs"
+    "milestone:check": "node tools/check-milestone.mjs",
+    "worker": "node worker/cli.mjs",
+    "worker:login": "node worker/cli.mjs login",
+    "test:p3:local": "node tests/integration/p3-worker-local.mjs",
+    "test:p3:live": "node tools/accept-p3-live.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.65.0-alpha-2026-10-30"
   }
 }

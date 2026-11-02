@@ -1,0 +1,563 @@
+{
+  "localContract": {
+    "passed": true,
+    "kind": "local-http-provider-contract-not-doubao",
+    "results": [
+      {
+        "variant": "success",
+        "state": "succeeded",
+        "error": null,
+        "elapsedMs": 2929,
+        "pages": 19,
+        "history": [
+          {
+            "state": "queued",
+            "at": "2026-11-02T02:37:41.212Z"
+          },
+          {
+            "state": "opening",
+            "at": "2026-11-02T02:37:41.800Z"
+          },
+          {
+            "state": "uploading",
+            "at": "2026-11-02T02:37:42.636Z"
+          },
+          {
+            "state": "sending",
+            "at": "2026-11-02T02:37:42.693Z"
+          },
+          {
+            "state": "previewing",
+            "at": "2026-11-02T02:37:42.725Z"
+          },
+          {
+            "state": "translating",
+            "at": "2026-11-02T02:37:42.747Z"
+          },
+          {
+            "state": "downloading",
+            "at": "2026-11-02T02:37:42.819Z"
+          },
+          {
+            "state": "validating",
+            "at": "2026-11-02T02:37:43.524Z"
+          },
+          {
+            "state": "succeeded",
+            "at": "2026-11-02T02:37:44.119Z"
+          }
+        ]
+      },
+      {
+        "variant": "login",
+        "state": "waiting_login",
+        "error": "LOGIN_REQUIRED",
+        "elapsedMs": 1743,
+        "pages": 0,
+        "history": [
+          {
+            "state": "queued",
+            "at": "2026-11-02T02:37:44.147Z"
+          },
+          {
+            "state": "opening",
+            "at": "2026-11-02T02:37:44.708Z"
+          },
+          {
+            "state": "waiting_login",
+            "at": "2026-11-02T02:37:45.869Z",
+            "code": "LOGIN_REQUIRED"
+          }
+        ]
+      },
+      {
+        "variant": "drift",
+        "state": "failed",
+        "error": "UI_CHANGED",
+        "elapsedMs": 4988,
+        "pages": 0,
+        "history": [
+          {
+            "state": "queued",
+            "at": "2026-11-02T02:37:45.897Z"
+          },
+          {
+            "state": "opening",
+            "at": "2026-11-02T02:37:46.454Z"
+          },
+          {
+            "state": "uploading",
+            "at": "2026-11-02T02:37:47.260Z"
+          },
+          {
+            "state": "sending",
+            "at": "2026-11-02T02:37:47.309Z"
+          },
+          {
+            "state": "previewing",
+            "at": "2026-11-02T02:37:47.350Z"
+          },
+          {
+            "state": "failed",
+            "at": "2026-11-02T02:37:50.837Z",
+            "code": "UI_CHANGED"
+          }
+        ]
+      },
+      {
+        "variant": "stall",
+        "state": "failed",
+        "error": "TIMEOUT",
+        "elapsedMs": 3386,
+        "pages": 0,
+        "history": [
+          {
+            "state": "queued",
+            "at": "2026-11-02T02:37:50.891Z"
+          },
+          {
+            "state": "opening",
+            "at": "2026-11-02T02:37:51.515Z"
+          },
+          {
+            "state": "uploading",
+            "at": "2026-11-02T02:37:52.414Z"
+          },
+          {
+            "state": "sending",
+            "at": "2026-11-02T02:37:52.452Z"
+          },
+          {
+            "state": "previewing",
+            "at": "2026-11-02T02:37:52.518Z"
+          },
+          {
+            "state": "translating",
+            "at": "2026-11-02T02:37:52.542Z"
+          },
+          {
+            "state": "failed",
+            "at": "2026-11-02T02:37:54.245Z",
+            "code": "TIMEOUT"
+          }
+        ]
+      },
+      {
+        "variant": "offline",
+        "state": "failed",
+        "error": "NETWORK_ERROR",
+        "elapsedMs": 1953,
+        "pages": 0,
+        "history": [
+          {
+            "state": "queued",
+            "at": "2026-11-02T02:37:54.286Z"
+          },
+          {
+            "state": "opening",
+            "at": "2026-11-02T02:37:54.853Z"
+          },
+          {
+            "state": "failed",
+            "at": "2026-11-02T02:37:56.218Z",
+            "code": "NETWORK_ERROR"
+          }
+        ]
+      },
+      {
+        "variant": "cancel",
+        "state": "cancelled",
+        "error": "CANCELLED",
+        "elapsedMs": 1931,
+        "pages": 0,
+        "history": [
+          {
+            "state": "queued",
+            "at": "2026-11-02T02:37:56.245Z"
+          },
+          {
+            "state": "opening",
+            "at": "2026-11-02T02:37:56.844Z"
+          },
+          {
+            "state": "uploading",
+            "at": "2026-11-02T02:37:57.666Z"
+          },
+          {
+            "state": "sending",
+            "at": "2026-11-02T02:37:57.711Z"
+          },
+          {
+            "state": "previewing",
+            "at": "2026-11-02T02:37:57.756Z"
+          },
+          {
+            "state": "translating",
+            "at": "2026-11-02T02:37:57.776Z"
+          },
+          {
+            "state": "cancelled",
+            "at": "2026-11-02T02:37:57.778Z",
+            "code": "CANCELLED"
+          }
+        ]
+      }
+    ],
+    "downloadEvents": 1,
+    "pdfValidation": {
+      "original": {
+        "valid": true,
+        "pages": 19,
+        "checkedPages": 19,
+        "sizes": [
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ]
+        ],
+        "hasTextLayer": true,
+        "textCharacters": 119876,
+        "bytes": 4531144,
+        "sha256": "c410bbbd06e25c4592a043acf66ca2dcab5ef03eeae601c29093e50898338df4"
+      },
+      "translation": {
+        "valid": true,
+        "pages": 19,
+        "checkedPages": 19,
+        "sizes": [
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ],
+          [
+            612,
+            792
+          ]
+        ],
+        "hasTextLayer": false,
+        "textCharacters": 0,
+        "bytes": 16091295,
+        "sha256": "bdcc263bccfc1b61b2e63cbd2ca75b3ffc749bf865349b30ee74270bf86e8d32"
+      }
+    },
+    "realDoubaoDownloads": 0
+  },
+  "protocol": {
+    "passed": true,
+    "code": 0,
+    "replies": [
+      {
+        "protocol": 1,
+        "id": "statuscheck",
+        "ok": true,
+        "data": [
+          {
+            "id": "4f2704da-4e46-48ab-a481-e2ea1ce3f465",
+            "state": "waiting_login",
+            "attempt": 1,
+            "createdAt": "2026-11-01T17:59:17.551Z",
+            "updatedAt": "2026-11-01T17:59:21.520Z",
+            "sourceHash": "c410bbbd06e25c4592a043acf66ca2dcab5ef03eeae601c29093e50898338df4",
+            "targetLanguage": "zh-CN",
+            "history": [
+              {
+                "state": "queued",
+                "at": "2026-11-01T17:59:17.551Z"
+              },
+              {
+                "state": "opening",
+                "at": "2026-11-01T17:59:18.188Z"
+              },
+              {
+                "state": "waiting_login",
+                "at": "2026-11-01T17:59:21.520Z",
+                "code": "LOGIN_REQUIRED"
+              }
+            ],
+            "error": {
+              "code": "LOGIN_REQUIRED",
+              "message": "请在专用浏览器中登录豆包，再重试任务。"
+            },
+            "result": null
+          }
+        ]
+      },
+      {
+        "protocol": 1,
+        "id": "invalidcheck",
+        "ok": false,
+        "error": {
+          "code": "INTERNAL_ERROR",
+          "message": "任务未完成，可查看任务编号后重试。"
+        }
+      }
+    ]
+  },
+  "credentialsAudit": {
+    "passed": true,
+    "candidateSourceFilesScanned": 67,
+    "xpiEntries": [
+      "manifest.json",
+      "bootstrap.js",
+      "src/main.js",
+      "src/scroll-sync.js",
+      "LICENSE",
+      "NOTICE.md"
+    ],
+    "xpiSha256": "39481cd4d08d6d2263a76ea96fe549237ebad0f62a73a1b114250b2ed82e099a",
+    "findings": [],
+    "scope": "Conservative source/package patterns and allowlist; no credential store was opened. Browser errors are also covered by redaction tests."
+  },
+  "nightShutdown": {
+    "observedAt": "2026-11-02T02:28:54.2387697+08:00",
+    "dailyZoteroAlive": true,
+    "ownedChromeProcesses": 0,
+    "testProcesses": 0
+  },
+  "nightProtectedFiles": {
+    "observedAt": "2026-11-01T18:29:22.928Z",
+    "comparison": "current isolated run before/after graceful shutdown",
+    "passed": true,
+    "files": [
+      {
+        "path": "D:\\D_Applications\\Zotero\\zotero.exe",
+        "baselineExists": true,
+        "baselineSha256": "ca77400c14cb0bb392d23d85e802e3af389dc8b76f9ab6a09414051cbae81b0f",
+        "observedExists": true,
+        "observedSha256": "ca77400c14cb0bb392d23d85e802e3af389dc8b76f9ab6a09414051cbae81b0f",
+        "unchanged": true
+      },
+      {
+        "path": "D:\\D_Applications\\Zotero\\app\\application.ini",
+        "baselineExists": true,
+        "baselineSha256": "5ceacc82b67706f5770c5736faa5f72c8460fbd5e959bd324ed0a47f835d2fbc",
+        "observedExists": true,
+        "observedSha256": "5ceacc82b67706f5770c5736faa5f72c8460fbd5e959bd324ed0a47f835d2fbc",
+        "unchanged": true
+      },
+      {
+        "path": "D:\\D_Applications\\Zotero\\app\\omni.ja",
+        "baselineExists": true,
+        "baselineSha256": "9573f63faaf1d8ddf0baa16d3e7f0d011e6b6d277e0ff8b5ab9b6db069b864a4",
+        "observedExists": true,
+        "observedSha256": "9573f63faaf1d8ddf0baa16d3e7f0d011e6b6d277e0ff8b5ab9b6db069b864a4",
+        "unchanged": true
+      },
+      {
+        "path": "C:\\Users\\18522\\AppData\\Roaming\\Zotero\\Zotero\\Profiles\\jza7s4xb.default\\prefs.js",
+        "baselineExists": true,
+        "baselineSha256": "f9cd332027c70a4baef2a6f63f2a2aa7dd9039670e4c5ec0a0abc93933de6885",
+        "observedExists": true,
+        "observedSha256": "f9cd332027c70a4baef2a6f63f2a2aa7dd9039670e4c5ec0a0abc93933de6885",
+        "unchanged": true
+      },
+      {
+        "path": "C:\\Users\\18522\\AppData\\Roaming\\Zotero\\Zotero\\profiles.ini",
+        "baselineExists": true,
+        "baselineSha256": "e6850bde598b5a8f0aa97eef1312a02e15ccd5b032d3feda9342fcaf6d53148e",
+        "observedExists": true,
+        "observedSha256": "e6850bde598b5a8f0aa97eef1312a02e15ccd5b032d3feda9342fcaf6d53148e",
+        "unchanged": true
+      },
+      {
+        "path": "C:\\Users\\18522\\AppData\\Roaming\\Microsoft\\Word\\STARTUP\\Zotero.dotm",
+        "baselineExists": true,
+        "baselineSha256": "5b502497ac15bc1afdc408a0c2a7f9e70e6c8c417a08ff83f7b2a1974096b6ec",
+        "observedExists": true,
+        "observedSha256": "5b502497ac15bc1afdc408a0c2a7f9e70e6c8c417a08ff83f7b2a1974096b6ec",
+        "unchanged": true
+      }
+    ]
+  },
+  "latestCompletedLive": {
+    "kind": "real-doubao-acceptance",
+    "startedAt": "2026-11-02T02:27:20.259Z",
+    "expectedTasks": 3,
+    "expectedPages": 19,
+    "tasks": [
+      {
+        "id": "525134f4-ed27-46d4-ae8d-308773b108da",
+        "state": "failed",
+        "attempt": 1,
+        "createdAt": "2026-11-02T02:27:20.278Z",
+        "updatedAt": "2026-11-02T02:27:32.696Z",
+        "sourceHash": "c410bbbd06e25c4592a043acf66ca2dcab5ef03eeae601c29093e50898338df4",
+        "targetLanguage": "zh-CN",
+        "history": [
+          {
+            "state": "queued",
+            "at": "2026-11-02T02:27:20.278Z"
+          },
+          {
+            "state": "opening",
+            "at": "2026-11-02T02:27:20.795Z"
+          },
+          {
+            "state": "uploading",
+            "at": "2026-11-02T02:27:23.992Z"
+          },
+          {
+            "state": "sending",
+            "at": "2026-11-02T02:27:29.646Z"
+          },
+          {
+            "state": "failed",
+            "at": "2026-11-02T02:27:32.696Z",
+            "code": "INTERNAL_ERROR"
+          }
+        ],
+        "error": {
+          "code": "INTERNAL_ERROR",
+          "message": "任务未完成，可查看任务编号后重试。"
+        },
+        "result": null,
+        "elapsedMs": 12440
+      }
+    ],
+    "passed": false,
+    "realDownloads": 0,
+    "independentConversations": 0,
+    "finishedAt": "2026-11-02T02:27:32.699Z"
+  },
+  "loginReuse": "User logged in; later runs failed during send and showed login again. Root cause not established; live export unverified."
+}

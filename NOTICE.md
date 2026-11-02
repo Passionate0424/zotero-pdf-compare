@@ -9,3 +9,5 @@
 - Split View Reader，提交 600f1bd99d9a52a99683702f6681bf34b83bfec3：批注回调差异核查。
 
 P1 使用独立实现的宿主保留布局，未整体复制上述项目的双阅读器实现或替换原文批注回调。以后实际移植上游模块时，继续保留原文件作者、来源链及许可声明。
+
+P3 的外部运行依赖为 Microsoft Playwright / playwright-core 1.65.0-alpha-2026-10-30，精确版本与下载完整性见 package-lock.json，其包内 LICENSE 为 Apache-2.0。依赖不打入当前 XPI；未来分发辅助程序及依赖时须随附各依赖许可和通知。
