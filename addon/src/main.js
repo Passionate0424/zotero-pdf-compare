@@ -122,6 +122,17 @@ var DoubaoTranslateAddon = class {
     link.style.cssText='font:inherit;font-size:11px;width:auto;min-width:32px;height:26px;padding:0 3px;border:1px solid var(--fill-tertiary,#888);border-radius:4px;';
     link.addEventListener('click',()=>{const state=this.states.get(reader.tabID);if(state?.sync){state.linkWanted=!state.sync.enabled;state.sync.setEnabled(state.linkWanted);}});
     group.appendChild(link);
+    for(const [className,label,action] of [
+      ['doubao-swap-button','互换',()=>this.swapSides(reader)],
+      ['doubao-zoom-button','同步缩放',()=>{
+        const state=this.states.get(reader.tabID);if(!state?.zoom)return;
+        state.zoomWanted=!state.zoomWanted;Zotero.Prefs.set('extensions.doubaoTranslate.syncZoom',state.zoomWanted,true);
+        state.zoom.setEnabled(state.zoomWanted,state.sync.leader);this.updateComparisonControls(reader);
+      }]
+    ]){
+      const button=doc.createElement('button');button.className='toolbar-button '+className;button.textContent=label;
+      button.style.cssText=link.style.cssText;button.disabled=true;button.addEventListener('click',action);group.appendChild(button);
+    }
     this.buttons.add(group);
     this.refreshControls(reader.itemID);
     return group;
@@ -138,7 +149,31 @@ var DoubaoTranslateAddon = class {
         if(button){let allowed=true;try{this.manual.assertSource(source);}catch{allowed=false;}button.disabled=!allowed||pending;button.textContent=pending?'导入中…':paired?'更换译文':'导入译文';}
         if(!this.states.has(reader.tabID)){const link=group.querySelector('.doubao-sync-button');if(link)link.disabled=true;}
       }
+      this.updateComparisonControls(reader);
     }
+  }
+  updateComparisonControls(reader) {
+    const state=this.states.get(reader.tabID),active=state?.mode==='compare'&&!state.closed;
+    for(const group of this.buttons){
+      if(group.dataset.sourceTab!==reader.tabID)continue;
+      for(const [selector,pressed,title] of [
+        ['.doubao-swap-button',!!state?.swapped,state?.swapped?'当前左译文、右原文；点击互换':'当前左原文、右译文；点击互换'],
+        ['.doubao-zoom-button',!!state?.zoom?.enabled,'同步倍率或适应模式，并同步当前页内查看区域；滚动联动可独立开关']
+      ]){
+        const button=group.querySelector(selector);if(!button)continue;button.disabled=!active||!state?.zoom;
+        button.title=title;button.setAttribute('aria-label',selector==='.doubao-swap-button'?'互换原文和译文位置':'同步缩放与查看区域');
+        button.setAttribute('aria-pressed',String(active&&pressed));button.style.background=active&&pressed?'#2563eb':'transparent';
+        button.style.color=active&&pressed?'white':'var(--fill-primary,#ddd)';
+      }
+    }
+  }
+  applyPaneOrder(state) {
+    state.sourceBrowser.style.order=state.swapped?'2':'0';state.divider.style.order='1';state.right.style.order=state.swapped?'0':'2';
+  }
+  swapSides(reader) {
+    const state=this.states.get(reader.tabID);if(!state||state.mode!=='compare'||state.closed)return;
+    state.swapped=!state.swapped;Zotero.Prefs.set('extensions.doubaoTranslate.translationOnLeft',state.swapped,true);
+    this.applyPaneOrder(state);state.resize(1-state.ratio);this.updateComparisonControls(reader);
   }
   async openManualImport(source,win,reader) {
     let imported=false;
@@ -218,12 +253,14 @@ var DoubaoTranslateAddon = class {
       originalBrowserStyle: sourceBrowser.getAttribute('style'),
       originalBrowserFlex: sourceBrowser.getAttribute('flex'),
       nativeInternal: reader._internalReader, originalParent: sourceBrowser.parentNode, linkWanted:true,
+      swapped:Zotero.Prefs.get('extensions.doubaoTranslate.translationOnLeft',true)===true,
+      zoomWanted:Zotero.Prefs.get('extensions.doubaoTranslate.syncZoom',true)!==false,
     };
     state.ratio = 0.5;
     const resize = ratio => {
       state.ratio = Math.max(0.2,Math.min(0.8,ratio));
-      sourceBrowser.style.flex = `${state.ratio} 1 0`;
-      right.style.flex = `${1-state.ratio} 1 0`;
+      sourceBrowser.style.flex = `${state.swapped?1-state.ratio:state.ratio} 1 0`;
+      right.style.flex = `${state.swapped?state.ratio:1-state.ratio} 1 0`;
       divider.setAttribute('aria-valuenow',String(Math.round(state.ratio*100)));
     };
     state.resize=resize;
@@ -268,6 +305,7 @@ var DoubaoTranslateAddon = class {
     }
     container.appendChild(divider);
     container.appendChild(right);
+    this.applyPaneOrder(state);
     right.setAttribute('src', 'resource://zotero/reader/reader.html');
     right.docShellIsActive = true;
     try {
@@ -306,6 +344,11 @@ var DoubaoTranslateAddon = class {
       if(initialMode==='compare')state.restoreSourceLayout = this.responsiveToolbar(reader._iframeWindow.document);
       state.restoreRightLayout = this.responsiveToolbar(content.document,true);
       const leftView=reader._internalReader._primaryView,rightView=state.rightInternal._primaryView;
+      // Native PDF initialization reapplies its saved scale/position after all
+      // pages load. Waiting only for .page elements exposes that later reset.
+      let pdfReady=false,pdfInitError;
+      Promise.all([leftView.initializedPromise,rightView.initializedPromise]).then(()=>{pdfReady=true;},error=>{pdfInitError=error;pdfReady=true;});
+      await this.waitFor(()=>pdfReady,state);if(pdfInitError)throw pdfInitError;
       await this.waitFor(()=>leftView._iframeWindow?.document.getElementById('viewerContainer')&&rightView._iframeWindow?.document.getElementById('viewerContainer'),state);
       state.sync=new DoubaoScrollSync({
         left:{host:reader._iframe,window:leftView._iframeWindow,viewer:leftView._iframeWindow.document.getElementById('viewerContainer'),outerDocument:reader._iframeWindow.document},
@@ -313,6 +356,8 @@ var DoubaoTranslateAddon = class {
         timers:this.timers,onState:status=>this.updateSyncButtons(reader,status),
         onNavigate:(side,anchor)=>{if(side==='right')this.translationPositions.set(reader.itemID,anchor);},
       });
+      const leftApp=leftView._iframeWindow.PDFViewerApplication,rightApp=rightView._iframeWindow.PDFViewerApplication;
+      state.zoom=new DoubaoZoomSync({left:{pdfViewer:leftApp.pdfViewer,eventBus:leftApp.eventBus},right:{pdfViewer:rightApp.pdfViewer,eventBus:rightApp.eventBus},scroll:state.sync});
       const saved=this.translationPositions.get(reader.itemID);
       if(saved){const target=DoubaoScrollMath.target(saved,state.sync.metrics('right'));if(target)state.sync.views.right.viewer.scrollTop=target.top;}
       state.sync.alignFrom('left');
@@ -339,6 +384,7 @@ var DoubaoTranslateAddon = class {
       button.style.color=active&&status?.enabled&&status?.compatible?'white':'var(--fill-primary,#ddd)';
       button.title=unsupported?(status.reason==='page-count'?'原译文页数不一致，暂停自动联动':'联动支持单页纵向滚动，请关闭双页或横向布局'):'开启或关闭双向滚动联动';
     }
+    this.updateComparisonControls(reader);
   }
   setMode(reader, mode) {
     if (!['original','translation','compare'].includes(mode)) return Promise.reject(new Error('未知阅读模式'));
@@ -386,10 +432,11 @@ var DoubaoTranslateAddon = class {
       }
       state.sourceBrowser.style.display = mode === 'translation' ? 'none' : '';
       state.divider.style.display = mode === 'translation' ? 'none' : '';
+      state.zoom.setEnabled(mode==='compare'&&state.zoomWanted,leader);
       const primaryTarget=DoubaoScrollMath.target(anchor,state.sync.metrics(leader));
       if(primaryTarget)state.sync.views[leader].viewer.scrollTop=primaryTarget.top;
       state.sync.setEnabled(mode==='compare'&&state.linkWanted,leader);
-      if(mode==='compare'&&state.linkWanted)state.sync.alignFrom(leader,Date.now(),anchor);
+      if(mode==='compare'&&state.linkWanted){if(state.zoom.enabled)state.sync.alignViewportFrom(leader);else state.sync.alignFrom(leader,Date.now(),anchor);}
     }
     for (const group of this.buttons) {
       if(group.dataset.sourceTab!==reader.tabID)continue;
@@ -404,6 +451,7 @@ var DoubaoTranslateAddon = class {
   restore(state) {
     if (state.closed) return;
     const anchor=state.sync?.anchor('right');if(anchor)this.translationPositions.set(state.reader.itemID,anchor);
+    state.zoom?.dispose();
     state.sync?.dispose();
     state.closed = true;
     state.closeObserver?.disconnect();

@@ -4,6 +4,13 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 const context=vm.createContext({});vm.runInContext(fs.readFileSync(new URL('../../addon/src/scroll-sync.js',import.meta.url),'utf8'),context);
 const math=context.DoubaoScrollMath;
+test('viewing-region mapping preserves both axes across zoom and viewport sizes',()=>{
+ const a={pages:[{top:0,left:0,height:1000,width:1000}],scrollTop:300,scrollLeft:400,clientHeight:200,clientWidth:200,scrollHeight:1000,scrollWidth:1000};
+ const b={pages:[{top:0,left:0,height:2000,width:2000}],scrollTop:0,scrollLeft:0,clientHeight:400,clientWidth:300,scrollHeight:2000,scrollWidth:2000};
+ const anchor=math.focus(a),target=math.focusTarget(anchor,b);assert.equal(target.top,600);assert.equal(target.left,850);assert.equal(target.clamped,false);
+ const actual=math.focus({...b,scrollTop:target.top,scrollLeft:target.left});assert.ok(math.distance(anchor,actual)<1e-9);assert.equal(actual.xFraction,anchor.xFraction);
+ const clipped=math.focusTarget({...anchor,xFraction:0,fraction:0},b);assert.equal(clipped.clamped,true);assert.equal(clipped.top,0);assert.equal(clipped.left,0);
+});
 function layout(heights,viewport=200){let top=10;const pages=heights.map(height=>{const page={top,height};top+=height+10;return page;});return{pages,scrollTop:0,clientHeight:viewport,scrollHeight:top};}
 test('maps corresponding page positions across different zoom and viewport sizes',()=>{
  const a=layout([1000,800,1200]),b=layout([500,400,600],150);

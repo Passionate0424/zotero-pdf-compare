@@ -7,11 +7,16 @@ var runP2=async function(ctx){
  const source=Zotero.Items.getByLibraryAndKey(fixture.libraryID,fixture.sourceKey);
  const win=Zotero.getMainWindow(),addon=win.DoubaoTranslate;
  if(!addon)throw new Error('Development product not loaded');
+ // Keep this single-pair baseline comparable with its original measurement.
+ for(const other of [...addon.states.values()])if(other.reader.itemID!==source.id)await addon.setMode(other.reader,'original');
  let reader=await Zotero.Reader.open(source.id);if(!reader)reader=await wait(()=>Zotero.Reader._readers.find(r=>r.itemID===source.id));
  await reader._initPromise;win.docShell.browsingContext.isActive=true;reader._updateDocShellActivity();
  const identity={reader,browser:reader._iframe,internal:reader._internalReader,parent:reader._iframe.parentNode};
  await addon.setMode(reader,'compare');
  const state=addon.states.get(reader.tabID),sync=state.sync;
+ // These baseline cases verify the original independent-scale, top-edge
+ // scrolling contract. Combined zoom/2D viewing regions have their own suite.
+ state.zoom?.setEnabled(false);
  if(!sync)throw new Error('Scroll sync module is not loaded');
  state.right.docShellIsActive=true;state.right.browsingContext.isActive=true;
  const preparePaint=async()=>{

@@ -1,0 +1,233 @@
+{
+  "date": "2026-11-02",
+  "version": "0.3.1",
+  "checkpointBeforeInitWait": "2ec0b7ba17c49e1623367e8137e2f1fa4ee5b7dc",
+  "build": {
+    "file": "E:\\project\\zotero-doubao-translate\\dist\\doubao-translate-dev-3e4e0ea0fff18e5a.xpi",
+    "filename": "doubao-translate-dev-3e4e0ea0fff18e5a.xpi",
+    "version": "0.3.1",
+    "entries": 8,
+    "bytes": 29299,
+    "sha256": "3e4e0ea0fff18e5a95a5f87b0ee201f7e209add1f4e0998aba5fcc1e67a7ff9b"
+  },
+  "unit": {
+    "passed": 41,
+    "failed": 0
+  },
+  "tests": {
+    "swap-zoom-acceptance-final": {
+      "passed": true,
+      "checks": {
+        "controlsPresent": true,
+        "zoomAndRegionLeftToRight": true,
+        "horizontalPanAloneFollows": true,
+        "regionRightToLeft": true,
+        "numericZoomRightToLeft": true,
+        "swappedPhysically": true,
+        "originalHostPreserved": true,
+        "swappedDividerPhysicalDirection": true,
+        "swapFromTranslationControls": true,
+        "zoomIndependentOfScrollToggle": true,
+        "zoomStillCopiesRegionWithScrollOff": true,
+        "scrollOffAllowsIndependentPan": true,
+        "zoomOffIndependent": true,
+        "enableFromTranslationCopiesScaleAndRegion": true,
+        "fitPresetMirrored": true,
+        "annotationParentUnchanged": true,
+        "translationOnlyHidesOriginal": true,
+        "modeRetainsSwappedAndZoom": true,
+        "narrowControlsReachable": true,
+        "zoomListenersDisposed": true,
+        "sourceOrderRestored": true
+      },
+      "nonce": "eb1e7821-c112-499f-9706-0548778930dc",
+      "generatedAt": "2026-11-02T04:45:14.412Z"
+    },
+    "swap-zoom-persistence": {
+      "passed": true,
+      "checks": {
+        "swapRemembered": true,
+        "zoomRemembered": true,
+        "nativeSourceWritable": true
+      },
+      "nonce": "fa8ed647-3f5b-484d-84df-6cc783025a61",
+      "generatedAt": "2026-11-02T04:46:39.043Z"
+    },
+    "swap-zoom-disable": {
+      "passed": true,
+      "checks": {
+        "controllerRemoved": true,
+        "panesRemoved": true,
+        "toolbarRemoved": true,
+        "nativeFlexRestored": true,
+        "timersDisposed": true,
+        "menuRemoved": true,
+        "originalAnnotationPreserved": true,
+        "reenabled": true
+      },
+      "nonce": "d5391db7-fb4d-4527-b007-fb298729450e",
+      "generatedAt": "2026-11-02T04:44:13.633Z"
+    },
+    "swap-zoom-annotations": {
+      "passed": true,
+      "checks": {
+        "existingAnnotations": true,
+        "existingPositionUnchanged": true,
+        "createdInOriginal": true,
+        "updatedCommentTagsColor": true,
+        "deletedFromDatabase": true,
+        "retainedOriginalParent": true,
+        "nativeCallbacksPreserved": true,
+        "nativeHostPreserved": true,
+        "dragSerializationOriginalIdentity": true,
+        "copyRichText": true
+      },
+      "nonce": "2b391dff-6009-49a9-a4ab-944bf43bbabe",
+      "generatedAt": "2026-11-02T04:40:37.885Z"
+    },
+    "swap-zoom-modes-final": {
+      "passed": true,
+      "checks": {
+        "twentySwitches": true,
+        "singlePane": true,
+        "dragResize": true,
+        "nativeHostPreserved": true,
+        "finalModeWins": true,
+        "noPaneAfterOriginal": true,
+        "noQueueLeak": true
+      },
+      "nonce": "d83485fe-4bed-4c1f-9722-0a1746f42bc3",
+      "generatedAt": "2026-11-02T04:43:09.262Z"
+    },
+    "swap-zoom-scroll-final": {
+      "passed": true,
+      "checks": {
+        "nineteenPagesBothDirections": true,
+        "anchorError": true,
+        "latencyP95": true
+      },
+      "nonce": "cb8cdc5b-596a-467b-a3d0-1dc2a0d5345b",
+      "generatedAt": "2026-11-02T04:43:21.118Z",
+      "p95Ms": 98,
+      "maximumError": 0.0023238191462482405,
+      "sampleCount": 120
+    },
+    "swap-zoom-cleanup": {
+      "passed": true,
+      "checks": {
+        "leftNativeNavigation": true,
+        "rightNativeNavigation": true,
+        "disabledIndependent": true,
+        "reenabledAligned": true,
+        "annotationGestureNoReverseJump": true,
+        "nativeHostPreserved": true,
+        "cleanup": true
+      },
+      "nonce": "60aabc1f-49ec-44c7-b9dd-62bd99f5716a",
+      "generatedAt": "2026-11-02T04:41:14.830Z"
+    },
+    "swap-zoom-isolation-final": {
+      "passed": true,
+      "checks": {
+        "actualProfile": true,
+        "actualData": true,
+        "parentProcess": true,
+        "noAccount": true,
+        "syncOff": true,
+        "connectorOff": true,
+        "wordInstallSkipped": true,
+        "productionProcessesPreserved": true,
+        "protectedFilesUnchanged": true,
+        "initialBaselinePolicy": true,
+        "nativeDatabaseCreated": true,
+        "screenshot": true,
+        "testLibraryRegistered": true
+      }
+    }
+  },
+  "regionCases": [
+    {
+      "action": "left-region",
+      "error": 4.440892098500626e-16,
+      "left": {
+        "pageIndex": 6,
+        "fraction": 0.4496212150111343,
+        "xFraction": 0.6495098039215687
+      },
+      "right": {
+        "pageIndex": 6,
+        "fraction": 0.4496212150111343,
+        "xFraction": 0.6495098039215687
+      }
+    },
+    {
+      "action": "right-region",
+      "error": 1.1102230246251565e-16,
+      "left": {
+        "pageIndex": 7,
+        "fraction": 0.5495265180414374,
+        "xFraction": 0.39950980392156865
+      },
+      "right": {
+        "pageIndex": 7,
+        "fraction": 0.5495265180414374,
+        "xFraction": 0.39950980392156865
+      }
+    },
+    {
+      "action": "zoom-scroll-off",
+      "error": 0.0002450980392156854,
+      "left": {
+        "pageIndex": 7,
+        "fraction": 0.511212123524059,
+        "xFraction": 0.34705882352941175
+      },
+      "right": {
+        "pageIndex": 7,
+        "fraction": 0.511212123524059,
+        "xFraction": 0.34681372549019607
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "assets/swap-zoom-1600.png",
+      "sha256": "1aa6fd398ceeae23ae3e89ce8667c97051546dfd090b4d6a79923bb89b8039fc",
+      "reviewed": true,
+      "dpr": 1.25
+    },
+    {
+      "path": "assets/swap-zoom-1280.png",
+      "sha256": "9fb9c2893a6e2a017d79256f4f4a02fb8a0c288313779483469cf66d98f34862",
+      "reviewed": true,
+      "dpr": 1.25
+    }
+  ],
+  "negativeResults": {
+    "beforeInitWait": "PDFView._setState reset visible scale and position after page loading",
+    "testObserverCleanup": "dead object when removing a listener after destroying its reader",
+    "modeTestScope": "global state count included a second legitimate comparison",
+    "multiSessionScrollP95Ms": 102,
+    "protectedDrift": {
+      "runId": "9f760c93-8880-4438-a43f-d8fdd061a1be",
+      "verifiedAt": "2026-11-02T04:44:15.618Z",
+      "changed": [
+        {
+          "path": "C:\\Users\\18522\\AppData\\Roaming\\Zotero\\Zotero\\Profiles\\jza7s4xb.default\\prefs.js",
+          "baselineExists": true,
+          "baselineSha256": "35a00b6eb33f32824fbcbe132ca8f88c9a5a35d1eca93f6eda28b36dc1c3bda1",
+          "observedExists": true,
+          "observedSha256": "9ceb327947c9cd82a3d25325e76489c14937757cfd2f58269bdf8678a8792d88",
+          "unchanged": false
+        }
+      ],
+      "fullReport": "runtime/swap-zoom-isolation-drift.json"
+    }
+  },
+  "limitations": [
+    "geometric page coordinates, not semantic paragraph correspondence",
+    "viewport bounds may prevent exact centering",
+    "multi-session performance not accepted",
+    "P2 and P3 remain incomplete"
+  ]
+}

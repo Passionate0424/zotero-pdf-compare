@@ -21,6 +21,19 @@ var DoubaoScrollMath = {
     const top=Math.max(0,Math.min(maximum,desired));
     return {top,desired,clamped:Math.abs(top-desired)>0.5};
   },
+  focus(metrics) {
+    const anchor=this.anchor({...metrics,scrollTop:metrics.scrollTop+metrics.clientHeight/2});
+    const page=anchor&&metrics.pages[anchor.pageIndex];if(!page?.width)return null;
+    return {...anchor,xFraction:(metrics.scrollLeft+metrics.clientWidth/2-page.left)/page.width};
+  },
+  focusTarget(anchor,metrics) {
+    const page=anchor&&metrics.pages[anchor.pageIndex];if(!page?.width||!metrics.clientWidth)return null;
+    const y=page.top+anchor.fraction*page.height-metrics.clientHeight/2;
+    const x=page.left+anchor.xFraction*page.width-metrics.clientWidth/2;
+    const top=Math.max(0,Math.min(metrics.scrollHeight-metrics.clientHeight,y));
+    const left=Math.max(0,Math.min(metrics.scrollWidth-metrics.clientWidth,x));
+    return{top,left,clamped:Math.abs(top-y)>.5||Math.abs(left-x)>.5};
+  },
   distance(a,b) {return a&&b?Math.abs((a.pageIndex+a.fraction)-(b.pageIndex+b.fraction)):Infinity;}
 };
 
@@ -31,6 +44,7 @@ var DoubaoScrollSync = class {
     this.frameWindow=left.host?.ownerGlobal;this.frame=null;this.lastFrame=0;
     this.stats={applies:0,suppressed:0,clamped:0,samples:[]};
     this.lastObserved={left:left.viewer.scrollTop,right:right.viewer.scrollTop};
+    this.lastObservedX={left:left.viewer.scrollLeft,right:right.viewer.scrollLeft};
     const listen=(target,type,callback,options)=>{target.addEventListener(type,callback,options);this.cleanup.push(()=>target.removeEventListener(type,callback,options));};
     for(const [side,view] of Object.entries(this.views)){
       listen(view.viewer,'scroll',()=>this.onScroll(side),{passive:true});
@@ -68,7 +82,7 @@ var DoubaoScrollSync = class {
     // also covers background windows whose animation frames are suspended.
     const tick=()=>{
       if(this.disposed||!this.enabled)return;
-      for(const side of ['left','right'])if(Math.abs(this.views[side].viewer.scrollTop-this.lastObserved[side])>0.25)this.onScroll(side);
+      for(const side of ['left','right'])if(Math.abs(this.views[side].viewer.scrollTop-this.lastObserved[side])>0.25||Math.abs(this.views[side].viewer.scrollLeft-this.lastObservedX[side])>0.25)this.onScroll(side);
       const pending=this.pending;this.pending=null;
       if(pending)this.alignFrom(pending.side,pending.at);
     };
@@ -85,13 +99,14 @@ var DoubaoScrollSync = class {
     view.outerDocument?.documentElement.getBoundingClientRect();
     const rect=viewer.getBoundingClientRect();
     const pages=[...view.window.document.querySelectorAll('.page')].map(page=>{
-      let top=0,node=page;
-      while(node&&node!==viewer){top+=node.offsetTop;node=node.offsetParent;}
-      return{top,height:page.offsetHeight||page.getBoundingClientRect().height};
+      let top=0,left=0,node=page;
+      while(node&&node!==viewer){top+=node.offsetTop;left+=node.offsetLeft;node=node.offsetParent;}
+      return{top,left,width:page.offsetWidth,height:page.offsetHeight||page.getBoundingClientRect().height};
     });
-    return{pages,scrollTop:viewer.scrollTop,clientHeight:Math.max(viewer.clientHeight,rect.height),scrollHeight:viewer.scrollHeight};
+    return{pages,scrollTop:viewer.scrollTop,scrollLeft:viewer.scrollLeft,clientWidth:viewer.clientWidth,scrollWidth:viewer.scrollWidth,clientHeight:Math.max(viewer.clientHeight,rect.height),scrollHeight:viewer.scrollHeight};
   }
   anchor(side) {return DoubaoScrollMath.anchor(this.metrics(side));}
+  focus(side) {return DoubaoScrollMath.focus(this.metrics(side));}
   compatible() {
     const a=this.metrics('left'),b=this.metrics('right');
     return a.pages.length>0&&a.pages.length===b.pages.length&&[a,b].every(m=>m.pages.every((p,i)=>i===0||p.top>m.pages[i-1].top));
@@ -100,9 +115,10 @@ var DoubaoScrollSync = class {
   onScroll(side) {
     if(this.disposed)return;
     const top=this.views[side].viewer.scrollTop,expected=this.expected[side];
-    if(Math.abs(top-this.lastObserved[side])<0.25)return;
-    this.lastObserved[side]=top;
-    if(expected&&Date.now()<expected.until&&Math.abs(top-expected.top)<2){this.stats.suppressed++;return;}
+    const left=this.views[side].viewer.scrollLeft;
+    if(Math.abs(top-this.lastObserved[side])<0.25&&Math.abs(left-this.lastObservedX[side])<0.25)return;
+    this.lastObserved[side]=top;this.lastObservedX[side]=left;
+    if(expected&&Date.now()<expected.until&&Math.abs(top-expected.top)<2&&(expected.left===undefined||Math.abs(left-expected.left)<2)){this.stats.suppressed++;return;}
     if(this.pointerSide&&this.pointerSide!==side)return;
     if(this.intentSide&&side!==this.intentSide&&Date.now()<this.intentUntil)return;
     const anchor=this.anchor(side);if(anchor)this.onNavigate(side,anchor);
@@ -116,13 +132,24 @@ var DoubaoScrollSync = class {
   alignFrom(side,started=Date.now(),anchor=null) {
     if(!this.enabled||this.disposed)return null;
     if(!this.compatible()){this.notify();return null;}
+    if(this.focusLinked&&!anchor)return this.alignViewportFrom(side,started);
     const targetSide=side==='left'?'right':'left';
     anchor=anchor||this.anchor(side);
     const target=DoubaoScrollMath.target(anchor,this.metrics(targetSide));
     if(!target)return null;
-    this.expected[targetSide]={top:target.top,until:Date.now()+250};
+    return this.applyTarget(side,anchor,target,started);
+  }
+  alignViewportFrom(side,started=Date.now()) {
+    if(this.disposed||!this.compatible())return null;
+    const anchor=this.focus(side),target=DoubaoScrollMath.focusTarget(anchor,this.metrics(side==='left'?'right':'left'));
+    return target?this.applyTarget(side,anchor,target,started):null;
+  }
+  applyTarget(side,anchor,target,started) {
+    const targetSide=side==='left'?'right':'left';
+    this.expected[targetSide]={top:target.top,left:target.left,until:Date.now()+250};
     const viewer=this.views[targetSide].viewer;
     if(Math.abs(viewer.scrollTop-target.top)>0.25)viewer.scrollTop=target.top;
+    if(target.left!==undefined&&Math.abs(viewer.scrollLeft-target.left)>.25)viewer.scrollLeft=target.left;
     this.leader=side;this.stats.applies++;if(target.clamped)this.stats.clamped++;
     const sample={source:side,anchor,target:target.top,clamped:target.clamped,elapsedMs:Date.now()-started};
     this.stats.samples.push(sample);if(this.stats.samples.length>200)this.stats.samples.shift();

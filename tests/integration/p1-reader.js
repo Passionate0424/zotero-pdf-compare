@@ -203,7 +203,7 @@ var runP1 = async function(ctx) {
       screenshots.push(await screenshot(`p1-layout-${width}x${height}`));
     }
     await Promise.all(['compare','original','translation','original'].map(mode=>addon.setMode(reader,mode)));
-    checks.finalModeWins=addon.states.size===0;
+    checks.finalModeWins=!addon.states.has(reader.tabID);
     checks.noPaneAfterOriginal=reader._tabContainer.querySelectorAll('.doubao-translation-pane').length===0;
     checks.noQueueLeak=addon.modeQueues.size===0&&addon.modeRequests.size===0;
     return {passed:Object.values(checks).every(Boolean),stage:'mode_lifecycle',checks,ratio:state.ratio,sequence,screenshots,screenshot:await screenshot('p1-mode-restored')};

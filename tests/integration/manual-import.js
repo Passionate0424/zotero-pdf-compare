@@ -31,6 +31,70 @@ var runManualImport=async function(ctx){
   return{path,width:canvas.width,height:canvas.height,dpr:win.devicePixelRatio,method:'gecko-window-global-snapshot'};
  };
  const checks={},screenshots=[];
+ if(ctx.action==='swap-zoom-inspect'){
+  const s=addon.states.get(reader.tabID),sync=s?.sync;
+  return{passed:true,diagnostic:true,swapped:s?.swapped,zoomEnabled:s?.zoom.enabled,scrollEnabled:sync?.enabled,leader:sync?.leader,expected:sync?.expected,views:sync&&Object.fromEntries(Object.entries(sync.views).map(([side,v])=>[side,{scale:v.window.PDFViewerApplication.pdfViewer.currentScale,value:v.window.PDFViewerApplication.pdfViewer.currentScaleValue,focus:sync.focus(side),metrics:sync.metrics(side)}])),samples:sync?.stats.samples.slice(-5)};
+ }
+ if(ctx.action==='swap-zoom'||ctx.action==='swap-zoom-persistence'){
+  if(ctx.action==='swap-zoom'){
+   await addon.setMode(reader,'original');Zotero.Prefs.set('extensions.doubaoTranslate.translationOnLeft',false,true);Zotero.Prefs.set('extensions.doubaoTranslate.syncZoom',true,true);
+  }
+  await addon.setMode(reader,'compare');
+  let s=addon.states.get(reader.tabID),sync=s.sync;
+  const apps=Object.fromEntries(Object.entries(sync.views).map(([side,v])=>[side,v.window.PDFViewerApplication]));
+  const focusError=()=>{const a=sync.focus('left'),b=sync.focus('right');return Math.max(Math.abs(a.pageIndex+a.fraction-b.pageIndex-b.fraction),Math.abs(a.xFraction-b.xFraction));};
+  const settle=async(fn,phase)=>{try{await wait(fn);}catch(error){const trace={phase,checks,views:Object.fromEntries(Object.entries(apps).map(([side,a])=>[side,{scale:a.pdfViewer.currentScale,value:a.pdfViewer.currentScaleValue,focus:sync.focus(side)}]))};await IOUtils.writeJSON(PathUtils.join(ctx.runtime,'swap-zoom-trace.json'),trace);throw new Error(JSON.stringify(trace));}};
+  const intent=side=>{const w=sync.views[side].window;w.document.dispatchEvent(new w.WheelEvent('wheel',{deltaY:1,bubbles:true}));};
+  const place=(side,anchor)=>{intent(side);const m=sync.metrics(side),p=m.pages[anchor.pageIndex],v=sync.views[side].viewer;v.scrollTop=p.top+p.height*anchor.fraction-m.clientHeight/2;v.scrollLeft=p.left+p.width*anchor.xFraction-m.clientWidth/2;};
+  if(ctx.action==='swap-zoom-persistence'){
+   checks.swapRemembered=s.swapped&&s.sourceBrowser.getBoundingClientRect().x>s.right.getBoundingClientRect().x;
+   checks.zoomRemembered=s.zoomWanted&&s.zoom.enabled;
+   checks.nativeSourceWritable=!reader._isReadOnly()&&reader._internalReader===originalReader;
+   return{passed:Object.values(checks).every(Boolean),checks};
+  }
+  checks.controlsPresent=!!reader._iframeWindow.document.querySelector('.doubao-swap-button')&&!!s.right.contentDocument.querySelector('.doubao-zoom-button');
+  apps.left.pdfViewer.currentScaleValue=2;await settle(()=>Math.abs(apps.right.pdfViewer.currentScale-2)<.0001,'initial-scale');
+  place('left',{pageIndex:6,fraction:.45,xFraction:.65});await settle(()=>focusError()<.005,'left-region');
+  checks.zoomAndRegionLeftToRight=focusError()<.005;const regionCases=[{action:'left-region',error:focusError(),left:sync.focus('left'),right:sync.focus('right')}];
+  const beforePan=sync.views.right.viewer.scrollLeft;intent('left');sync.views.left.viewer.scrollLeft-=100;await settle(()=>focusError()<.005,'horizontal-only-pan');
+  checks.horizontalPanAloneFollows=Math.abs(sync.views.right.viewer.scrollLeft-beforePan)>50;
+  place('right',{pageIndex:7,fraction:.55,xFraction:.4});await settle(()=>focusError()<.005,'right-region');
+  checks.regionRightToLeft=focusError()<.005;regionCases.push({action:'right-region',error:focusError(),left:sync.focus('left'),right:sync.focus('right')});
+  intent('right');apps.right.pdfViewer.currentScaleValue=2.2;await settle(()=>Math.abs(apps.left.pdfViewer.currentScale-2.2)<.0001&&focusError()<.005,'right-numeric-zoom');
+  checks.numericZoomRightToLeft=true;
+  reader._iframeWindow.document.querySelector('.doubao-swap-button').click();
+  checks.swappedPhysically=s.sourceBrowser.getBoundingClientRect().x>s.right.getBoundingClientRect().x;
+  checks.originalHostPreserved=reader._iframe===originalBrowser&&reader._internalReader===originalReader&&reader._iframe.parentNode===s.container;
+  const beforeWidth=s.right.getBoundingClientRect().width;s.divider.dispatchEvent(new win.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));
+  checks.swappedDividerPhysicalDirection=s.right.getBoundingClientRect().width>beforeWidth;
+  s.right.contentDocument.querySelector('.doubao-swap-button').click();checks.swapFromTranslationControls=!s.swapped&&s.sourceBrowser.getBoundingClientRect().x<s.right.getBoundingClientRect().x;
+  reader._iframeWindow.document.querySelector('.doubao-swap-button').click();
+  reader._iframeWindow.document.querySelector('.doubao-sync-button').click();
+  checks.zoomIndependentOfScrollToggle=!sync.enabled&&s.zoom.enabled;
+  intent('left');reader._internalReader.zoomIn();await settle(()=>Math.abs(apps.left.pdfViewer.currentScale-apps.right.pdfViewer.currentScale)<.0001&&focusError()<.005,'zoom-scroll-off');
+  checks.zoomStillCopiesRegionWithScrollOff=focusError()<.005;regionCases.push({action:'zoom-scroll-off',error:focusError(),left:sync.focus('left'),right:sync.focus('right')});
+  const idle=sync.focus('right');place('left',{pageIndex:8,fraction:.5,xFraction:.6});await pause(150);
+  checks.scrollOffAllowsIndependentPan=Math.abs(sync.focus('right').pageIndex+sync.focus('right').fraction-idle.pageIndex-idle.fraction)<.001;
+  reader._iframeWindow.document.querySelector('.doubao-zoom-button').click();const fixed=apps.right.pdfViewer.currentScale;
+  apps.left.pdfViewer.currentScaleValue=1.7;await pause(150);checks.zoomOffIndependent=Math.abs(apps.right.pdfViewer.currentScale-fixed)<.0001&&Math.abs(apps.left.pdfViewer.currentScale-fixed)>.01;
+  intent('right');s.right.contentDocument.querySelector('.doubao-zoom-button').click();await settle(()=>Math.abs(apps.left.pdfViewer.currentScale-apps.right.pdfViewer.currentScale)<.0001&&focusError()<.005,'reenable-from-right');
+  checks.enableFromTranslationCopiesScaleAndRegion=focusError()<.005;
+  reader._iframeWindow.document.querySelector('.doubao-sync-button').click();
+  intent('right');s.rightInternal.zoomPageWidth();await settle(()=>apps.left.pdfViewer.currentScaleValue==='page-width'&&apps.right.pdfViewer.currentScaleValue==='page-width','fit-width');
+  checks.fitPresetMirrored=true;
+  const annotation=Zotero.Items.getByLibraryAndKey(fixture.libraryID,fixture.annotationKey);checks.annotationParentUnchanged=annotation.parentID===source.id;
+  await addon.setMode(reader,'translation');checks.translationOnlyHidesOriginal=s.sourceBrowser.getBoundingClientRect().width===0&&!s.zoom.enabled;
+  await addon.setMode(reader,'compare');checks.modeRetainsSwappedAndZoom=s.swapped&&s.zoom.enabled&&Math.abs(s.sourceBrowser.getBoundingClientRect().width-s.right.getBoundingClientRect().width)<1;
+  intent('left');apps.left.pdfViewer.currentScaleValue=1.3;place('left',{pageIndex:0,fraction:.45,xFraction:.5});await settle(()=>focusError()<.005,'visual-region');
+  win.resizeTo(1600,1000);screenshots.push(await screenshot('swap-zoom-1600'));
+  win.resizeTo(1280,800);screenshots.push(await screenshot('swap-zoom-1280'));
+  checks.narrowControlsReachable=[reader._iframeWindow,s.right.contentWindow].every(w=>{const r=w.document.querySelector('.doubao-reading-modes').getBoundingClientRect();return r.x>=0&&r.right<=w.innerWidth+1;});
+  win.resizeTo(1600,1000);const oldZoom=s.zoom;
+  await addon.setMode(reader,'original');checks.zoomListenersDisposed=oldZoom.disposed&&oldZoom.cleanup.length===0;
+  checks.sourceOrderRestored=reader._iframe.getAttribute('style')===s.originalBrowserStyle;
+  await addon.setMode(reader,'compare');
+  return{passed:Object.values(checks).every(Boolean),checks,regionCases,screenshots,screenshot:screenshots[0]};
+ }
  if(ctx.action==='ux-diagnose'){
   await addon.setMode(reader,'original');
   const frames=[],transitions=[];let observing=true;
