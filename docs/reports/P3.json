@@ -1,7 +1,7 @@
 {
   "milestone": "P3",
   "status": "in_progress",
-  "recordedAt": "2026-11-02T10:43:45.169262+08:00",
+  "recordedAt": "2026-11-02T11:12:09.999975+08:00",
   "checks": {
     "isolationAudit": true,
     "cancelTimeout": true,
@@ -23,9 +23,11 @@
     "docs/reports/P3.md",
     "docs/reports/P3-evidence.json",
     "docs/reports/P3-isolation.json",
-    "docs/WORKER.md"
+    "docs/WORKER.md",
+    "docs/reports/P3-verification-blocker.md"
   ],
   "remaining": [
+    "真实发送触发人机验证；网页脚本不满足无人值守验收，已停止本轮重试。",
     "登录复用尚不稳定，原因未确认。",
     "线上预览/翻译/下载及目标语言待验。",
     "3 次独立真实豆包下载未完成。",

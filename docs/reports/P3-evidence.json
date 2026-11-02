@@ -559,5 +559,24 @@
     "independentConversations": 0,
     "finishedAt": "2026-11-02T02:27:32.699Z"
   },
-  "loginReuse": "User logged in; later runs failed during send and showed login again. Root cause not established; live export unverified."
+  "loginReuse": "User logged in; later runs failed during send and showed login again. Root cause not established; live export unverified.",
+  "verificationBlocker": {
+    "observedAt": "2026-11-02T11:12:09.989452+08:00",
+    "loginMarkerPresent": true,
+    "loginVisible": false,
+    "uploadDataAvailable": true,
+    "completionHTTPStatus": 200,
+    "completionContentType": "text/event-stream",
+    "completionErrorCode": 710022004,
+    "verificationFrameOrigin": "https://rmc.bytedance.com",
+    "translatedPDFs": 0,
+    "automationStopped": true,
+    "cleanup": {
+      "projectChromeCount": 0,
+      "diagnosticPort9229Listeners": 0,
+      "probeAlive": false
+    },
+    "evidenceReport": "docs/reports/P3-verification-blocker.md",
+    "scope": "Same-process failure; does not explain earlier cross-process authentication loss."
+  }
 }
