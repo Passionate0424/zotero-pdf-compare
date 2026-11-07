@@ -289,6 +289,20 @@ var runManualImport=async function(ctx){
   checks.reenabled=!!reader._iframeWindow.document.querySelector('.doubao-import-button');
   return{passed:Object.values(checks).every(Boolean),checks};
  }
+ if(ctx.action==='direct-import'){
+  const testParent=new Zotero.Item('journalArticle');testParent.libraryID=source.libraryID;testParent.setField('title','[DEV] 真实译文导入验收');testParent.addTag('doubao-dev-fixture');await testParent.saveTx();
+  const testSource=await Zotero.Attachments.importFromFile({file:Zotero.File.pathToFile(originalPath),parentItemID:testParent.id});
+  const sourceHash=service.hash(await IOUtils.read(await testSource.getFilePathAsync()));
+  const selectedHash=service.hash(await IOUtils.read(selectedPath));
+  const first=await service.importFile(testSource,selectedPath),second=await service.importFile(testSource,selectedPath);
+  checks.created=first.created&&!first.cancelled;
+  checks.correctParent=first.translated.parentID===testParent.id;
+  checks.fileMatches=service.hash(await IOUtils.read(await first.translated.getFilePathAsync()))===selectedHash;
+  checks.originalUnchanged=service.hash(await IOUtils.read(await testSource.getFilePathAsync()))===sourceHash;
+  checks.duplicateReused=!second.created&&second.translated.id===first.translated.id;
+  checks.pairRecorded=service.records().some(r=>r.sourceKey===testSource.key&&r.translatedKey===first.translated.key);
+  return{passed:Object.values(checks).every(Boolean),checks,testParentKey:testParent.key};
+ }
  if(ctx.action!=='import')throw new Error('Unknown manual scenario');
  await addon.setMode(reader,'original');
  const sourceBefore=service.hash(await IOUtils.read(await source.getFilePathAsync())),selectedBefore=service.hash(await IOUtils.read(selectedPath));

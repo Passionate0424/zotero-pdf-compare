@@ -150,10 +150,13 @@ var runP2=async function(ctx){
    sync.leader=side;delete sync.expected[side];
    for(const [name,method,expected] of [['first','navigateToFirstPage',0],['next','navigateToNextPage',1],['last','navigateToLastPage',18],['previous','navigateToPreviousPage',17]]){
     const inputWindow=sync.views[side].window;inputWindow.document.dispatchEvent(new inputWindow.Event('keydown',{bubbles:true}));
-    internal[method]();await preparePaint();try{await wait(()=>{const m=sync.metrics(side);return name==='last'?Math.abs(m.scrollTop-(m.scrollHeight-m.clientHeight))<2:sync.anchor(side)?.pageIndex===expected;},2000);}catch{throw new Error(JSON.stringify({phase:'native-navigation',side,name,expected,actual:sync.anchor(side),method:String(internal[method]),intentSide:sync.intentSide,leader:sync.leader,samples:sync.stats.samples.slice(-3)}));}await pause(100);
-    actions.push({side,name,distance:distance(),anchor:sync.anchor(side)});
+    internal[method]();await preparePaint();try{await wait(()=>{const m=sync.metrics(side);return name==='last'?Math.abs(m.scrollTop-Math.min(m.pages[expected].top,m.scrollHeight-m.clientHeight))<2:sync.anchor(side)?.pageIndex===expected;},2000);}catch{throw new Error(JSON.stringify({phase:'native-navigation',side,name,expected,actual:sync.anchor(side),method:String(internal[method]),intentSide:sync.intentSide,leader:sync.leader,samples:sync.stats.samples.slice(-3)}));}await pause(100);
+    const other=side==='left'?'right':'left',anchor=sync.anchor(side),m=sync.metrics(other),page=m.pages[anchor.pageIndex];
+    const target=Math.max(0,Math.min(m.scrollHeight-m.clientHeight,page.top+anchor.fraction*page.height));
+    await wait(()=>Math.abs(sync.metrics(other).scrollTop-target)<2,2000);
+    actions.push({side,name,distance:distance(),anchor,otherScroll:sync.metrics(other).scrollTop,target});
    }
-   checks[side+'NativeNavigation']=actions.filter(a=>a.side===side).every(a=>a.distance<0.02||a.name==='last');
+   checks[side+'NativeNavigation']=actions.filter(a=>a.side===side).every(a=>Math.abs(a.otherScroll-a.target)<2&&(a.distance<0.02||a.name==='last'));
   }
   const toggle=reader._iframeWindow.document.querySelector('.doubao-sync-button');toggle.click();
   const before=sync.views.right.viewer.scrollTop;sync.views.left.viewer.scrollTop+=250;await pause(150);
