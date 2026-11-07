@@ -4,6 +4,7 @@ const scenarios = [
   ['annotations-api', 'p1-reader'],
   ['mode-lifecycle', 'p1-reader'],
   ['layout-interactions', 'p2-sync'],
+  ['compare-toolbar-geometry', 'manual-import'],
   ['toolbar-height', 'manual-import'],
   ['cache-lifecycle', 'manual-import'],
   ['swap-zoom', 'manual-import'],

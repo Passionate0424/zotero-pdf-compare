@@ -31,6 +31,22 @@ var runManualImport=async function(ctx){
   return{path,width:canvas.width,height:canvas.height,dpr:win.devicePixelRatio,method:'gecko-window-global-snapshot'};
  };
  const checks={},screenshots=[];
+ if(ctx.action==='compare-toolbar-geometry'){
+  const sizes=[];
+  for(const width of [1600,1280]){
+   win.resizeTo(width,width===1600?1000:800);await addon.setMode(reader,'compare');
+   const s=addon.states.get(reader.tabID);
+   screenshots.push(await screenshot('compare-toolbar-'+width));
+   const measure=d=>{const toolbar=d.querySelector('.toolbar'),tools=toolbar.querySelector('.tools');return{height:toolbar.getBoundingClientRect().height,width:toolbar.getBoundingClientRect().width,toolsDisplay:d.defaultView.getComputedStyle(tools).display,toolsRect:tools.getBoundingClientRect().toJSON(),toolsChildren:tools.children.length};};
+   sizes.push({width,ratio:.5,original:measure(reader._iframeWindow.document),translation:measure(s.right.contentDocument)});
+   for(const ratio of [.3,.7,.5]){s.resize(ratio);await screenshot(`compare-toolbar-${width}-${ratio}`);sizes.push({width,ratio,original:measure(reader._iframeWindow.document),translation:measure(s.right.contentDocument)});}
+  }
+  checks.equal=sizes.every(s=>Math.abs(s.original.height-s.translation.height)<1);
+  checks.splitWidths=sizes.filter(s=>s.ratio!==.5).every(s=>Math.abs(s.original.width-s.translation.width)>100);
+  checks.heightRestored=[1600,1280].every(width=>{const entries=sizes.filter(s=>s.width===width&&s.ratio===.5);return Math.abs(entries[0].original.height-entries.at(-1).original.height)<1;});
+  await addon.setMode(reader,'original');checks.cleanup=reader._iframeWindow.document.querySelector('.toolbar').style.minHeight==='';
+  win.resizeTo(1600,1000);return{passed:Object.values(checks).every(Boolean),checks,sizes,screenshots,screenshot:screenshots[1]};
+ }
  if(ctx.action==='toolbar-height'){
   const sizes=[];
   const controlsFit=doc=>{const bar=doc.querySelector('.toolbar').getBoundingClientRect();return [...doc.querySelectorAll('.toolbar button,.toolbar input')].every(el=>{const r=el.getBoundingClientRect();return !r.width||!r.height||(r.top>=bar.top-1&&r.bottom<=bar.bottom+1&&r.left>=bar.left-1&&r.right<=bar.right+1);});};

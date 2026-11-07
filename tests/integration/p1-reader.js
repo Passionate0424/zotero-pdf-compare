@@ -50,6 +50,16 @@ var runP1 = async function(ctx) {
     fixture.seedKey = annotation.key; await persist();
   }
   const win = Zotero.getMainWindow();
+  if(ctx.action==='restore-fixture-pair') {
+    const addon=win.DoubaoTranslate;if(!addon)throw new Error('Plugin not active');
+    const expectedPath=PathUtils.join(ctx.root,'fixtures','public','doubao-19p','world-action-models.zh-CN.doubao.pdf');
+    if(addon.manual.hash(await IOUtils.read(await translated.getFilePathAsync()))!==addon.manual.hash(await IOUtils.read(expectedPath)))throw new Error('Fixture translation content mismatch');
+    const before=addon.getPairs()[`${source.libraryID}:${source.key}`];
+    for(const reader of Zotero.Reader._readers.filter(r=>r.itemID===source.id))await addon.setMode(reader,'original');
+    addon.pair(source,translated);addon.refreshControls(source.id);
+    const after=addon.getPairs()[`${source.libraryID}:${source.key}`];
+    return{passed:after===translated.key,before,after,sourceKey:source.key};
+  }
   if(ctx.action==='plugin-state') {
     const {AddonManager}=ChromeUtils.importESModule('resource://gre/modules/AddonManager.sys.mjs');
     const installed=await AddonManager.getAddonByID('doubao-translate@local.invalid');

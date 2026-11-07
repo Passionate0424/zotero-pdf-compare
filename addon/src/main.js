@@ -221,6 +221,27 @@ var DoubaoTranslateAddon = class {
     observer.observe(toolbar); update();
     return () => { observer.disconnect(); style.remove(); if (!hadClass) root.classList.remove('doubao-compare-layout'); if (oldOffset) root.style.setProperty('--doubao-toolbar-offset',oldOffset); else root.style.removeProperty('--doubao-toolbar-offset'); };
   }
+  alignCompareToolbars(state) {
+    const docs=[state.reader._iframeWindow.document,state.right.contentDocument];
+    const bars=docs.map(doc=>doc.querySelector('.toolbar'));
+    const previous=bars.map(bar=>bar.style.minHeight);
+    const update=()=>{
+      for(const bar of bars)bar.style.minHeight='';
+      const height=Math.ceil(Math.max(81,...bars.map(bar=>bar.getBoundingClientRect().height)));
+      for(const bar of bars)bar.style.minHeight=`${height}px`;
+    };
+    let timer=null,lastWidths='';
+    const schedule=()=>{
+      const widths=[state.sourceBrowser,state.right].map(node=>node.getBoundingClientRect().width).join(':');
+      if(widths===lastWidths)return;
+      lastWidths=widths;
+      if(timer!==null)this.timers.clearTimeout(timer);
+      timer=this.timers.setTimeout(()=>{timer=null;update();},0);
+    };
+    const observer=new state.container.ownerGlobal.ResizeObserver(schedule);
+    observer.observe(state.sourceBrowser);observer.observe(state.right);schedule();
+    return ()=>{observer.disconnect();if(timer!==null)this.timers.clearTimeout(timer);bars.forEach((bar,index)=>bar.style.minHeight=previous[index]);};
+  }
   async waitFor(check, state, timeout = 20000) {
     const start = Date.now();
     while (Date.now() - start < timeout) {
@@ -257,6 +278,7 @@ var DoubaoTranslateAddon = class {
     // their own lifecycle, but hidden readers must not accumulate across tabs.
     for(const other of [...this.states.values()])if(other!==state&&other.mode==='original')this.restore(other);
     state.zoom?.dispose();state.sync?.dispose();state.mode='original';
+    state.restoreToolbarAlignment?.();state.restoreToolbarAlignment=null;
     state.restoreSourceLayout?.();state.restoreSourceLayout=null;
     state.restoreRightLayout?.();state.restoreRightLayout=null;
     state.right.style.display='none';state.divider.style.display='none';
@@ -498,7 +520,9 @@ var DoubaoTranslateAddon = class {
         state.resize(0.5);
         if(!state.restoreSourceLayout)state.restoreSourceLayout=this.responsiveToolbar(reader._iframeWindow.document);
         if(!state.restoreRightLayout)state.restoreRightLayout=this.responsiveToolbar(state.right.contentDocument,true);
+        if(!state.restoreToolbarAlignment)state.restoreToolbarAlignment=this.alignCompareToolbars(state);
       }else{
+        state.restoreToolbarAlignment?.();state.restoreToolbarAlignment=null;
         state.restoreSourceLayout?.();state.restoreSourceLayout=null;
         state.restoreRightLayout?.();state.restoreRightLayout=null;
       }
@@ -529,7 +553,7 @@ var DoubaoTranslateAddon = class {
     state.closed = true;
     state.closeObserver?.disconnect();
     if (state.selectionListener) state.container.removeEventListener('tab-selection-change',state.selectionListener);
-    state.restoreSourceLayout?.(); state.restoreRightLayout?.();
+    state.restoreToolbarAlignment?.();state.restoreSourceLayout?.(); state.restoreRightLayout?.();
     state.readOnlyStyle?.remove();
     if (state.rightControls) { this.buttons.delete(state.rightControls); state.rightControls.remove(); }
     try { state.rightInternal?.uninit?.(); } catch (error) { Zotero.logError(error); }
