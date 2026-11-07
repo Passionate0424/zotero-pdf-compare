@@ -49,14 +49,15 @@ try {
   console.log('CONNECTED', JSON.stringify({ pid: owner.PID, applicationType: hello.applicationType }));
   const root = await send({ to: 'root', type: 'getRoot' });
   console.log('ROOT', JSON.stringify(root));
-  if (['install-probe', 'install-product', 'install-product-xpi'].includes(process.argv[2])) {
+  if (['install-probe', 'install-product', 'install-product-xpi', 'install-release-xpi'].includes(process.argv[2])) {
     if (!root.addonsActor) throw new Error('No addons actor');
     const rootPath=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
     let addonPath=path.join(rootPath,process.argv[2]==='install-probe'?'tools/probe-addon':'addon');
-    if(process.argv[2]==='install-product-xpi'){
-      const marker=path.join(rootPath,'dist','current-dev-build.json');rejectLinks(marker);
+    if(['install-product-xpi','install-release-xpi'].includes(process.argv[2])){
+      const release=process.argv[2]==='install-release-xpi';
+      const marker=path.join(rootPath,'dist',release?'current-release-build.json':'current-dev-build.json');rejectLinks(marker);
       const build=JSON.parse(fs.readFileSync(marker,'utf8'));
-      if(!/^doubao-translate-dev-[a-f0-9]{16}\.xpi$/.test(build.filename))throw new Error('Invalid build filename');
+      if(!(release?/^zotero-pdf-compare-\d+\.\d+\.\d+\.xpi$/:/^doubao-translate-dev-[a-f0-9]{16}\.xpi$/).test(build.filename))throw new Error('Invalid build filename');
       addonPath=path.join(rootPath,'dist',build.filename);rejectLinks(addonPath);
       if(crypto.createHash('sha256').update(fs.readFileSync(addonPath)).digest('hex')!==build.sha256)throw new Error('Build hash mismatch');
     }
