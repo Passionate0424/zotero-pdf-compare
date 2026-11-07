@@ -305,6 +305,30 @@ var runManualImport=async function(ctx){
   checks.reenabled=!!reader._iframeWindow.document.querySelector('.doubao-import-button');
   return{passed:Object.values(checks).every(Boolean),checks};
  }
+ if(ctx.action==='uninstall-check'){
+  await addon.setMode(reader,'compare');
+  const state=addon.states.get(reader.tabID),sync=state.sync,translated=addon.translationFor(reader);
+  if(!translated)throw new Error('Paired translated attachment is required');
+  const annotation=Zotero.Items.getByLibraryAndKey(fixture.libraryID,fixture.annotationKey);
+  if(!annotation)throw new Error('Native annotation is required');
+  const sourcePath=await source.getFilePathAsync(),translatedPath=await translated.getFilePathAsync();
+  const originalHash=service.hash(await IOUtils.read(sourcePath)),translatedHash=service.hash(await IOUtils.read(translatedPath));
+  const annotationPosition=annotation.annotationPosition,pairs=Zotero.Prefs.get('extensions.doubaoTranslate.pairs',true);
+  const {AddonManager}=ChromeUtils.importESModule('resource://gre/modules/AddonManager.sys.mjs');
+  const installed=await AddonManager.getAddonByID('doubao-translate@local.invalid');
+  if(!installed||installed.temporarilyInstalled)throw new Error('Expected installed test addon');
+  await installed.uninstall();await wait(()=>!win.DoubaoTranslate);
+  checks.uninstalled=!(await AddonManager.getAddonByID('doubao-translate@local.invalid'));
+  checks.controlsRemoved=!reader._iframeWindow.document.querySelector('.doubao-reading-modes');
+  checks.panesRemoved=!win.document.querySelector('.doubao-translation-pane');
+  checks.nativeRestored=reader._iframe.getAttribute('flex')==='1'&&!reader._isReadOnly();
+  checks.syncDisposed=sync.disposed&&sync.poll===null&&sync.frame===null&&sync.cleanup.length===0;
+  checks.sourceUnchanged=service.hash(await IOUtils.read(sourcePath))===originalHash;
+  checks.translatedUnchanged=service.hash(await IOUtils.read(translatedPath))===translatedHash&&!!Zotero.Items.get(translated.id);
+  checks.annotationUnchanged=Zotero.Items.get(annotation.id)?.annotationPosition===annotationPosition&&annotation.parentID===source.id;
+  checks.pairPreferencesRetained=Zotero.Prefs.get('extensions.doubaoTranslate.pairs',true)===pairs;
+  return{passed:Object.values(checks).every(Boolean),checks,sourceKey:source.key,translatedKey:translated.key};
+ }
  if(ctx.action==='direct-import'){
   const testParent=new Zotero.Item('journalArticle');testParent.libraryID=source.libraryID;testParent.setField('title','[DEV] 真实译文导入验收');testParent.addTag('doubao-dev-fixture');await testParent.saveTx();
   const testSource=await Zotero.Attachments.importFromFile({file:Zotero.File.pathToFile(originalPath),parentItemID:testParent.id});
