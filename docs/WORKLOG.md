@@ -161,3 +161,8 @@
 - 任务：公开发布 Zotero PDF Compare，统一对外名称并建立 CI 与标签发布流程。
 - 修改内容：创建 Passionate0424/zotero-pdf-compare 公开仓库；版本 0.3.6，更新首页、安装说明、包名称和作者显示。保留内部 ID 及配置键以兼容已有安装。增加 Windows/Linux GitHub Actions 单元测试、发布包构建校验与 v 标签自动 Release，发布 XPI、SHA-256 和更新清单；发布源码指定 LF 行尾以保持跨平台包指纹一致。
 - 具体结果：本地单元 41/41，包结构、版本、指纹、阅读器源文件和更新清单检查通过；XPI SHA-256=1993856eada936f4c789266f1040c5db6b986d5516171acb15c6e890c5a9564a。当前及历史文本常见私钥/令牌模式扫描未命中，runtime、附件和浏览器状态不纳入发布包。远程 CI 与 Release 结果另记验证记录，不以本地通过代替远程执行。
+
+2026-11-08 10:21
+- 任务：完成公开仓库的远程 CI 与 v0.3.6 Release 发布验证。
+- 修改内容：源码推送到 origin/main，推送 v0.3.6 标签；GitHub Actions 自动发布安装包、指纹及更新清单，运行数据保持本地。
+- 具体结果：主分支运行 42437983633 的 Windows/Linux 测试及构建成功；标签运行 42438041220 的两平台测试与发布成功，Release 非草稿且非预发布。远程三个资产下载成功，XPI SHA-256=8b7bb1c313de3f8572fbd6c7ad07e3ae2197bbfdc6f79ea4a6dc83cf74f6ea38，与远程校验文件一致；本地及远程解包的 8 个文件逐字节一致，压缩后的字节指纹存在平台差异。仓库 https://github.com/Passionate0424/zotero-pdf-compare，Release https://github.com/Passionate0424/zotero-pdf-compare/releases/tag/v0.3.6。云端 CI 不覆盖真实 Zotero 窗口交互。
