@@ -21,6 +21,7 @@ if args.release:
     files['bootstrap.js'] = 'addon/bootstrap-release.js'
     manifest['name'] = 'PDF 译文对照阅读'
     manifest['description'] = '手动导入译文 PDF，保留原文批注，支持对照阅读与滚动和缩放同步。'
+    manifest['applications']['zotero']['update_url'] = 'https://github.com/Passionate0424/zotero-pdf-compare/releases/latest/download/updates.json'
 outdir = root / "dist"
 if outdir.is_symlink() or (outdir.exists() and outdir.resolve() != outdir):
     raise SystemExit("Refuse a redirected output directory")
@@ -59,3 +60,10 @@ with zipfile.ZipFile(output) as archive:
     assert set(archive.namelist()) == set(files)
     assert archive.testzip() is None
 print(json.dumps(build, indent=2))
+if args.release:
+    (outdir / (output.name + '.sha256')).write_text(digest + '  ' + output.name + '\n', encoding='utf-8')
+    app = manifest['applications']['zotero']
+    updates = {'addons': {app['id']: {'updates': [{'version': manifest['version'],
+               'update_link': f"https://github.com/Passionate0424/zotero-pdf-compare/releases/download/v{manifest['version']}/{output.name}",
+               'applications': {'zotero': {key: app[key] for key in ['strict_min_version', 'strict_max_version']}}}]}}}
+    (outdir / 'updates.json').write_text(json.dumps(updates, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
